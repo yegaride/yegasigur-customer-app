@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "771767867649",
+    "project_id": "cabme-customer-85d10",
+    "storage_bucket": "cabme-customer-85d10.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:771767867649:android:8278d885b82edc6172a300",
+        "android_client_info": {
+          "package_name": "com.cabme"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC5QlrnVsTKf2T2qCaOHkX2b01L5Kx-1a8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -178,7 +178,11 @@ class NewRideScreen extends StatelessWidget {
                       ],
                     ),
                     Visibility(
-                      visible: data.statut == "confirmed" && Constant.rideOtp.toString().toLowerCase() == 'yes'.toLowerCase() && data.rideType != 'driver' ? true : false,
+                      visible: data.statut == "confirmed" &&
+                              Constant.rideOtp.toString().toLowerCase() == 'yes'.toLowerCase() &&
+                              data.rideType != 'driver'
+                          ? true
+                          : false,
                       child: Column(
                         children: [
                           Divider(
@@ -278,7 +282,8 @@ class NewRideScreen extends StatelessWidget {
                                         // ),
                                         Text(
                                           Constant().amountShow(amount: data.montant.toString()),
-                                          style: const TextStyle(fontWeight: FontWeight.w700, color: Colors.black54, fontSize: 13.5),
+                                          style:
+                                              const TextStyle(fontWeight: FontWeight.w700, color: Colors.black54, fontSize: 13.5),
                                         ),
                                       ],
                                     ),
@@ -350,7 +355,9 @@ class NewRideScreen extends StatelessWidget {
                                         Padding(
                                           padding: const EdgeInsets.only(top: 8.0),
                                           child: TextScroll(data.duree.toString(),
-                                              mode: TextScrollMode.bouncing, pauseBetween: const Duration(seconds: 2), style: const TextStyle(fontWeight: FontWeight.w800, color: Colors.black54)),
+                                              mode: TextScrollMode.bouncing,
+                                              pauseBetween: const Duration(seconds: 2),
+                                              style: const TextStyle(fontWeight: FontWeight.w800, color: Colors.black54)),
                                         ),
                                       ],
                                     ),
@@ -383,8 +390,10 @@ class NewRideScreen extends StatelessWidget {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text("${data.prenomConducteur} ${data.nomConducteur}", style: const TextStyle(color: Colors.black87, fontWeight: FontWeight.w600)),
-                                  StarRating(size: 18, rating: double.parse(data.moyenne.toString()), color: ConstantColors.yellow),
+                                  Text("${data.prenomConducteur} ${data.nomConducteur}",
+                                      style: const TextStyle(color: Colors.black87, fontWeight: FontWeight.w600)),
+                                  StarRating(
+                                      size: 18, rating: double.parse(data.moyenne.toString()), color: ConstantColors.yellow),
                                 ],
                               ),
                             ),
@@ -406,14 +415,16 @@ class NewRideScreen extends StatelessWidget {
                                                     LocationData location = await currentLocation.getLocation();
                                                     ShowToastDialog.closeLoader();
 
-                                                    await FlutterShareMe().shareToWhatsApp(msg: 'https://www.google.com/maps/search/?api=1&query=${location.latitude},${location.longitude}');
+                                                    await FlutterShareMe().shareToWhatsApp(
+                                                        msg:
+                                                            'https://www.google.com/maps/search/?api=1&query=${location.latitude},${location.longitude}');
                                                   },
                                                   child: Container(
                                                       height: 36,
                                                       width: 36,
                                                       decoration: BoxDecoration(
                                                         shape: BoxShape.circle,
-                                                        color: ConstantColors.blueColor,
+                                                        color: ConstantColors.primary,
                                                       ),
                                                       child: const Icon(
                                                         Icons.share_rounded,
@@ -444,7 +455,8 @@ class NewRideScreen extends StatelessWidget {
                               ),
                               Padding(
                                 padding: const EdgeInsets.only(top: 5.0),
-                                child: Text(data.dateRetour.toString(), style: const TextStyle(color: Colors.black26, fontWeight: FontWeight.w600)),
+                                child: Text(data.dateRetour.toString(),
+                                    style: const TextStyle(color: Colors.black26, fontWeight: FontWeight.w600)),
                               ),
                             ],
                           )

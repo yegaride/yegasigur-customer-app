@@ -3,14 +3,18 @@ import 'dart:io';
 import 'package:cabme/utils/Preferences.dart';
 
 class API {
-  static const baseUrl = "${"Base url"}/api/v1/"; // live
-  static const apiKey = "Replace your API key";
+  static const baseUrl = "${'https://dev.yegaride.com/admin'}/api/v1/"; // live
+  static const apiKey = "base64:4CGWBlDsMFiCkyEavKMUTP7JBwBQj7xVoelRB+jOZF4=";
 
   static Map<String, String> authheader = {
     HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8',
     'apikey': apiKey,
   };
-  static Map<String, String> header = {HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8', 'apikey': apiKey, 'accesstoken': Preferences.getString(Preferences.accesstoken)};
+  static Map<String, String> header = {
+    HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8',
+    'apikey': apiKey,
+    'accesstoken': Preferences.getString(Preferences.accesstoken)
+  };
 
   static const userSignUP = "${baseUrl}user";
   static const userLogin = "${baseUrl}user-login";

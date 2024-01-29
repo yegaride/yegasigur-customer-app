@@ -61,7 +61,11 @@ class OnBoardingScreen extends StatelessWidget {
                                 children: [
                                   Text(
                                     controller.onBoardingList[index].title.toString(),
-                                    style: TextStyle(fontSize: 20, color: ConstantColors.primary, fontWeight: FontWeight.w900, letterSpacing: 1.5),
+                                    style: TextStyle(
+                                        fontSize: 20,
+                                        color: ConstantColors.primary,
+                                        fontWeight: FontWeight.w900,
+                                        letterSpacing: 1.5),
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.symmetric(horizontal: 40.0, vertical: 20),
@@ -87,7 +91,10 @@ class OnBoardingScreen extends StatelessWidget {
                         style: ElevatedButton.styleFrom(shape: const StadiumBorder(), backgroundColor: ConstantColors.primary),
                         child: const Padding(
                           padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 12),
-                          child: Text('Get started'),
+                          child: Text(
+                            'Get started',
+                            style: TextStyle(color: Colors.white),
+                          ),
                         ),
                       )
                     : InkWell(
@@ -96,7 +103,8 @@ class OnBoardingScreen extends StatelessWidget {
                         },
                         child: Text(
                           'skip'.tr,
-                          style: const TextStyle(fontSize: 16, letterSpacing: 1.5, color: Color(0xff6F6F6F), fontWeight: FontWeight.w500),
+                          style: const TextStyle(
+                              fontSize: 16, letterSpacing: 1.5, color: Color(0xff6F6F6F), fontWeight: FontWeight.w500),
                         )),
 
                 Padding(
@@ -106,7 +114,9 @@ class OnBoardingScreen extends StatelessWidget {
                     children: List.generate(
                       controller.onBoardingList.length,
                       (index) => Container(
-                          margin: controller.selectedPageIndex.value == index ? const EdgeInsets.symmetric(horizontal: 10) : EdgeInsets.zero,
+                          margin: controller.selectedPageIndex.value == index
+                              ? const EdgeInsets.symmetric(horizontal: 10)
+                              : EdgeInsets.zero,
                           width: controller.selectedPageIndex.value == index ? 50 : 66,
                           height: 10,
                           decoration: BoxDecoration(

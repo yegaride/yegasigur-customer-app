@@ -63,7 +63,7 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="Replace your map key" />
+            android:value="AIzaSyDR2F7eZUkyouuoMde79PYtf8KodduvwTk" />
 
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_channel_id"

@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:cabme/constant/show_toast_dialog.dart';
 import 'package:cabme/controller/sign_up_controller.dart';
 import 'package:cabme/page/auth_screens/add_profile_photo_screen.dart';
+import 'package:cabme/page/auth_screens/choose_safe_location_screen.dart';
 import 'package:cabme/page/auth_screens/login_screen.dart';
 import 'package:cabme/themes/button_them.dart';
 import 'package:cabme/themes/constant_colors.dart';
@@ -27,6 +28,7 @@ class SignupScreen extends StatelessWidget {
   final _passwordController = TextEditingController();
   final _conformPasswordController = TextEditingController();
   final _referralCodeController = TextEditingController();
+  final _addressController = TextEditingController();
 
   final controller = Get.put(SignUpController());
 
@@ -38,10 +40,11 @@ class SignupScreen extends StatelessWidget {
       body: SafeArea(
         child: Container(
           decoration: const BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage("assets/images/login_bg.png"),
-              fit: BoxFit.cover,
-            ),
+            color: ConstantColors.fucsia,
+            // image: DecorationImage(
+            //   image: AssetImage("assets/images/login_bg.png"),
+            //   fit: BoxFit.cover,
+            // ),
           ),
           child: Stack(
             children: [
@@ -51,17 +54,21 @@ class SignupScreen extends StatelessWidget {
                   child: Form(
                     key: _formKey,
                     child: SingleChildScrollView(
+                      padding: const EdgeInsets.symmetric(vertical: 40),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
+                          Image.asset("assets/images/appIcon-130.png"),
+                          const SizedBox(height: 30),
                           Text(
                             "Sign up".tr.toUpperCase(),
                             style: const TextStyle(
-                                letterSpacing: 0.60,
-                                fontSize: 22,
-                                color: Colors.black,
-                                fontWeight: FontWeight.w600),
+                              letterSpacing: 0.60,
+                              fontSize: 22,
+                              color: Colors.black,
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
                           SizedBox(
                               width: 80,
@@ -137,9 +144,7 @@ class SignupScreen extends StatelessWidget {
                               textInputType: TextInputType.emailAddress,
                               contentPadding: EdgeInsets.zero,
                               validators: (String? value) {
-                                bool emailValid = RegExp(
-                                        r'^.+@[a-zA-Z]+\.{1}[a-zA-Z]+(\.{0,1}[a-zA-Z]+)$')
-                                    .hasMatch(value!);
+                                bool emailValid = RegExp(r'^.+@[a-zA-Z]+\.{1}[a-zA-Z]+(\.{0,1}[a-zA-Z]+)$').hasMatch(value!);
                                 if (!emailValid) {
                                   return 'email not valid'.tr;
                                 } else {
@@ -148,22 +153,47 @@ class SignupScreen extends StatelessWidget {
                               },
                             ),
                           ),
-                          // Padding(
-                          //   padding: const EdgeInsets.only(top: 16),
-                          //   child: TextFieldThem.boxBuildTextField(
-                          //     hintText: 'address'.tr,
-                          //     controller: _addressController,
-                          //     textInputType: TextInputType.text,
-                          //     contentPadding: EdgeInsets.zero,
-                          //     validators: (String? value) {
-                          //       if (value!.isNotEmpty) {
-                          //         return null;
-                          //       } else {
-                          //         return 'required'.tr;
-                          //       }
-                          //     },
-                          //   ),
-                          // ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 16),
+                            child: Container(
+                              color: Colors.white,
+                              child: DropdownButton(
+                                isExpanded: true,
+                                hint: const Padding(
+                                  padding: EdgeInsets.only(left: 8),
+                                  child: Text('Transmission type'),
+                                ),
+                                // value: "Standart",
+                                onChanged: (value) {},
+                                items: const [
+                                  DropdownMenuItem(
+                                    value: 'Standart',
+                                    child: Text('Standart'),
+                                  ),
+                                  DropdownMenuItem(
+                                    value: 'Automatic',
+                                    child: Text('Automatic'),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 16),
+                            child: TextFieldThem.boxBuildTextField(
+                              hintText: 'address'.tr,
+                              controller: _addressController,
+                              textInputType: TextInputType.text,
+                              contentPadding: EdgeInsets.zero,
+                              validators: (String? value) {
+                                if (value!.isNotEmpty) {
+                                  return null;
+                                } else {
+                                  return 'required'.tr;
+                                }
+                              },
+                            ),
+                          ),
                           Padding(
                             padding: const EdgeInsets.only(top: 16),
                             child: TextFieldThem.boxBuildTextField(
@@ -176,8 +206,7 @@ class SignupScreen extends StatelessWidget {
                                 if (value!.length >= 6) {
                                   return null;
                                 } else {
-                                  return 'Password required at least 6 characters'
-                                      .tr;
+                                  return 'Password required at least 6 characters'.tr;
                                 }
                               },
                             ),
@@ -199,60 +228,51 @@ class SignupScreen extends StatelessWidget {
                               },
                             ),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 16),
-                            child: TextFieldThem.boxBuildTextField(
-                              hintText: 'Referral Code (Optional)'.tr,
-                              controller: _referralCodeController,
-                              textInputType: TextInputType.text,
-                              contentPadding: EdgeInsets.zero,
-                            ),
-                          ),
+                          // Padding(
+                          //   padding: const EdgeInsets.only(top: 16),
+                          //   child: TextFieldThem.boxBuildTextField(
+                          //     hintText: 'Referral Code (Optional)'.tr,
+                          //     controller: _referralCodeController,
+                          //     textInputType: TextInputType.text,
+                          //     contentPadding: EdgeInsets.zero,
+                          //   ),
+                          // ),
                           Padding(
                               padding: const EdgeInsets.only(top: 50),
                               child: ButtonThem.buildButton(
                                 context,
-                                title: 'Sign up'.tr,
+                                title: 'Continue'.tr,
                                 btnHeight: 45,
                                 btnColor: ConstantColors.primary,
                                 txtColor: Colors.white,
                                 onPress: () async {
                                   FocusScope.of(context).unfocus();
+                                  // Get.to(
+                                  //   const ChooseSafeLocationScreen(),
+                                  //   transition: Transition.rightToLeft,
+                                  // );
+
                                   if (_formKey.currentState!.validate()) {
                                     Map<String, String> bodyParams = {
-                                      'firstname': _firstNameController.text
-                                          .trim()
-                                          .toString(),
-                                      'lastname': _lastNameController.text
-                                          .trim()
-                                          .toString(),
+                                      'firstname': _firstNameController.text.trim().toString(),
+                                      'lastname': _lastNameController.text.trim().toString(),
                                       'phone': _phoneController.text.trim(),
                                       'email': _emailController.text.trim(),
                                       'password': _passwordController.text,
-                                      'referral_code': _referralCodeController
-                                          .text
-                                          .toString(),
+                                      'referral_code': _referralCodeController.text.toString(),
                                       // 'address': _addressController.text,
                                       'login_type': 'phone',
                                       'tonotify': 'yes',
                                       'account_type': 'customer',
                                     };
-                                    await controller
-                                        .signUp(bodyParams)
-                                        .then((value) {
+                                    await controller.signUp(bodyParams).then((value) {
                                       if (value != null) {
                                         if (value.success == "success") {
-                                          Preferences.setInt(
-                                              Preferences.userId,
-                                              int.parse(
-                                                  value.data!.id.toString()));
-                                          Preferences.setString(
-                                              Preferences.user,
-                                              jsonEncode(value));
+                                          Preferences.setInt(Preferences.userId, int.parse(value.data!.id.toString()));
+                                          Preferences.setString(Preferences.user, jsonEncode(value));
                                           Get.to(AddProfilePhotoScreen());
                                         } else {
-                                          ShowToastDialog.showToast(
-                                              value.error);
+                                          ShowToastDialog.showToast(value.error);
                                         }
                                       }
                                     });
@@ -311,31 +331,22 @@ class SignupScreen extends StatelessWidget {
                 children: [
                   TextSpan(
                     text: 'Already have an account? '.tr,
-                    style: const TextStyle(
-                        color: Colors.black, fontWeight: FontWeight.w500),
+                    style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w500),
                     recognizer: TapGestureRecognizer()
                       ..onTap = () {
                         Get.offAll(LoginScreen(),
-                            duration: const Duration(
-                                milliseconds:
-                                    400), //duration of transitions, default 1 sec
-                            transition:
-                                Transition.rightToLeft); //transition effect);
+                            duration: const Duration(milliseconds: 400), //duration of transitions, default 1 sec
+                            transition: Transition.rightToLeft); //transition effect);
                       },
                   ),
                   TextSpan(
                     text: 'login'.tr.toUpperCase(),
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: ConstantColors.primary),
+                    style: TextStyle(fontWeight: FontWeight.bold, color: ConstantColors.primary),
                     recognizer: TapGestureRecognizer()
                       ..onTap = () {
                         Get.offAll(LoginScreen(),
-                            duration: const Duration(
-                                milliseconds:
-                                    400), //duration of transitions, default 1 sec
-                            transition:
-                                Transition.rightToLeft); //transition effect);
+                            duration: const Duration(milliseconds: 400), //duration of transitions, default 1 sec
+                            transition: Transition.rightToLeft); //transition effect);
                       },
                   ),
                 ],

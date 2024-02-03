@@ -36,8 +36,11 @@ class SettingsController extends GetxController {
         ShowToastDialog.closeLoader();
         SettingsModel model = SettingsModel.fromJson(responseBody);
         LocationData location = await Location().getLocation();
-        List<get_cord_address.Placemark> placeMarks = await get_cord_address.placemarkFromCoordinates(location.latitude ?? 0.0, location.longitude ?? 0.0);
-        ConstantColors.primary = Color(int.parse(model.data!.websiteColor!.replaceFirst("#", "0xff")));
+        List<get_cord_address.Placemark> placeMarks =
+            await get_cord_address.placemarkFromCoordinates(
+                location.latitude ?? 0.0, location.longitude ?? 0.0);
+        ConstantColors.primary = Color(
+            int.parse(model.data!.websiteColor!.replaceFirst("#", "0xff")));
         Constant.distanceUnit = model.data!.deliveryDistance!;
         Constant.driverRadius = model.data!.driverRadios!;
         Constant.appVersion = model.data!.appVersion.toString();
@@ -45,7 +48,8 @@ class SettingsController extends GetxController {
         Constant.driverLocationUpdate = model.data!.driverLocationUpdate!;
         Constant.mapType = model.data!.mapType!;
         for (var i = 0; i < model.data!.taxModel!.length; i++) {
-          if (placeMarks.first.country.toString().toUpperCase() == model.data!.taxModel![i].country!.toUpperCase()) {
+          if (placeMarks.first.country.toString().toUpperCase() ==
+              model.data!.taxModel![i].country!.toUpperCase()) {
             Constant.taxList.add(model.data!.taxModel![i]);
           }
         }
@@ -53,18 +57,21 @@ class SettingsController extends GetxController {
         // Constant.taxName = model.data!.taxName!;
         // Constant.taxValue = model.data!.taxValue!;
         Constant.currency = model.data!.currency!;
-        Constant.symbolAtRight = model.data!.symbolAtRight! == 'true' ? true : false;
-        Constant.kGoogleApiKey = model.data!.googleMapApiKey!;
+        Constant.symbolAtRight =
+            model.data!.symbolAtRight! == 'true' ? true : false;
+        // Constant.kGoogleApiKey = model.data!.googleMapApiKey!;
         Constant.contactUsEmail = model.data!.contactUsEmail!;
         Constant.contactUsAddress = model.data!.contactUsAddress!;
         Constant.contactUsPhone = model.data!.contactUsPhone!;
         Constant.rideOtp = model.data!.showRideOtp!;
-      } else if (response.statusCode == 200 && responseBody['success'] == "Failed") {
+      } else if (response.statusCode == 200 &&
+          responseBody['success'] == "Failed") {
         ShowToastDialog.closeLoader();
         ShowToastDialog.showToast(responseBody['error']);
       } else {
         ShowToastDialog.closeLoader();
-        ShowToastDialog.showToast('Something want wrong. Please try again later');
+        ShowToastDialog.showToast(
+            'Something want wrong. Please try again later');
         throw Exception('Failed to load album');
       }
     } on TimeoutException catch (e) {

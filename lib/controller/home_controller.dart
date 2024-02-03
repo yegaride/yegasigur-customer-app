@@ -70,7 +70,6 @@ class HomeController extends GetxController {
     super.onInit();
   }
 
-
   BitmapDescriptor? departureIcon;
   BitmapDescriptor? destinationIcon;
   BitmapDescriptor? taxiIcon;
@@ -101,7 +100,10 @@ class HomeController extends GetxController {
     multiStopList.add(AddStopModel(editingController: TextEditingController(), latitude: "", longitude: ""));
     multiStopListNew = List<AddStopModel>.generate(
       multiStopList.length,
-      (int index) => AddStopModel(editingController: multiStopList[index].editingController, latitude: multiStopList[index].latitude, longitude: multiStopList[index].longitude),
+      (int index) => AddStopModel(
+          editingController: multiStopList[index].editingController,
+          latitude: multiStopList[index].latitude,
+          longitude: multiStopList[index].longitude),
     );
     ShowToastDialog.closeLoader();
     update();
@@ -112,7 +114,10 @@ class HomeController extends GetxController {
     multiStopList.removeAt(index);
     multiStopListNew = List<AddStopModel>.generate(
       multiStopList.length,
-      (int index) => AddStopModel(editingController: multiStopList[index].editingController, latitude: multiStopList[index].latitude, longitude: multiStopList[index].longitude),
+      (int index) => AddStopModel(
+          editingController: multiStopList[index].editingController,
+          latitude: multiStopList[index].latitude,
+          longitude: multiStopList[index].longitude),
     );
     ShowToastDialog.closeLoader();
     update();
@@ -144,7 +149,8 @@ class HomeController extends GetxController {
             markerId: MarkerId(element.driverId.toString()),
             rotation: double.parse(element.rotation.toString()),
             // infoWindow: InfoWindow(title: element.prenom.toString(), snippet: "${element.brand},${element.model},${element.numberplate}"),
-            position: LatLng(double.parse(element.driverLatitude.toString().isNotEmpty ? element.driverLatitude.toString() : "0.0"),
+            position: LatLng(
+                double.parse(element.driverLatitude.toString().isNotEmpty ? element.driverLatitude.toString() : "0.0"),
                 double.parse(element.driverLongitude.toString().isNotEmpty ? element.driverLongitude.toString() : "0.0")),
             icon: taxiIcon!,
           );
@@ -200,6 +206,7 @@ class HomeController extends GetxController {
   }
 
   Future<PlacesDetailsResponse?> displayPrediction(Prediction? p) async {
+    log(Constant.kGoogleApiKey);
     if (p != null) {
       GoogleMapsPlaces? places = GoogleMapsPlaces(
         apiKey: Constant.kGoogleApiKey,
@@ -278,7 +285,8 @@ class HomeController extends GetxController {
   Future<DriverModel?> getDriverDetails(String typeVehicle, String lat1, String lng1) async {
     try {
       ShowToastDialog.showLoader("Please wait");
-      final response = await http.get(Uri.parse("${API.driverDetails}?type_vehicle=$typeVehicle&lat1=$lat1&lng1=$lng1"), headers: API.header);
+      final response =
+          await http.get(Uri.parse("${API.driverDetails}?type_vehicle=$typeVehicle&lat1=$lat1&lng1=$lng1"), headers: API.header);
       log(response.request.toString());
 
       Map<String, dynamic> responseBody = json.decode(response.body);
@@ -371,7 +379,11 @@ class HomeController extends GetxController {
     return null;
   }
 
-  double calculateTripPrice({required double distance, required double minimumDeliveryChargesWithin, required double minimumDeliveryCharges, required double deliveryCharges}) {
+  double calculateTripPrice(
+      {required double distance,
+      required double minimumDeliveryChargesWithin,
+      required double minimumDeliveryCharges,
+      required double deliveryCharges}) {
     double cout = 0.0;
 
     if (distance > minimumDeliveryChargesWithin) {

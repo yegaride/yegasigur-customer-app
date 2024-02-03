@@ -6,6 +6,7 @@ import 'package:cabme/constant/constant.dart';
 import 'package:cabme/controller/dash_board_controller.dart';
 import 'package:cabme/controller/settings_controller.dart';
 import 'package:cabme/model/ride_model.dart';
+import 'package:cabme/page/auth_screens/choose_safe_location_screen.dart';
 import 'package:cabme/page/localization_screens/localization_screen.dart';
 import 'package:cabme/page/route_view_screen/route_view_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -190,7 +191,8 @@ class MyApp extends StatelessWidget {
                 ? const LocalizationScreens(intentType: "main")
                 : Preferences.getBoolean(Preferences.isFinishOnBoardingKey)
                     ? Preferences.getBoolean(Preferences.isLogin)
-                        ? DashBoard()
+                        ? const ChooseSafeLocationScreen()
+                        // ? DashBoard()
                         : LoginScreen()
                     : const OnBoardingScreen();
           }),

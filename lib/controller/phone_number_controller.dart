@@ -45,7 +45,8 @@ class PhoneNumberController extends GetxController {
   Future<bool?> phoneNumberIsExit(Map<String, String> bodyParams) async {
     try {
       ShowToastDialog.showLoader("Please wait");
-      final response = await http.post(Uri.parse(API.getExistingUserOrNot), headers: API.authheader, body: jsonEncode(bodyParams));
+      final response =
+          await http.post(Uri.parse(API.getExistingUserOrNot), headers: API.authheader, body: jsonEncode(bodyParams));
 
       log("---->");
       log(bodyParams.toString());

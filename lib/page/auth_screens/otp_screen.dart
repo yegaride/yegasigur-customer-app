@@ -14,7 +14,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pinput/pinput.dart';
-
 import '../../themes/constant_colors.dart';
 import 'signup_screen.dart';
 
@@ -36,10 +35,11 @@ class OtpScreen extends StatelessWidget {
         child: Container(
           height: Get.height,
           decoration: const BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage("assets/images/login_bg.png"),
-              fit: BoxFit.cover,
-            ),
+            color: ConstantColors.fucsia,
+            // image: DecorationImage(
+            //   image: AssetImage("assets/images/login_bg.png"),
+            //   fit: BoxFit.cover,
+            // ),
           ),
           child: Stack(
             children: [
@@ -181,8 +181,8 @@ class OtpScreen extends StatelessWidget {
                                                   value.data!.photoPath
                                                       .toString()
                                                       .isEmpty) {
-                                                Get.to(() =>
-                                                    AddProfilePhotoScreen());
+                                                // Get.to(() =>
+                                                //     AddProfilePhotoScreen());
                                               } else {
                                                 Preferences.setBoolean(
                                                     Preferences.isLogin, true);

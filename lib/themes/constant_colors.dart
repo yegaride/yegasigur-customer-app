@@ -1,7 +1,8 @@
 import 'dart:ui';
 
 class ConstantColors {
-  static Color primary = const Color(0xff84157e);
+  static Color primary = const Color(0xFF84157E);
+  static const Color fucsia = Color(0xFFD72E88);
   static Color yellow = const Color(0xffEAA501);
   static Color yellow1 = const Color(0xffFFC003);
   static Color background = const Color(0xffF5F7FB);

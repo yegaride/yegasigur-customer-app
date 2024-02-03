@@ -30,10 +30,11 @@ class LoginScreen extends StatelessWidget {
         backgroundColor: ConstantColors.background,
         body: Container(
           decoration: const BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage("assets/images/login_bg.png"),
-              fit: BoxFit.cover,
-            ),
+            color: ConstantColors.fucsia,
+            // image: DecorationImage(
+            //   image: AssetImage("assets/images/login_bg.png"),
+            //   fit: BoxFit.cover,
+            // ),
           ),
           child: Center(
             child: Padding(
@@ -95,6 +96,7 @@ class LoginScreen extends StatelessWidget {
                                 },
                               ),
                             ),
+
                             Padding(
                                 padding: const EdgeInsets.only(top: 50),
                                 child: ButtonThem.buildButton(

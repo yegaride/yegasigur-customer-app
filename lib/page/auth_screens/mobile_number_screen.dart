@@ -21,12 +21,13 @@ class MobileNumberScreen extends StatelessWidget {
         child: Container(
           height: Get.height,
           decoration: const BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage(
-                "assets/images/login_bg.png",
-              ),
-              fit: BoxFit.cover,
-            ),
+            color: ConstantColors.fucsia,
+            // image: DecorationImage(
+            //   image: AssetImage(
+            //     "assets/images/login_bg.png",
+            //   ),
+            //   fit: BoxFit.cover,
+            // ),
           ),
           child: Stack(
             children: [
@@ -43,14 +44,9 @@ class MobileNumberScreen extends StatelessWidget {
                         ),
                         const SizedBox(height: 30),
                         Text(
-                          isLogin == true
-                              ? "Login Phone".tr
-                              : "Signup Phone".tr,
+                          isLogin == true ? "Login Phone".tr : "Signup Phone".tr,
                           style: const TextStyle(
-                              letterSpacing: 0.60,
-                              fontSize: 22,
-                              color: Colors.black,
-                              fontWeight: FontWeight.w600),
+                              letterSpacing: 0.60, fontSize: 22, color: Colors.black, fontWeight: FontWeight.w600),
                         ),
                         SizedBox(
                             width: 80,
@@ -62,24 +58,22 @@ class MobileNumberScreen extends StatelessWidget {
                           padding: const EdgeInsets.only(top: 80),
                           child: Container(
                             decoration: BoxDecoration(
+                                color: Colors.white,
                                 border: Border.all(
                                   color: ConstantColors.textFieldBoarderColor,
                                 ),
-                                borderRadius:
-                                    const BorderRadius.all(Radius.circular(6))),
+                                borderRadius: const BorderRadius.all(Radius.circular(6))),
                             padding: const EdgeInsets.only(left: 10),
                             child: IntlPhoneField(
                               initialCountryCode: 'AW',
                               onChanged: (phone) {
-                                controller.phoneNumber.value =
-                                    phone.completeNumber;
+                                controller.phoneNumber.value = phone.completeNumber;
                               },
                               invalidNumberMessage: "number invalid",
                               showDropdownIcon: false,
                               disableLengthCheck: true,
                               decoration: InputDecoration(
-                                contentPadding:
-                                    const EdgeInsets.symmetric(vertical: 12),
+                                contentPadding: const EdgeInsets.symmetric(vertical: 12),
                                 hintText: 'Phone Number'.tr,
                                 border: InputBorder.none,
                                 isDense: true,
@@ -99,8 +93,7 @@ class MobileNumberScreen extends StatelessWidget {
                                 FocusScope.of(context).unfocus();
                                 if (controller.phoneNumber.value.isNotEmpty) {
                                   ShowToastDialog.showLoader("Code sending".tr);
-                                  controller
-                                      .sendCode(controller.phoneNumber.value);
+                                  controller.sendCode(controller.phoneNumber.value);
                                 }
                               },
                             )),

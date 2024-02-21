@@ -12,6 +12,9 @@ import 'package:http/http.dart' as http;
 class LoginController extends GetxController {
   Future<UserModel?> loginAPI(Map<String, String> bodyParams) async {
     try {
+      print('😂');
+      print(bodyParams);
+
       ShowToastDialog.showLoader("Please wait");
       final response = await http.post(Uri.parse(API.userLogin), headers: API.authheader, body: jsonEncode(bodyParams));
 

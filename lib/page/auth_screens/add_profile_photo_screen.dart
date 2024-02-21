@@ -7,6 +7,8 @@ import 'package:cabme/controller/add_photo_controller.dart';
 import 'package:cabme/model/user_model.dart';
 import 'package:cabme/page/auth_screens/login_screen.dart';
 import 'package:cabme/page/dash_board.dart';
+import 'package:cabme/page/home_screens/home_screen.dart';
+import 'package:cabme/page/order_yegasigur_screen/order_yegasigur_screen.dart';
 import 'package:cabme/themes/button_them.dart';
 import 'package:cabme/themes/constant_colors.dart';
 import 'package:cabme/themes/responsive.dart';
@@ -17,7 +19,7 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
 class AddProfilePhotoScreen extends StatelessWidget {
-  AddProfilePhotoScreen({Key? key}) : super(key: key);
+  AddProfilePhotoScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +33,8 @@ class AddProfilePhotoScreen extends StatelessWidget {
             backgroundColor: ConstantColors.background,
             leading: InkWell(
               onTap: () {
-                Get.offAll(() => LoginScreen());
+                Get.back();
+                // Get.offAll(() => LoginScreen());
               },
               child: const Icon(
                 Icons.arrow_back_ios,
@@ -39,59 +42,43 @@ class AddProfilePhotoScreen extends StatelessWidget {
               ),
             ),
           ),
-          body: WillPopScope(
-            onWillPop: () async {
-              Get.offAll(
-                () => LoginScreen(),
-              );
-              return true;
-            },
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 22.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    height: Responsive.height(8, context),
-                  ),
-                  Text(
-                    "select_profile_photo".tr,
-                    style: const TextStyle(
-                        color: Colors.black87,
-                        fontWeight: FontWeight.w600,
-                        letterSpacing: 1.2,
-                        fontSize: 22),
-                  ),
-                  const SizedBox(height: 15),
-                  Text(
-                    "profile_message".tr,
-                    style: const TextStyle(
-                        color: Colors.black54,
-                        fontWeight: FontWeight.w600,
-                        height: 2,
-                        letterSpacing: 1),
-                  ),
-                  SizedBox(
-                    height: Responsive.height(5, context),
-                  ),
-                  controller.image.isNotEmpty
-                      ? Center(
-                          child: ClipOval(
-                            child: Padding(
-                              padding: const EdgeInsets.all(4.0),
-                              child: ClipOval(
-                                  child: Image.file(
-                                File(controller.image.value),
-                                height: 190,
-                                width: 190,
-                                fit: BoxFit.cover,
-                              )),
-                            ),
+          body: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 22.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  height: Responsive.height(8, context),
+                ),
+                Text(
+                  "select_profile_photo".tr,
+                  style: const TextStyle(color: Colors.black87, fontWeight: FontWeight.w600, letterSpacing: 1.2, fontSize: 22),
+                ),
+                const SizedBox(height: 15),
+                Text(
+                  "profile_message".tr,
+                  style: const TextStyle(color: Colors.black54, fontWeight: FontWeight.w600, height: 2, letterSpacing: 1),
+                ),
+                SizedBox(
+                  height: Responsive.height(5, context),
+                ),
+                controller.image.isNotEmpty
+                    ? Center(
+                        child: ClipOval(
+                          child: Padding(
+                            padding: const EdgeInsets.all(4.0),
+                            child: ClipOval(
+                                child: Image.file(
+                              File(controller.image.value),
+                              height: 190,
+                              width: 190,
+                              fit: BoxFit.cover,
+                            )),
                           ),
-                        )
-                      : const SizedBox(),
-                ],
-              ),
+                        ),
+                      )
+                    : const SizedBox(),
+              ],
             ),
           ),
           bottomNavigationBar: Container(
@@ -110,36 +97,49 @@ class AddProfilePhotoScreen extends StatelessWidget {
               ),
             ),
           ),
-          floatingActionButton: FloatingActionButton(
-            backgroundColor: ConstantColors.yellow,
-            child: const Icon(
-              Icons.navigate_next,
-              size: 28,
-              color: Colors.black,
-            ),
-            onPressed: () {
-              if (controller.image.isNotEmpty) {
-                controller.uploadPhoto().then((value) {
-                  if (value != null) {
-                    if (value["success"] == "Success") {
-                      UserModel userModel = Constant.getUserData();
-                      userModel.data!.photoPath = value['data']['photo_path'];
-                      Preferences.setString(
-                          Preferences.user, jsonEncode(userModel.toJson()));
-                      Preferences.setBoolean(Preferences.isLogin, true);
-                      Get.offAll(DashBoard());
+          floatingActionButton: controller.image.isEmpty
+              ? GestureDetector(
+                  child: Text('skip'.tr),
+                  onTap: () {
+                    UserModel userModel = Constant.getUserData();
+                    userModel.data!.photoPath = userModel.data?.gender == 'male'
+                        ? Constant.maleImagePathPlaceholder
+                        : Constant.femaleImagePathPlaceholder;
+
+                    Preferences.setString(Preferences.user, jsonEncode(userModel.toJson()));
+                    Preferences.setBoolean(Preferences.isLogin, true);
+
+                    Get.offAll(DashBoard());
+                  },
+                )
+              : FloatingActionButton(
+                  backgroundColor: ConstantColors.yellow,
+                  child: const Icon(
+                    Icons.navigate_next,
+                    size: 28,
+                    color: Colors.black,
+                  ),
+                  onPressed: () {
+                    if (controller.image.isNotEmpty) {
+                      controller.uploadPhoto().then((value) {
+                        if (value != null) {
+                          if (value["success"] == "Success") {
+                            UserModel userModel = Constant.getUserData();
+                            userModel.data!.photoPath = value['data']['photo_path'];
+                            Preferences.setString(Preferences.user, jsonEncode(userModel.toJson()));
+                            Preferences.setBoolean(Preferences.isLogin, true);
+                            Get.offAll(DashBoard());
+                          } else {
+                            ShowToastDialog.showToast(value['error']);
+                          }
+                        }
+                      });
                     } else {
-                      ShowToastDialog.showToast(value['error']);
+                      ShowToastDialog.showToast("Please Choose Image".tr);
                     }
-                  }
-                });
-              } else {
-                ShowToastDialog.showToast("Please Choose Image".tr);
-              }
-            },
-          ),
-          floatingActionButtonLocation:
-              FloatingActionButtonLocation.centerFloat,
+                  },
+                ),
+          floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         );
       },
     );
@@ -177,8 +177,7 @@ class AddProfilePhotoScreen extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             IconButton(
-                                onPressed: () => pickFile(controller,
-                                    source: ImageSource.camera),
+                                onPressed: () => pickFile(controller, source: ImageSource.camera),
                                 icon: const Icon(
                                   Icons.camera_alt,
                                   size: 32,
@@ -197,8 +196,7 @@ class AddProfilePhotoScreen extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             IconButton(
-                                onPressed: () => pickFile(controller,
-                                    source: ImageSource.gallery),
+                                onPressed: () => pickFile(controller, source: ImageSource.gallery),
                                 icon: const Icon(
                                   Icons.photo_library_sharp,
                                   size: 32,
@@ -221,8 +219,7 @@ class AddProfilePhotoScreen extends StatelessWidget {
 
   final ImagePicker _imagePicker = ImagePicker();
 
-  Future pickFile(AddPhotoController controller,
-      {required ImageSource source}) async {
+  Future pickFile(AddPhotoController controller, {required ImageSource source}) async {
     try {
       XFile? image = await _imagePicker.pickImage(source: source);
       if (image == null) return;

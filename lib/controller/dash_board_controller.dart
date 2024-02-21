@@ -11,13 +11,13 @@ import 'package:cabme/page/contact_us/contact_us_screen.dart';
 import 'package:cabme/page/coupon_code/coupon_code_screen.dart';
 import 'package:cabme/page/dash_board.dart';
 import 'package:cabme/page/favotite_ride_screens/favorite_ride_screen.dart';
+import 'package:cabme/page/home_screens/home_screen.dart';
 import 'package:cabme/page/localization_screens/localization_screen.dart';
 import 'package:cabme/page/my_profile/my_profile_screen.dart';
 import 'package:cabme/page/new_ride_screens/new_ride_screen.dart';
+import 'package:cabme/page/order_yegasigur_screen/order_yegasigur_screen.dart';
 import 'package:cabme/page/privacy_policy/privacy_policy_screen.dart';
 import 'package:cabme/page/referral_screen/referral_screen.dart';
-import 'package:cabme/page/rent_vehicle_screens/rent_vehicle_screen.dart';
-import 'package:cabme/page/rented_vehicle.dart';
 import 'package:cabme/page/terms_service/terms_of_service_screen.dart';
 import 'package:cabme/page/wallet/wallet_screen.dart';
 import 'package:cabme/service/api.dart';
@@ -28,7 +28,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:launch_review/launch_review.dart';
-import '../page/home_screens/home_screen.dart';
 
 class DashBoardController extends GetxController {
   RxInt selectedDrawerIndex = 0.obs;
@@ -58,17 +57,18 @@ class DashBoardController extends GetxController {
 
   final drawerItems = [
     DrawerItem('home', CupertinoIcons.home),
+    DrawerItem('order_yegasigur', Icons.car_crash_sharp),
+    DrawerItem('my_profile', Icons.person_outline),
     DrawerItem('All Rides', Icons.local_car_wash),
     DrawerItem('favorite_ride', CupertinoIcons.star),
     // DrawerItem('confirmed', CupertinoIcons.checkmark_circle),
     // DrawerItem('on_ride', Icons.directions_boat_outlined),
     // DrawerItem("completed", Icons.incomplete_circle),
     // DrawerItem('canceled', Icons.cancel_outlined),
-    DrawerItem('rent_a_vehicle', Icons.car_rental),
-    DrawerItem('rented_vehicle', Icons.car_rental),
+    // DrawerItem('rent_a_vehicle', Icons.car_rental),
+    // DrawerItem('rented_vehicle', Icons.car_rental),
     DrawerItem('promo_code', Icons.discount),
     DrawerItem('my_wallet', Icons.account_balance_wallet_outlined),
-    DrawerItem('my_profile', Icons.person_outline),
     DrawerItem('refer_a_friend', Icons.people_sharp),
     DrawerItem('change_language', Icons.language),
     DrawerItem('term_service', Icons.design_services),
@@ -83,9 +83,11 @@ class DashBoardController extends GetxController {
       case 0:
         return const HomeScreen();
       case 1:
-        return const NewRideScreen();
+        return OrderYegasigurScreen();
       case 2:
-        return const FavoriteRideScreen();
+        return MyProfileScreen();
+      case 3:
+        return const NewRideScreen();
 
       // case 3:
       //   return const ConfirmedRideScreen();
@@ -95,27 +97,27 @@ class DashBoardController extends GetxController {
       //   return const CompletedRideScreen();
       // case 6:
       //   return const CanceledRideScreens();
-      case 3:
-        return RentVehicleScreen();
+      // case 4:
+      //   return RentVehicleScreen();
+      // case 5:
+      //   return const RentedVehicleScreen();
       case 4:
-        return const RentedVehicleScreen();
+        return const FavoriteRideScreen();
       case 5:
         return const CouponCodeScreen();
       case 6:
         return WalletScreen();
       case 7:
-        return MyProfileScreen();
-      case 8:
         return const ReferralScreen();
-      case 9:
+      case 8:
         return const LocalizationScreens(
           intentType: "dashBoard",
         );
-      case 10:
+      case 9:
         return const TermsOfServiceScreen();
-      case 11:
+      case 10:
         return const PrivacyPolicyScreen();
-      case 12:
+      case 11:
         return const ContactUsScreen();
 
       default:
@@ -124,12 +126,13 @@ class DashBoardController extends GetxController {
   }
 
   onSelectItem(int index) {
-    if (index == 13) {
+    if (index == 12) {
       LaunchReview.launch(
         androidAppId: "com.cabme",
         iOSAppId: "com.cabme.ios",
       );
-    } else if (index == 14) {
+      // log out
+    } else if (index == 13) {
       Preferences.clearKeyData(Preferences.isLogin);
       Preferences.clearKeyData(Preferences.user);
       Preferences.clearKeyData(Preferences.userId);
@@ -142,7 +145,12 @@ class DashBoardController extends GetxController {
 
   Future<dynamic> updateFCMToken(String token) async {
     try {
-      Map<String, dynamic> bodyParams = {'user_id': Preferences.getInt(Preferences.userId), 'fcm_id': token, 'device_id': "", 'user_cat': userModel!.data!.userCat};
+      Map<String, dynamic> bodyParams = {
+        'user_id': Preferences.getInt(Preferences.userId),
+        'fcm_id': token,
+        'device_id': "",
+        'user_cat': userModel!.data!.userCat
+      };
       final response = await http.post(Uri.parse(API.updateToken), headers: API.header, body: jsonEncode(bodyParams));
 
       Map<String, dynamic> responseBody = json.decode(response.body);
@@ -163,7 +171,6 @@ class DashBoardController extends GetxController {
     }
     return null;
   }
-
 
   Future<dynamic> getPaymentSettingData() async {
     try {

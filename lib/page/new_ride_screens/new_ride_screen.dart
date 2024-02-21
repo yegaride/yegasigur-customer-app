@@ -19,7 +19,7 @@ import 'package:location/location.dart';
 import 'package:text_scroll/text_scroll.dart';
 
 class NewRideScreen extends StatelessWidget {
-  const NewRideScreen({Key? key}) : super(key: key);
+  const NewRideScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -27,23 +27,25 @@ class NewRideScreen extends StatelessWidget {
       init: NewRideController(),
       builder: (controller) {
         return Scaffold(
-            backgroundColor: ConstantColors.background,
-            body: RefreshIndicator(
-              onRefresh: () => controller.getNewRide(),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: controller.isLoading.value
-                    ? Constant.loader()
-                    : controller.rideList.isEmpty
-                        ? Constant.emptyView(context, "You have not booked any trip.\n Please book a cab now".tr, true)
-                        : ListView.builder(
-                            itemCount: controller.rideList.length,
-                            shrinkWrap: true,
-                            itemBuilder: (context, index) {
-                              return newRideWidgets(controller, context, controller.rideList[index]);
-                            }),
-              ),
-            ));
+          backgroundColor: ConstantColors.background,
+          body: RefreshIndicator(
+            onRefresh: () => controller.getNewRide(),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: controller.isLoading.value
+                  ? Constant.loader()
+                  : controller.rideList.isEmpty
+                      ? Constant.emptyView(context, "You have not booked any trip.\n Please book a cab now".tr, true)
+                      : ListView.builder(
+                          itemCount: controller.rideList.length,
+                          shrinkWrap: true,
+                          itemBuilder: (context, index) {
+                            return newRideWidgets(controller, context, controller.rideList[index]);
+                          },
+                        ),
+            ),
+          ),
+        );
       },
     );
   }

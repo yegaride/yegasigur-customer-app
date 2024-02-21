@@ -3,8 +3,12 @@ import 'dart:io';
 import 'package:cabme/utils/Preferences.dart';
 
 class API {
-  static const baseUrl = "${'https://dev.yegaride.com/admin'}/api/v1/"; // live
+  // static const host = "https://admin.dev.yegasigur.com";
+  static const host = "http://10.0.2.2/admin";
+  static const baseUrl = "$host/api/v1/";
+  // static const baseUrl = "${'https://admin.dev.yegasigur.com'}/api/v1/";
   static const apiKey = "base64:4CGWBlDsMFiCkyEavKMUTP7JBwBQj7xVoelRB+jOZF4=";
+  // static const apiKey = "base64:4CGWBlDsMFiCkyEavKMUTP7JBwBQj7xVoelRB+jOZF4=";
 
   static Map<String, String> authheader = {
     HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8',
@@ -24,6 +28,7 @@ class API {
   static const getExistingUserOrNot = "${baseUrl}existing-user";
   static const updateUserNic = "${baseUrl}update-user-nic";
   static const uploadUserPhoto = "${baseUrl}user-photo";
+  static const setSafeLocation = "${baseUrl}safe-location";
   static const updateUserEmail = "${baseUrl}update-user-email";
   static const changePassword = "${baseUrl}update-user-mdp";
   static const updatePreName = "${baseUrl}user-pre-name";

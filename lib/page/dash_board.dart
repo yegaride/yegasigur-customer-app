@@ -7,9 +7,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class DashBoard extends StatelessWidget {
-  DashBoard({Key? key}) : super(key: key);
+  DashBoard({super.key});
 
   DateTime backPress = DateTime.now();
 
@@ -43,27 +44,43 @@ class DashBoard extends StatelessWidget {
               }
             },
             child: Scaffold(
-              appBar: controller.selectedDrawerIndex.value != 0 &&
-                      controller.selectedDrawerIndex.value != 6
+              appBar: controller.selectedDrawerIndex.value != 6
                   ? AppBar(
-                      backgroundColor: controller.selectedDrawerIndex.value == 7
+                      backgroundColor: controller.selectedDrawerIndex.value == 2 || controller.selectedDrawerIndex.value == 1
                           ? ConstantColors.primary
                           : ConstantColors.background,
                       elevation: 0,
                       centerTitle: true,
-                      title: controller.selectedDrawerIndex.value != 0 &&
-                              controller.selectedDrawerIndex.value != 6
+                      title: controller.selectedDrawerIndex.value != 1 && controller.selectedDrawerIndex.value != 6
                           ? Text(
-                              controller
-                                  .drawerItems[
-                                      controller.selectedDrawerIndex.value]
-                                  .title
-                                  .tr,
+                              controller.drawerItems[controller.selectedDrawerIndex.value].title.tr,
                               style: const TextStyle(
                                 color: Colors.black,
                               ),
                             )
-                          : const Text(""),
+                          : controller.selectedDrawerIndex.value == 1
+                              ? Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    Text(
+                                      'YegaSigur',
+                                      style: GoogleFonts.poppins(
+                                        fontWeight: FontWeight.w800,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    Text(
+                                      '.com',
+                                      style: GoogleFonts.poppins(
+                                        color: Colors.white,
+                                        fontSize: 15,
+                                        height: 1.4,
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              : const Text(""),
                       leading: Builder(builder: (context) {
                         return Padding(
                           padding: const EdgeInsets.all(8.0),
@@ -77,8 +94,7 @@ class DashBoard extends StatelessWidget {
                                   color: Colors.white,
                                   boxShadow: <BoxShadow>[
                                     BoxShadow(
-                                      color: ConstantColors.primary
-                                          .withOpacity(0.1),
+                                      color: ConstantColors.primary.withOpacity(0.1),
                                       blurRadius: 3,
                                       offset: const Offset(0, 3),
                                     ),
@@ -94,8 +110,7 @@ class DashBoard extends StatelessWidget {
                     )
                   : null,
               drawer: buildAppDrawer(context, controller),
-              body: controller
-                  .getDrawerItemWidget(controller.selectedDrawerIndex.value),
+              body: controller.getDrawerItemWidget(controller.selectedDrawerIndex.value),
             ),
           ),
         );
@@ -120,8 +135,7 @@ class DashBoard extends StatelessWidget {
         children: [
           controller.userModel == null
               ? Center(
-                  child:
-                      CircularProgressIndicator(color: ConstantColors.primary),
+                  child: CircularProgressIndicator(color: ConstantColors.primary),
                 )
               : UserAccountsDrawerHeader(
                   decoration: BoxDecoration(
@@ -134,12 +148,10 @@ class DashBoard extends StatelessWidget {
                         child: Container(
                           color: Colors.white,
                           child: CachedNetworkImage(
-                            imageUrl: controller.userModel!.data!.photoPath
-                                .toString(),
+                            imageUrl: controller.userModel!.data!.photoPath.toString(),
                             fit: BoxFit.cover,
                             placeholder: (context, url) => Constant.loader(),
-                            errorWidget: (context, url, error) =>
-                                const Icon(Icons.error),
+                            errorWidget: (context, url, error) => const Icon(Icons.error),
                           ),
                         ),
                       ),
@@ -149,9 +161,7 @@ class DashBoard extends StatelessWidget {
                     "${controller.userModel!.data!.prenom} ${controller.userModel!.data!.nom}",
                     style: const TextStyle(color: Colors.white),
                   ),
-                  accountEmail: Text(
-                      controller.userModel!.data!.email.toString(),
-                      style: const TextStyle(color: Colors.white)),
+                  accountEmail: Text(controller.userModel!.data!.email.toString(), style: const TextStyle(color: Colors.white)),
                 ),
           Column(children: drawerOptions),
           Text(

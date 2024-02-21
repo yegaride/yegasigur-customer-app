@@ -63,20 +63,17 @@ class TextFieldThem {
             fillColor: Colors.white,
             filled: true,
             focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(
-                  color: ConstantColors.textFieldBoarderColor, width: 0.7),
+              borderSide: BorderSide(color: ConstantColors.textFieldBoarderColor, width: 0.7),
             ),
             enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(
-                  color: ConstantColors.textFieldBoarderColor, width: 0.7),
+              borderSide: BorderSide(color: ConstantColors.textFieldBoarderColor, width: 0.7),
             ),
             errorBorder: OutlineInputBorder(
-              borderSide: BorderSide(
-                  color: ConstantColors.textFieldBoarderColor, width: 0.7),
+              borderSide: BorderSide(color: ConstantColors.textFieldBoarderColor, width: 0.7),
             ),
+            errorStyle: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
             border: OutlineInputBorder(
-              borderSide: BorderSide(
-                  color: ConstantColors.textFieldBoarderColor, width: 0.7),
+              borderSide: BorderSide(color: ConstantColors.textFieldBoarderColor, width: 0.7),
             ),
             hintText: hintText,
             hintStyle: TextStyle(color: ConstantColors.hintTextColor)));

@@ -34,7 +34,8 @@ class NewRideController extends GetxController {
 
   Future<dynamic> getNewRide() async {
     try {
-      final response = await http.get(Uri.parse("${API.userAllRides}?id_user_app=${Preferences.getInt(Preferences.userId)}"), headers: API.header);
+      final response = await http.get(Uri.parse("${API.userAllRides}?id_user_app=${Preferences.getInt(Preferences.userId)}"),
+          headers: API.header);
 
       Map<String, dynamic> responseBody = json.decode(response.body);
       if (response.statusCode == 200 && responseBody['success'] == "success") {

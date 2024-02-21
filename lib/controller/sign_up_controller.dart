@@ -15,8 +15,9 @@ class SignUpController extends GetxController {
     try {
       ShowToastDialog.showLoader("Please wait");
       final response = await http.post(Uri.parse(API.userSignUP), headers: API.authheader, body: jsonEncode(bodyParams));
+
       Map<String, dynamic> responseBody = json.decode(response.body);
-      if (response.statusCode == 200) {
+      if (response.statusCode == 200 && responseBody['success'] == 'success') {
         ShowToastDialog.closeLoader();
         Preferences.setString(Preferences.accesstoken, responseBody['data']['accesstoken'].toString());
         Preferences.setString(Preferences.admincommission, responseBody['data']['admin_commission'].toString());
@@ -25,7 +26,7 @@ class SignUpController extends GetxController {
       } else {
         ShowToastDialog.closeLoader();
         ShowToastDialog.showToast('Something want wrong. Please try again later');
-        throw Exception('Failed to load album');
+        throw Exception(responseBody['error']);
       }
     } on TimeoutException catch (e) {
       ShowToastDialog.closeLoader();

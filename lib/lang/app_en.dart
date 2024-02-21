@@ -3,8 +3,7 @@ const Map<String, String> enUS = {
   'intro_title_two': "Request for Ride",
   'into_dec_one':
       "Passengers can choose their desired location and know the time to reach the destination and the amount they need to pay.",
-  'into_dec_two':
-      "Passengers can request for a ride easily from anywhere, any time with few steps.",
+  'into_dec_two': "Passengers can request for a ride easily from anywhere, any time with few steps.",
   'intro_title_three': "Track Your Ride",
   'into_dec_three':
       "Passengers can track their ride and the time required for a cab to arrive and also time to reach the desired destination.",
@@ -16,8 +15,7 @@ const Map<String, String> enUS = {
   'gallery': "Gallery",
   'camera': "Camera",
   'select_identity_photo': "Select a photo for your national ID card",
-  'identity_message':
-      "Take a good photo  of your ID card.All the necessary information must come out in photo",
+  'identity_message': "Take a good photo  of your ID card.All the necessary information must come out in photo",
   'select_language': "Select your language",
   'next': "Next",
   'done': "Done",
@@ -58,8 +56,7 @@ const Map<String, String> enUS = {
   'Earn': 'Earn',
   'each': 'each',
   'Invite Friend & Businesses': 'Invite Friend & Businesses',
-  'Invite your friend to sign up using your code and you’ll get':
-      "Invite your friend to sign up using your code and you’ll get",
+  'Invite your friend to sign up using your code and you’ll get': "Invite your friend to sign up using your code and you’ll get",
   'after successfully ride complete.': "after successfully ride complete.",
   'Coupon code copied': "Coupon code copied",
   'Please wait': "Please wait",
@@ -90,8 +87,7 @@ const Map<String, String> enUS = {
   'Please Choose Image': "Please Choose Image",
   'Failed to Pick': "Failed to Pick",
   'Enter OTP': "Enter OTP",
-  'Password required at least 6 characters':
-      "Password required at least 6 characters",
+  'Password required at least 6 characters': "Password required at least 6 characters",
   'Confirm password is invalid': "Confirm password is invalid",
   'Password change successfully!': "Password change successfully!",
   'Please try again later': "Please try again later",
@@ -162,14 +158,12 @@ const Map<String, String> enUS = {
   'RazorPay': "RazorPay",
   'FlutterWave': "FlutterWave",
   'Sufficient Balance': "Sufficient Balance",
-  'Your Wallet doesn\'t have sufficient balance':
-      "Your Wallet doesn't have sufficient balance",
+  'Your Wallet doesn\'t have sufficient balance': "Your Wallet doesn't have sufficient balance",
   'Payment successfully completed': "Payment successfully completed",
   'Insufficient wallet balance': "Insufficient wallet balance",
   'Proceed to Pay': "Proceed to Pay",
   'Redeem Your Coupons': "Redeem Your Coupons",
-  'Get the discount on all over the budget':
-      "Get the discount on all over the budget",
+  'Get the discount on all over the budget': "Get the discount on all over the budget",
   'Write Coupon Code': "Write Coupon Code",
   'A coupon will be applied when the subtotal amount is greater than the coupon amount.':
       "A coupon will be applied when the subtotal amount is greater than the coupon amount.",
@@ -178,15 +172,13 @@ const Map<String, String> enUS = {
   'Enter Tip option': "Enter Tip option",
   'Enter Tip': "Enter Tip",
   'Add': "Add",
-  'Something went wrong, please contact admin.':
-      "Something went wrong, please contact admin.",
+  'Something went wrong, please contact admin.': "Something went wrong, please contact admin.",
   'Status : Payment Incomplete!!': "Status : Payment Incomplete!!",
   'Payment UnSuccessful!!': "Payment UnSuccessful!!",
   'Payment Processing Via': "Payment Processing Via",
   'Payment Failed!!': "Payment Failed!!",
   'Please wait!!': "Please wait!!",
-  'Please wait!! while completing Transaction':
-      "Please wait!! while completing Transaction",
+  'Please wait!! while completing Transaction': "Please wait!! while completing Transaction",
   'Error while transaction!': "Error while transaction!",
   'Trip Details': "Trip Details",
   'Pay Now': "Pay Now",
@@ -203,8 +195,7 @@ const Map<String, String> enUS = {
   'Favourite ride delete successfully': "Favourite ride delete successfully",
   'Delete Favourite': "Delete Favourite",
   'No': "No",
-  'Are you sure you want to delete favourite ride?':
-      "Are you sure you want to delete favourite ride?",
+  'Are you sure you want to delete favourite ride?': "Are you sure you want to delete favourite ride?",
   'Departure': "Departure",
   'Back': "Back",
   'Where do you want to stop ?': "Where do you want to stop ?",
@@ -229,8 +220,7 @@ const Map<String, String> enUS = {
   'change password': "Change Password",
   'Vehicle Information': "Vehicle Information",
   'Category': "Category",
-  'Are you sure you want to delete account?':
-      "Are you sure you want to delete account?",
+  'Are you sure you want to delete account?': "Are you sure you want to delete account?",
   'Delete Account': "Delete Account",
   'Delete': "Delete",
   'Yes': "Yes",
@@ -241,8 +231,7 @@ const Map<String, String> enUS = {
   'Password Field do not match  !!': "Password Field do not match  !!",
   'Password Updated!!': "Password Updated!!",
   'Upload successfully!': "Upload successfully!",
-  'You have not booked any trip.\n Please book a cab now':
-      "You have not booked any trip.\n Please book a cab now",
+  'You have not booked any trip.\n Please book a cab now': "You have not booked any trip.\n Please book a cab now",
   'Rate for': "Rate for",
   'Type comment....': "Type comment....",
   'Submit review': "Submit review",
@@ -250,8 +239,7 @@ const Map<String, String> enUS = {
   'Driver Estimate Arrival Time : ': "Driver Estimate Arrival Time : ",
   'Cancel Trip': "Cancel Trip",
   'Do you want to cancel this booking?': "Do you want to cancel this booking?",
-  'Write a reason for trip cancellation':
-      "Write a reason for trip cancellation",
+  'Write a reason for trip cancellation': "Write a reason for trip cancellation",
   'Vehicle not found': "Vehicle not found",
   'Reservation Information': "Reservation Information",
   'Total to Pay': "Total to Pay",
@@ -261,4 +249,13 @@ const Map<String, String> enUS = {
   'Contact number': "Contact number",
   'Payment canceled': "Payment canceled",
   'Payment Successful!!': "Payment Successful!!",
+  'order_yegasigur': 'Order Yegasigur',
+  'orderNow': "Order now",
+  'get_started': 'Get started',
+  'gender': 'Gender',
+  'male': 'Male',
+  'female': 'Female',
+  'standart': 'Starndart',
+  'automatic': 'Automatic',
+  'transmissionType': 'Transmissio type',
 };

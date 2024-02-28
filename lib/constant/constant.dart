@@ -33,10 +33,10 @@ class Constant {
   static String? appVersion = "0.0";
   static String? decimal = "2";
   static String? currency = "\$";
-  static String? driverRadius = "0";
+  static String? driverRadius = "30";
   static bool symbolAtRight = false;
   static List<TaxModel> taxList = [];
-  static String mapType = "google";
+  static String mapType = "inappmap";
   static String driverLocationUpdate = "10";
 
   // static String? taxValue = "0";

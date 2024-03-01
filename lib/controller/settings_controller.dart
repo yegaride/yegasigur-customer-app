@@ -36,7 +36,6 @@ class SettingsController extends GetxController {
         ShowToastDialog.closeLoader();
         SettingsModel model = SettingsModel.fromJson(responseBody);
         LocationData location = await Location().getLocation();
-        print(location);
         List<get_cord_address.Placemark> placeMarks =
             await get_cord_address.placemarkFromCoordinates(location.latitude ?? 0.0, location.longitude ?? 0.0);
         // ConstantColors.primary = Color(int.parse(model.data!.websiteColor!.replaceFirst("#", "0xff")));

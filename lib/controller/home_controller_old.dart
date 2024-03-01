@@ -347,6 +347,7 @@ class HomeController extends GetxController {
   Future<dynamic> bookRide(Map<String, dynamic> bodyParams) async {
     try {
       ShowToastDialog.showLoader("Please wait");
+
       final response = await http.post(Uri.parse(API.bookRides), headers: API.header, body: jsonEncode(bodyParams));
 
       Map<String, dynamic> responseBody = json.decode(response.body);

@@ -13,15 +13,15 @@ class HomeController extends GetxController {
       title: 'Welcome back dear user!',
       description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.',
     ),
-    HomeModel(
-      imageAsset: 'assets/images/intro_2.png',
-      title: 'Lorem ipsum dolor 2',
-      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.',
-    ),
-    HomeModel(
-      imageAsset: 'assets/images/intro_3.png',
-      title: 'Lorem ipsum dolor 3',
-      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.',
-    ),
+    // HomeModel(
+    //   imageAsset: 'assets/images/intro_2.png',
+    //   title: 'Lorem ipsum dolor 2',
+    //   description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.',
+    // ),
+    // HomeModel(
+    //   imageAsset: 'assets/images/intro_3.png',
+    //   title: 'Lorem ipsum dolor 3',
+    //   description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.',
+    // ),
   ];
 }

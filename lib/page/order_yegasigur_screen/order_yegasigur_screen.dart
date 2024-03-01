@@ -1,5 +1,9 @@
+import 'package:cabme/constant/constant.dart';
 import 'package:cabme/controller/order_yegasigur_controller.dart';
 import 'package:cabme/themes/constant_colors.dart';
+import 'package:cabme/themes/custom_alert_dialog.dart';
+import 'package:cabme/themes/custom_dialog_box.dart';
+// import 'package:cabme/themes/custom_dialog_box.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -16,7 +20,6 @@ class OrderYegasigurScreen extends StatelessWidget {
 
     final double paddingSize = screenHeight * 0.03;
 
-    print(mediaQuery.orientation);
     return SafeArea(
       child: Scaffold(
         bottomNavigationBar: Text(
@@ -44,7 +47,37 @@ class OrderYegasigurScreen extends StatelessWidget {
               child: ClipPath(
                 clipper: _CustomGesture(substractPixels: 0),
                 child: GestureDetector(
-                  onTap: () => controller.onOrderYegasigurButtonPressed(),
+                  onTap: () => {
+                    showDialog(
+                        context: context,
+                        builder: (context) {
+                          return CustomAlertDialog(
+                            title: "Are you sure you want to order yegasigur?",
+                            onPressNegative: () => Get.back(),
+                            onPressPositive: () async {
+                              await controller.orderYegaSigur();
+
+                              if (!context.mounted) return;
+
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return CustomDialogBox(
+                                    title: "Confirmed Successfully".tr,
+                                    descriptions: "Ride Successfully confirmed.".tr,
+                                    // text: "Ok".tr,
+                                    onPress: () {
+                                      Get.back();
+                                      Get.back();
+                                    },
+                                    img: Image.asset('assets/images/green_checked.png'),
+                                  );
+                                },
+                              );
+                            },
+                          );
+                        })
+                  },
                   child: Container(
                     width: 250,
                     height: 250,
@@ -69,7 +102,7 @@ class OrderYegasigurScreen extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    '#6545',
+                    "#${Constant.getUserData().data!.custNumber}",
                     style: GoogleFonts.poppins(
                       height: 3,
                       fontSize: 18,

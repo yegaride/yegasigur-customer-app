@@ -3,12 +3,11 @@ import 'dart:io';
 import 'package:cabme/utils/Preferences.dart';
 
 class API {
-  // static const host = "https://admin.dev.yegasigur.com";
-  static const host = "http://10.0.2.2/admin";
+  static const host = "https://admin.dev.yegasigur.com";
+  // static const host = "http://10.0.2.2/admin";
   static const baseUrl = "$host/api/v1/";
-  // static const baseUrl = "${'https://admin.dev.yegasigur.com'}/api/v1/";
   static const apiKey = "base64:4CGWBlDsMFiCkyEavKMUTP7JBwBQj7xVoelRB+jOZF4=";
-  // static const apiKey = "base64:4CGWBlDsMFiCkyEavKMUTP7JBwBQj7xVoelRB+jOZF4=";
+  // static const baseUrl = "${'https://admin.dev.yegasigur.com'}/api/v1/";
 
   static Map<String, String> authheader = {
     HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8',
@@ -19,6 +18,8 @@ class API {
     'apikey': apiKey,
     'accesstoken': Preferences.getString(Preferences.accesstoken)
   };
+
+  static const googleMapDistanceMatrix = 'https://maps.googleapis.com/maps/api/distancematrix/json';
 
   static const userSignUP = "${baseUrl}user";
   static const userLogin = "${baseUrl}user-login";
@@ -53,6 +54,7 @@ class API {
   static const driverDetails = "${baseUrl}driver";
   static const getPaymentMethod = "${baseUrl}payment-method";
   static const bookRides = "${baseUrl}requete-register";
+  static const userSafeLocation = "${baseUrl}get-user-safe-location";
   static const userAllRides = "${baseUrl}user-all-rides";
   static const newRide = "${baseUrl}requete-userapp";
   static const confirmedRide = "${baseUrl}user-confirmation";

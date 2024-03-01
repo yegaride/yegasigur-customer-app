@@ -1,6 +1,8 @@
+import 'package:cabme/constant/constant.dart';
 import 'package:cabme/controller/home_controller.dart';
 import 'package:cabme/model/home_model.dart';
 import 'package:cabme/themes/constant_colors.dart';
+import 'package:cabme/utils/Preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -45,7 +47,8 @@ class HomeScreen extends StatelessWidget {
                             child: Column(
                               children: [
                                 Text(
-                                  screen.title,
+                                  "Welcome back ${Constant.getUserData().data?.prenom}",
+                                  // screen.title,
                                   style: const TextStyle(
                                       fontSize: 20,
                                       color: ConstantColors.primary,

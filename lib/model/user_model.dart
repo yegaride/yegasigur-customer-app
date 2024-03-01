@@ -31,6 +31,7 @@ class User {
     this.id,
     this.nom,
     this.prenom,
+    this.custNumber,
     this.email,
     this.phone,
     this.loginType,
@@ -63,6 +64,7 @@ class User {
   String? id;
   String? nom;
   String? prenom;
+  String? custNumber;
   String? email;
   String? phone;
   String? loginType;
@@ -96,6 +98,9 @@ class User {
         id: json["id"].toString(),
         nom: json["nom"].toString() ?? '',
         prenom: json["prenom"].toString() ?? '',
+        custNumber: json['customer_number'].toString().length < 4
+            ? json['customer_number'].toString().padLeft(4, '0')
+            : json['customer_number'].toString(),
         email: json["email"].toString(),
         phone: json["phone"].toString(),
         loginType: json["login_type"].toString(),
@@ -129,6 +134,7 @@ class User {
         "id": id,
         "nom": nom,
         "prenom": prenom,
+        "customer_number": custNumber,
         "email": email,
         "phone": phone,
         "login_type": loginType,

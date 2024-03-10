@@ -59,6 +59,14 @@ class Constant {
   static const maleImagePathPlaceholder = "${API.host}/assets/images/placeholder_image.jpg";
   static const femaleImagePathPlaceholder = '${API.host}/assets/images/placeholder_image_female.jpg';
 
+  static getPhotoPlaceholderBasedOnGender(String gender) {
+    return switch (gender) {
+      'male' => Constant.maleImagePathPlaceholder,
+      'female' => Constant.femaleImagePathPlaceholder,
+      _ => ''
+    };
+  }
+
   static UserModel getUserData() {
     final String user = Preferences.getString(Preferences.user);
     Map<String, dynamic> userMap = jsonDecode(user);

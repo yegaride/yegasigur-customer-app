@@ -22,10 +22,13 @@ class OrderYegasigurController extends GetxController {
 
       LocationData location = await Location().getLocation();
 
-      // 12.549457, -70.033034
+      // 12.444182, -69.909228 test location
+      // 37.409392, -122.089005
 
       final startLat = location.latitude;
       final startLng = location.longitude;
+      // final startLat = '37.409392';
+      // final startLng = '-122.089005';
 
       final userId = Preferences.getInt(Preferences.userId);
 
@@ -71,8 +74,6 @@ class OrderYegasigurController extends GetxController {
       final tripPrice = (distance.value * double.parse(vehicleData["data"][0]["minimum_delivery_charges"]))
           .toDouble()
           .toStringAsFixed(int.parse(Constant.decimal ?? "2"));
-
-      ShowToastDialog.closeLoader();
 
       await http.post(
         Uri.parse(API.bookRides),

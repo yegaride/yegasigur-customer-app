@@ -253,4 +253,5 @@ const Map<String, String> ptPO = {
   'order_yegasigur': 'Pida YegaSigur',
   'orderNow': "Peça agora",
   'get_started': 'Começar',
+  "welcome back": "Bem-vindo de volta"
 };

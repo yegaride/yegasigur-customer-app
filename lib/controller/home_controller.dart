@@ -11,7 +11,7 @@ class HomeController extends GetxController {
     HomeModel(
       imageAsset: 'assets/images/intro_1.png',
       title: 'Welcome back dear user!',
-      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.',
+      description: 'YegaSigur.com is a Designated Driver Service. Get home Safe,  with YegaSigur.com',
     ),
     // HomeModel(
     //   imageAsset: 'assets/images/intro_2.png',

@@ -68,17 +68,18 @@ class OnBoardingScreen extends StatelessWidget {
                             child: Column(
                               children: [
                                 Text(
-                                  controller.onBoardingList[index].title.toString(),
-                                  style: TextStyle(
-                                      fontSize: 20,
-                                      color: ConstantColors.primary,
-                                      fontWeight: FontWeight.w900,
-                                      letterSpacing: 1.5),
+                                  controller.onBoardingList[index].title!.tr,
+                                  style: const TextStyle(
+                                    fontSize: 20,
+                                    color: ConstantColors.primary,
+                                    fontWeight: FontWeight.w900,
+                                    letterSpacing: 1.5,
+                                  ),
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.symmetric(horizontal: 40.0, vertical: 20),
                                   child: Text(
-                                    controller.onBoardingList[index].description.toString(),
+                                    controller.onBoardingList[index].description!.tr,
                                     textAlign: TextAlign.center,
                                     style: const TextStyle(fontSize: 16, color: Colors.black45, letterSpacing: 1.5),
                                   ),

@@ -9,6 +9,7 @@ import 'package:cabme/controller/dash_board_controller.dart';
 import 'package:cabme/controller/my_profile_controller.dart';
 import 'package:cabme/model/user_model.dart';
 import 'package:cabme/page/auth_screens/login_screen.dart';
+import 'package:cabme/page/safe_location/choose_safe_location_screen.dart';
 import 'package:cabme/themes/button_them.dart';
 import 'package:cabme/themes/constant_colors.dart';
 import 'package:cabme/themes/responsive.dart';
@@ -21,22 +22,37 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
-class MyProfileScreen extends StatelessWidget {
-  MyProfileScreen({Key? key}) : super(key: key);
+class MyProfileScreen extends StatefulWidget {
+  MyProfileScreen({super.key});
 
+  @override
+  State<MyProfileScreen> createState() => _MyProfileScreenState();
+}
+
+class _MyProfileScreenState extends State<MyProfileScreen> {
   final GlobalKey<FormState> _passwordKey = GlobalKey();
 
   TextEditingController fullNameController = TextEditingController();
+
   TextEditingController lastNameController = TextEditingController();
+
   TextEditingController emailController = TextEditingController();
+
   TextEditingController phoneController = TextEditingController();
+
   TextEditingController addressController = TextEditingController();
 
   TextEditingController currentPasswordController = TextEditingController();
+
   TextEditingController newPasswordController = TextEditingController();
+
   TextEditingController confirmPasswordController = TextEditingController();
 
+  TextEditingController genderController = TextEditingController();
+
   final dashboardController = Get.put(DashBoardController());
+
+  String? _gender;
 
   @override
   Widget build(BuildContext context) {
@@ -74,45 +90,35 @@ class MyProfileScreen extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(16),
                                   child: myProfileController.photoPath.isEmpty
                                       ? CachedNetworkImage(
-                                          imageUrl:
-                                              "https://cabme.siswebapp.com/assets/images/placeholder_image.jpg",
+                                          imageUrl: switch (myProfileController.gender.toString()) {
+                                            'male' => Constant.maleImagePathPlaceholder,
+                                            'female' => Constant.femaleImagePathPlaceholder,
+                                            _ => ''
+                                          },
                                           height: 120,
                                           width: 120,
                                           fit: BoxFit.cover,
-                                          progressIndicatorBuilder: (context,
-                                                  url, downloadProgress) =>
-                                              Center(
-                                            child: CircularProgressIndicator(
-                                                value:
-                                                    downloadProgress.progress),
+                                          progressIndicatorBuilder: (context, url, downloadProgress) => Center(
+                                            child: CircularProgressIndicator(value: downloadProgress.progress),
                                           ),
-                                          errorWidget: (context, url, error) =>
-                                              const Icon(Icons.error),
+                                          errorWidget: (context, url, error) => const Icon(Icons.error),
                                         )
                                       : CachedNetworkImage(
-                                          imageUrl: myProfileController
-                                              .photoPath
-                                              .toString(),
+                                          imageUrl: myProfileController.photoPath.toString(),
                                           height: 120,
                                           width: 120,
                                           fit: BoxFit.cover,
-                                          progressIndicatorBuilder: (context,
-                                                  url, downloadProgress) =>
-                                              Center(
-                                            child: CircularProgressIndicator(
-                                                value:
-                                                    downloadProgress.progress),
+                                          progressIndicatorBuilder: (context, url, downloadProgress) => Center(
+                                            child: CircularProgressIndicator(value: downloadProgress.progress),
                                           ),
-                                          errorWidget: (context, url, error) =>
-                                              const Icon(Icons.error),
+                                          errorWidget: (context, url, error) => const Icon(Icons.error),
                                         ),
                                 ),
                               ),
                               Align(
                                 alignment: Alignment.bottomRight,
                                 child: InkWell(
-                                  onTap: () => buildBottomSheet(
-                                      context, myProfileController),
+                                  onTap: () => buildBottomSheet(context, myProfileController),
                                   child: ClipOval(
                                     child: Container(
                                       color: Colors.white,
@@ -136,11 +142,79 @@ class MyProfileScreen extends StatelessWidget {
                   ),
                   SingleChildScrollView(
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 10),
+                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
+                          buildShowDetails(
+                            title: 'Safe location',
+                            subtitle: 'Add your safe location',
+                            isEditIcon: true,
+                            iconData: Icons.location_on,
+                            onPress: () => Get.to(const ChooseSafeLocationScreen(
+                              continueButtonType: 'back',
+                            )),
+                          ),
+                          buildShowDetails(
+                            subtitle: myProfileController.gender.toString(),
+                            title: 'gender'.tr,
+                            isEditIcon: true,
+                            iconData: switch (myProfileController.gender.toString()) {
+                              'male' => Icons.male,
+                              'female' => Icons.female,
+                              _ => Icons.star_border_rounded
+                            },
+                            onPress: () {
+                              buildAlertChangeData(
+                                context,
+                                // TODO: i18n
+                                title: 'Change gender',
+                                controller: genderController,
+                                iconData: switch (myProfileController.gender.toString()) {
+                                  'male' => Icons.male,
+                                  'female' => Icons.female,
+                                  _ => Icons.star_border_rounded
+                                },
+                                validators: (value) => null,
+                                isChangingGender: true,
+                                onSubmitBtn: () {
+                                  if (_gender == null) {
+                                    // TODO: i18n
+                                    ShowToastDialog.showToast('select a gender to continue');
+                                    return;
+                                  }
+
+                                  final Map<String, String> bodyParams = {
+                                    'id_user': Preferences.getInt(Preferences.userId).toString(),
+                                    'user_cat': myProfileController.userCat.value,
+                                    'gender': _gender!,
+                                  };
+
+                                  myProfileController.updateGender(bodyParams).then((value) {
+                                    if (value == null) {
+                                      ShowToastDialog.showToast(value['error']);
+                                      Get.back();
+                                      return;
+                                    }
+
+                                    UserModel userModel = Constant.getUserData();
+
+                                    if (value['data']['photo_path'] == null) {
+                                      userModel.data!.photoPath = Constant.getPhotoPlaceholderBasedOnGender(_gender!);
+                                    }
+
+                                    userModel.data!.gender = _gender!;
+                                    Preferences.setString(Preferences.user, jsonEncode(userModel.toJson()));
+                                    myProfileController.getUsrData();
+                                    dashboardController.getUsrData();
+                                    Get.back();
+
+                                    ShowToastDialog.showToast(value['message']);
+                                  });
+                                },
+                              );
+                            },
+                          ),
                           buildShowDetails(
                             subtitle: myProfileController.name.toString(),
                             title: "First Name".tr,
@@ -152,40 +226,28 @@ class MyProfileScreen extends StatelessWidget {
                                 onSubmitBtn: () {
                                   if (fullNameController.text.isNotEmpty) {
                                     Map<String, String> bodyParams = {
-                                      'id_user':
-                                          Preferences.getInt(Preferences.userId)
-                                              .toString(),
-                                      'user_cat':
-                                          myProfileController.userCat.value,
+                                      'id_user': Preferences.getInt(Preferences.userId).toString(),
+                                      'user_cat': myProfileController.userCat.value,
                                       'prenom': fullNameController.text,
                                     };
-                                    myProfileController
-                                        .updateFirstName(bodyParams)
-                                        .then((value) {
+                                    myProfileController.updateFirstName(bodyParams).then((value) {
                                       if (value != null) {
                                         if (value["success"] == "success") {
-                                          UserModel userModel =
-                                              Constant.getUserData();
-                                          userModel.data!.prenom =
-                                              value['data']['prenom'];
-                                          Preferences.setString(
-                                              Preferences.user,
-                                              jsonEncode(userModel.toJson()));
+                                          UserModel userModel = Constant.getUserData();
+                                          userModel.data!.prenom = value['data']['prenom'];
+                                          Preferences.setString(Preferences.user, jsonEncode(userModel.toJson()));
                                           myProfileController.getUsrData();
                                           dashboardController.getUsrData();
-                                          ShowToastDialog.showToast(
-                                              value['message']);
+                                          ShowToastDialog.showToast(value['message']);
                                           Get.back();
                                         } else {
-                                          ShowToastDialog.showToast(
-                                              value['error']);
+                                          ShowToastDialog.showToast(value['error']);
                                           Get.back();
                                         }
                                       }
                                     });
                                   } else {
-                                    ShowToastDialog.showToast(
-                                        "Please Enter Name".tr);
+                                    ShowToastDialog.showToast("Please Enter Name".tr);
                                   }
                                 },
                                 controller: fullNameController,
@@ -208,40 +270,28 @@ class MyProfileScreen extends StatelessWidget {
                                 onSubmitBtn: () {
                                   if (lastNameController.text.isNotEmpty) {
                                     Map<String, String> bodyParams = {
-                                      'id_user':
-                                          Preferences.getInt(Preferences.userId)
-                                              .toString(),
-                                      'user_cat':
-                                          myProfileController.userCat.value,
+                                      'id_user': Preferences.getInt(Preferences.userId).toString(),
+                                      'user_cat': myProfileController.userCat.value,
                                       'nom': lastNameController.text,
                                     };
-                                    myProfileController
-                                        .updateLastName(bodyParams)
-                                        .then((value) {
+                                    myProfileController.updateLastName(bodyParams).then((value) {
                                       if (value != null) {
                                         if (value["success"] == "success") {
-                                          UserModel userModel =
-                                              Constant.getUserData();
-                                          userModel.data!.nom =
-                                              value['data']['nom'];
-                                          Preferences.setString(
-                                              Preferences.user,
-                                              jsonEncode(userModel.toJson()));
+                                          UserModel userModel = Constant.getUserData();
+                                          userModel.data!.nom = value['data']['nom'];
+                                          Preferences.setString(Preferences.user, jsonEncode(userModel.toJson()));
                                           myProfileController.getUsrData();
                                           dashboardController.getUsrData();
-                                          ShowToastDialog.showToast(
-                                              value['message']);
+                                          ShowToastDialog.showToast(value['message']);
                                           Get.back();
                                         } else {
-                                          ShowToastDialog.showToast(
-                                              value['error']);
+                                          ShowToastDialog.showToast(value['error']);
                                           Get.back();
                                         }
                                       }
                                     });
                                   } else {
-                                    ShowToastDialog.showToast(
-                                        "Please Enter Name".tr);
+                                    ShowToastDialog.showToast("Please Enter Name".tr);
                                   }
                                 },
                                 controller: lastNameController,
@@ -291,8 +341,7 @@ class MyProfileScreen extends StatelessWidget {
                                   builder: (context) {
                                     return AlertDialog(
                                       title: Text(
-                                        'Are you sure you want to delete account?'
-                                            .tr,
+                                        'Are you sure you want to delete account?'.tr,
                                       ),
                                       actions: [
                                         Row(
@@ -315,27 +364,18 @@ class MyProfileScreen extends StatelessWidget {
                                               child: ButtonThem.buildButton(
                                                 context,
                                                 title: 'Yes'.tr,
-                                                btnColor:
-                                                    ConstantColors.primary,
+                                                btnColor: ConstantColors.primary,
                                                 txtColor: Colors.white,
                                                 onPress: () {
                                                   myProfileController
-                                                      .deleteAccount(
-                                                          myProfileController
-                                                              .userId
-                                                              .toString())
+                                                      .deleteAccount(myProfileController.userId.toString())
                                                       .then((value) {
                                                     if (value != null) {
-                                                      if (value["success"] ==
-                                                          "success") {
-                                                        ShowToastDialog
-                                                            .showToast(value[
-                                                                'message']);
+                                                      if (value["success"] == "success") {
+                                                        ShowToastDialog.showToast(value['message']);
                                                         Get.back();
-                                                        Preferences
-                                                            .clearSharPreference();
-                                                        Get.offAll(
-                                                            LoginScreen());
+                                                        Preferences.clearSharPreference();
+                                                        Get.offAll(LoginScreen());
                                                       }
                                                     }
                                                   });
@@ -370,9 +410,7 @@ class MyProfileScreen extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 5),
       child: Container(
-        decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.all(Radius.circular(10))),
+        decoration: const BoxDecoration(color: Colors.white, borderRadius: BorderRadius.all(Radius.circular(10))),
         child: ListTile(
           leading: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -382,8 +420,7 @@ class MyProfileScreen extends StatelessWidget {
                 child: Container(
                     decoration: BoxDecoration(
                         color: ConstantColors.primary.withOpacity(0.08),
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(8))),
+                        borderRadius: const BorderRadius.all(Radius.circular(8))),
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Icon(iconData, size: 20, color: Colors.black),
@@ -425,6 +462,7 @@ class MyProfileScreen extends StatelessWidget {
     required IconData iconData,
     required String? Function(String?) validators,
     required Function() onSubmitBtn,
+    bool isChangingGender = false,
   }) {
     return Get.defaultDialog(
       titlePadding: const EdgeInsets.only(top: 20),
@@ -438,10 +476,31 @@ class MyProfileScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            TextFieldThem.boxBuildTextField(
-                hintText: title,
-                controller: controller,
-                validators: validators),
+            if (isChangingGender)
+              StatefulBuilder(builder: (context, setState) {
+                return DropdownButton(
+                  items: ['male', 'female'].map((e) {
+                    return DropdownMenuItem(
+                      value: e,
+                      child: Text(
+                        e.tr,
+                        style: const TextStyle(height: 1.8),
+                      ),
+                    );
+                  }).toList(),
+                  value: _gender,
+                  hint: Text('gender'.tr),
+                  underline: const SizedBox(),
+                  isExpanded: true,
+                  onChanged: (value) {
+                    setState(() {
+                      _gender = value!;
+                    });
+                  },
+                );
+              })
+            else
+              TextFieldThem.boxBuildTextField(hintText: title, controller: controller, validators: validators),
             const SizedBox(
               height: 20,
             ),
@@ -548,19 +607,15 @@ class MyProfileScreen extends StatelessWidget {
                     onPress: () {
                       if (_passwordKey.currentState!.validate()) {
                         Map<String, String> bodyParams = {
-                          'id_user':
-                              Preferences.getInt(Preferences.userId).toString(),
+                          'id_user': Preferences.getInt(Preferences.userId).toString(),
                           'user_cat': myProfileController.userCat.value,
                           'anc_mdp': currentPasswordController.text,
                           'new_mdp': newPasswordController.text,
                         };
-                        myProfileController
-                            .updatePassword(bodyParams)
-                            .then((value) {
+                        myProfileController.updatePassword(bodyParams).then((value) {
                           if (value != null) {
                             if (value["success"] == "Success") {
-                              ShowToastDialog.showToast(
-                                  "Password change successfully".tr);
+                              ShowToastDialog.showToast("Password change successfully".tr);
                               Get.back();
                             } else {
                               ShowToastDialog.showToast(value['error']);
@@ -621,8 +676,7 @@ class MyProfileScreen extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             IconButton(
-                                onPressed: () => pickFile(controller,
-                                    source: ImageSource.camera),
+                                onPressed: () => pickFile(controller, source: ImageSource.camera),
                                 icon: const Icon(
                                   Icons.camera_alt,
                                   size: 32,
@@ -641,8 +695,7 @@ class MyProfileScreen extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             IconButton(
-                                onPressed: () => pickFile(controller,
-                                    source: ImageSource.gallery),
+                                onPressed: () => pickFile(controller, source: ImageSource.gallery),
                                 icon: const Icon(
                                   Icons.photo_library_sharp,
                                   size: 32,
@@ -665,8 +718,7 @@ class MyProfileScreen extends StatelessWidget {
 
   final ImagePicker _imagePicker = ImagePicker();
 
-  Future pickFile(MyProfileController controller,
-      {required ImageSource source}) async {
+  Future pickFile(MyProfileController controller, {required ImageSource source}) async {
     try {
       XFile? image = await _imagePicker.pickImage(source: source);
       if (image == null) return;
@@ -676,8 +728,7 @@ class MyProfileScreen extends StatelessWidget {
           if (value["success"] == "Success") {
             UserModel userModel = Constant.getUserData();
             userModel.data!.photoPath = value['data']['photo_path'];
-            Preferences.setString(
-                Preferences.user, jsonEncode(userModel.toJson()));
+            Preferences.setString(Preferences.user, jsonEncode(userModel.toJson()));
             controller.getUsrData();
             dashboardController.getUsrData();
             ShowToastDialog.showToast("Upload successfully!".tr);

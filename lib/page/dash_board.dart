@@ -54,8 +54,8 @@ class DashBoard extends StatelessWidget {
                       title: controller.selectedDrawerIndex.value != 1 && controller.selectedDrawerIndex.value != 6
                           ? Text(
                               controller.drawerItems[controller.selectedDrawerIndex.value].title.tr,
-                              style: const TextStyle(
-                                color: Colors.black,
+                              style: TextStyle(
+                                color: controller.selectedDrawerIndex.value == 2 ? Colors.white : Colors.black,
                               ),
                             )
                           : controller.selectedDrawerIndex.value == 1

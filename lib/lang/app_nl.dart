@@ -250,4 +250,5 @@ const Map<String, String> nlNL = {
   'order_yegasigur': 'Bestel Yegasigur',
   'orderNow': "Bestel nu",
   'get_started': 'Beginnen',
+  "welcome back": "Welkom terug",
 };

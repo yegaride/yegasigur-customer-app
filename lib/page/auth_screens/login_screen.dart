@@ -51,7 +51,13 @@ class LoginScreen extends StatelessWidget {
                     const SizedBox(height: 30),
                     Text(
                       "Login with Email".tr,
-                      style: const TextStyle(letterSpacing: 0.60, fontSize: 22, color: Colors.black, fontWeight: FontWeight.w600),
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        letterSpacing: 0.60,
+                        fontSize: 22,
+                        color: Colors.black,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                     SizedBox(
                         width: 80,

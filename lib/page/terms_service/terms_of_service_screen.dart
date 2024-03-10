@@ -15,8 +15,10 @@ class TermsOfServiceScreen extends StatelessWidget {
             body: Padding(
               padding: const EdgeInsets.all(20.0),
               child: controller.data != null
-                  ? Html(
-                      data: controller.data,
+                  ? SingleChildScrollView(
+                      child: Html(
+                        data: controller.data,
+                      ),
                     )
                   : const Offstage(),
             ),

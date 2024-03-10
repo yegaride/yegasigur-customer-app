@@ -97,7 +97,7 @@ const Map<String, String> esES = {
   'Login with Email': "Iniciar sesión con correo electrónico",
   'log in': "iniciar sesión",
   'Login With Phone Number': "Iniciar sesión con número de teléfono",
-  'You don\'t have an account yet? ': "¿Aún no tienes una cuenta?",
+  'You don’t have an account yet? ': "¿Aún no tienes una cuenta?",
   'SIGNUP': "REGISTRARSE",
   'Login Phone': "Iniciar sesión con teléfono",
   'Signup Phone': "Registrarse con teléfono",
@@ -251,5 +251,6 @@ const Map<String, String> esES = {
   'Payment Successful!!': "¡Pago exitoso!",
   'order_yegasigur': "Ordenar Yegasigur",
   'orderNow': "Ordenar ahora",
-  'get_started': 'Comenzar'
+  'get_started': 'Comenzar',
+  "welcome back": "Bienvenido"
 };

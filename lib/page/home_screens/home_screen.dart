@@ -47,13 +47,14 @@ class HomeScreen extends StatelessWidget {
                             child: Column(
                               children: [
                                 Text(
-                                  "Welcome back ${Constant.getUserData().data?.prenom}",
-                                  // screen.title,
+                                  '${'welcome back'.tr} \n${Constant.getUserData().data?.prenom}',
+                                  textAlign: TextAlign.center,
                                   style: const TextStyle(
-                                      fontSize: 20,
-                                      color: ConstantColors.primary,
-                                      fontWeight: FontWeight.w900,
-                                      letterSpacing: 1.5),
+                                    fontSize: 20,
+                                    color: ConstantColors.primary,
+                                    fontWeight: FontWeight.w900,
+                                    letterSpacing: 1.5,
+                                  ),
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20),

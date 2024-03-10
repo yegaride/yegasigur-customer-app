@@ -352,7 +352,9 @@ class _SignupScreenState extends State<SignupScreen> {
                                       if (value.success == "success") {
                                         Preferences.setInt(Preferences.userId, int.parse(value.data!.id.toString()));
                                         Preferences.setString(Preferences.user, jsonEncode(value));
-                                        Get.to(const ChooseSafeLocationScreen());
+                                        Get.to(const ChooseSafeLocationScreen(
+                                          continueButtonType: 'dashboard',
+                                        ));
                                         // Get.to(AddProfilePhotoScreen());
                                       } else {
                                         ShowToastDialog.showToast(value.error);

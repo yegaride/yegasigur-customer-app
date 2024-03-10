@@ -9,7 +9,12 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class ChooseSafeLocationScreen extends StatefulWidget {
-  const ChooseSafeLocationScreen({super.key});
+  const ChooseSafeLocationScreen({
+    super.key,
+    required this.continueButtonType,
+  });
+
+  final String continueButtonType;
 
   @override
   State<ChooseSafeLocationScreen> createState() => _ChooseSafeLocationScreenState();
@@ -17,6 +22,23 @@ class ChooseSafeLocationScreen extends StatefulWidget {
 
 class _ChooseSafeLocationScreenState extends State<ChooseSafeLocationScreen> {
   final controller = Get.put(ChooseSafeLocationController());
+
+  Widget _buildTextField({required title, required TextEditingController textController}) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 8.0),
+      child: TextField(
+        controller: textController,
+        textInputAction: TextInputAction.done,
+        style: TextStyle(color: ConstantColors.titleTextColor),
+        decoration: InputDecoration(
+          hintText: title,
+          border: InputBorder.none,
+          focusedBorder: InputBorder.none,
+          enabled: false,
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,6 +58,36 @@ class _ChooseSafeLocationScreenState extends State<ChooseSafeLocationScreen> {
               onCameraMove: (cameraPosition) {
                 controller.currentLocation = cameraPosition.target;
               },
+              onMapCreated: (GoogleMapController googleMapController) {
+                controller.mapController = googleMapController;
+              },
+            ),
+            Container(
+              margin: const EdgeInsets.only(top: 62, left: 12, right: 12),
+              height: 50,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: InkWell(
+                onTap: () async {
+                  controller.placesPredictionAPI(context).then((prediction) {
+                    if (prediction == null) return;
+                    controller.searchLocationController.text = prediction.result.formattedAddress.toString();
+                    controller.animateCameraToSearchedLocation(
+                      LatLng(
+                        prediction.result.geometry!.location.lat,
+                        prediction.result.geometry!.location.lng,
+                      ),
+                    );
+                  });
+                },
+                child: _buildTextField(
+                  // TODO: add to ln10
+                  title: "Search area",
+                  textController: controller.searchLocationController,
+                ),
+              ),
             ),
             Align(
               alignment: Alignment.center,
@@ -80,6 +132,10 @@ class _ChooseSafeLocationScreenState extends State<ChooseSafeLocationScreen> {
                         txtColor: Colors.white,
                         onPress: () => controller.saveSafeLocation().then(
                           (value) {
+                            if (widget.continueButtonType == 'back') {
+                              Get.back();
+                              return;
+                            }
                             Get.to(AddProfilePhotoScreen());
                           },
                         ).catchError(

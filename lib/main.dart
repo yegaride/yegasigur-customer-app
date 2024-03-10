@@ -145,41 +145,39 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    final MediaQueryData data = MediaQuery.of(context);
     setupInteractedMessage(context);
     Future.delayed(const Duration(seconds: 3), () {
       if (Preferences.getString(Preferences.languageCodeKey).toString().isNotEmpty) {
         LocalizationService().changeLocale(Preferences.getString(Preferences.languageCodeKey).toString());
       }
     });
-    return GetMaterialApp(
-      title: 'CabMe',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primaryColor: ConstantColors.primary,
-        textTheme: GoogleFonts.poppinsTextTheme(
-          Theme.of(context).textTheme,
+    return MediaQuery(
+      data: data.copyWith(textScaler: const TextScaler.linear(1.08)),
+      child: GetMaterialApp(
+        title: 'YegaSigur',
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          primaryColor: ConstantColors.primary,
+          textTheme: GoogleFonts.poppinsTextTheme(
+            Theme.of(context).textTheme,
+          ),
+          primaryTextTheme: GoogleFonts.poppinsTextTheme(),
         ),
-        primaryTextTheme: GoogleFonts.poppinsTextTheme(),
-      ),
-      locale: LocalizationService.locale,
-      fallbackLocale: LocalizationService.locale,
-      translations: LocalizationService(),
-      builder: EasyLoading.init(),
-      home: GetBuilder(
-        init: SettingsController(),
-        builder: (controller) {
-          return Preferences.getString(Preferences.languageCodeKey).toString().isEmpty
-              ? const LocalizationScreens(intentType: "main")
-              : Preferences.getBoolean(Preferences.isLogin)
-                  ? DashBoard()
-                  : const OnBoardingScreen();
-          // : SignupScreen(phoneNumber: '+23412353');
-          // : Preferences.getBoolean(Preferences.isFinishOnBoardingKey)
-          //     ? Preferences.getBoolean(Preferences.isLogin)
-          //         ? DashBoard()
-          //         : LoginScreen()
-          //     : const OnBoardingScreen();
-        },
+        locale: LocalizationService.locale,
+        fallbackLocale: LocalizationService.locale,
+        translations: LocalizationService(),
+        builder: EasyLoading.init(),
+        home: GetBuilder(
+          init: SettingsController(),
+          builder: (controller) {
+            return Preferences.getString(Preferences.languageCodeKey).toString().isEmpty
+                ? const LocalizationScreens(intentType: "main")
+                : Preferences.getBoolean(Preferences.isLogin)
+                    ? DashBoard()
+                    : const OnBoardingScreen();
+          },
+        ),
       ),
     );
   }

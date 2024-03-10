@@ -258,4 +258,5 @@ const Map<String, String> enUS = {
   'standart': 'Starndart',
   'automatic': 'Automatic',
   'transmissionType': 'Transmissio type',
+  "welcome back": "welcome back"
 };

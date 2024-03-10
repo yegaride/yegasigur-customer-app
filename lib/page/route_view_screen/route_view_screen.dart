@@ -66,47 +66,33 @@ class _RouteViewScreenState extends State<RouteViewScreen> {
       type = argumentData['type'];
       rideData = argumentData['data'];
 
-      departureLatLong = LatLng(
-          double.parse(rideData!.latitudeDepart.toString()),
-          double.parse(rideData!.longitudeDepart.toString()));
-      destinationLatLong = LatLng(
-          double.parse(rideData!.latitudeArrivee.toString()),
-          double.parse(rideData!.longitudeArrivee.toString()));
+      departureLatLong =
+          LatLng(double.parse(rideData!.latitudeDepart.toString()), double.parse(rideData!.longitudeDepart.toString()));
+      destinationLatLong =
+          LatLng(double.parse(rideData!.latitudeArrivee.toString()), double.parse(rideData!.longitudeArrivee.toString()));
 
       if (rideData!.statut == "on ride" || rideData!.statut == 'confirmed') {
-        Constant.driverLocationUpdateCollection
-            .doc(rideData!.idConducteur)
-            .snapshots()
-            .listen((event) async {
-          DriverLocationUpdate driverLocationUpdate =
-              DriverLocationUpdate.fromJson(
-                  event.data() as Map<String, dynamic>);
+        Constant.driverLocationUpdateCollection.doc(rideData!.idConducteur).snapshots().listen((event) async {
+          DriverLocationUpdate driverLocationUpdate = DriverLocationUpdate.fromJson(event.data() as Map<String, dynamic>);
 
           Dio dio = Dio();
           dynamic response = await dio.get(
               "https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=${rideData!.latitudeDepart},${rideData!.longitudeDepart}&destinations=${double.parse(driverLocationUpdate.driverLatitude.toString())},${double.parse(driverLocationUpdate.driverLongitude.toString())}&key=${Constant.kGoogleApiKey}");
 
-          driverEstimateArrivalTime = response.data['rows'][0]['elements'][0]
-                  ['duration']['text']
-              .toString();
+          driverEstimateArrivalTime = response.data['rows'][0]['elements'][0]['duration']['text'].toString();
 
           setState(() {
-            departureLatLong = LatLng(
-                double.parse(driverLocationUpdate.driverLatitude.toString()),
+            departureLatLong = LatLng(double.parse(driverLocationUpdate.driverLatitude.toString()),
                 double.parse(driverLocationUpdate.driverLongitude.toString()));
             _markers[rideData!.id.toString()] = Marker(
                 markerId: MarkerId(rideData!.id.toString()),
-                infoWindow:
-                    InfoWindow(title: rideData!.prenomConducteur.toString()),
+                infoWindow: InfoWindow(title: rideData!.prenomConducteur.toString()),
                 position: departureLatLong,
                 icon: taxiIcon!,
-                rotation:
-                    double.parse(driverLocationUpdate.rotation.toString()));
+                rotation: double.parse(driverLocationUpdate.rotation.toString()));
             getDirections(
-                dLat: double.parse(
-                    driverLocationUpdate.driverLatitude.toString()),
-                dLng: double.parse(
-                    driverLocationUpdate.driverLongitude.toString()));
+                dLat: double.parse(driverLocationUpdate.driverLatitude.toString()),
+                dLng: double.parse(driverLocationUpdate.driverLongitude.toString()));
           });
         });
       } else {
@@ -116,31 +102,19 @@ class _RouteViewScreenState extends State<RouteViewScreen> {
   }
 
   setIcons() async {
-    BitmapDescriptor.fromAssetImage(
-            const ImageConfiguration(size: Size(10, 10)),
-            "assets/icons/pickup.png")
-        .then((value) {
+    BitmapDescriptor.fromAssetImage(const ImageConfiguration(size: Size(10, 10)), "assets/icons/pickup.png").then((value) {
       departureIcon = value;
     });
 
-    BitmapDescriptor.fromAssetImage(
-            const ImageConfiguration(size: Size(10, 10)),
-            "assets/icons/dropoff.png")
-        .then((value) {
+    BitmapDescriptor.fromAssetImage(const ImageConfiguration(size: Size(10, 10)), "assets/icons/dropoff.png").then((value) {
       destinationIcon = value;
     });
 
-    BitmapDescriptor.fromAssetImage(
-            const ImageConfiguration(size: Size(10, 10)),
-            "assets/icons/ic_taxi.png")
-        .then((value) {
+    BitmapDescriptor.fromAssetImage(const ImageConfiguration(size: Size(10, 10)), "assets/icons/ic_taxi.png").then((value) {
       taxiIcon = value;
     });
 
-    BitmapDescriptor.fromAssetImage(
-            const ImageConfiguration(size: Size(10, 10)),
-            "assets/icons/location.png")
-        .then((value) {
+    BitmapDescriptor.fromAssetImage(const ImageConfiguration(size: Size(10, 10)), "assets/icons/location.png").then((value) {
       stopIcon = value;
     });
   }
@@ -162,8 +136,7 @@ class _RouteViewScreenState extends State<RouteViewScreen> {
               ),
               onMapCreated: (GoogleMapController controller) {
                 _controller = controller;
-                _controller!.moveCamera(
-                    CameraUpdate.newLatLngZoom(departureLatLong, 12));
+                _controller!.moveCamera(CameraUpdate.newLatLngZoom(departureLatLong, 12));
               },
               polylines: Set<Polyline>.of(polyLines.values),
               markers: _markers.values.toSet(),
@@ -184,8 +157,7 @@ class _RouteViewScreenState extends State<RouteViewScreen> {
                   ),
                   child: const Padding(
                     padding: EdgeInsets.all(4.0),
-                    child: Icon(Icons.arrow_back_ios_outlined,
-                        color: Colors.black),
+                    child: Icon(Icons.arrow_back_ios_outlined, color: Colors.black),
                   ),
                 ),
               ),
@@ -222,21 +194,17 @@ class _RouteViewScreenState extends State<RouteViewScreen> {
                                   ),
                                   Text(
                                     driverEstimateArrivalTime,
-                                    style: TextStyle(
-                                        color: ConstantColors.yellow,
-                                        fontSize: 16),
+                                    style: TextStyle(color: ConstantColors.yellow, fontSize: 16),
                                   ),
                                 ],
                               ),
                             ),
                           Visibility(
-                            visible:
-                                Constant.rideOtp.toString().toLowerCase() ==
-                                            'yes'.toLowerCase() &&
-                                        rideData!.statut == 'confirmed' &&
-                                        rideData!.rideType != 'driver'
-                                    ? true
-                                    : false,
+                            visible: Constant.rideOtp.toString().toLowerCase() == 'yes'.toLowerCase() &&
+                                    rideData!.statut == 'confirmed' &&
+                                    rideData!.rideType != 'driver'
+                                ? true
+                                : false,
                             child: Column(
                               children: [
                                 Divider(
@@ -429,31 +397,23 @@ class _RouteViewScreenState extends State<RouteViewScreen> {
                                     height: 80,
                                     width: 80,
                                     fit: BoxFit.cover,
-                                    placeholder: (context, url) =>
-                                        Constant.loader(),
-                                    errorWidget: (context, url, error) =>
-                                        const Icon(Icons.error),
+                                    placeholder: (context, url) => Constant.loader(),
+                                    errorWidget: (context, url, error) => const Icon(Icons.error),
                                   ),
                                 ),
                                 Expanded(
                                   child: Padding(
                                     padding: const EdgeInsets.only(left: 8.0),
                                     child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        Text(
-                                            "${rideData!.prenomConducteur.toString()} ${rideData!.nomConducteur.toString()}",
+                                        Text("${rideData!.prenomConducteur.toString()} ${rideData!.nomConducteur.toString()}",
                                             overflow: TextOverflow.ellipsis,
-                                            style: const TextStyle(
-                                                color: Colors.black87,
-                                                fontWeight: FontWeight.w600)),
+                                            style: const TextStyle(color: Colors.black87, fontWeight: FontWeight.w600)),
                                         StarRating(
                                             size: 18,
-                                            rating: rideData!.moyenne != "null"
-                                                ? double.parse(rideData!.moyenne
-                                                    .toString())
-                                                : 0.0,
+                                            rating:
+                                                rideData!.moyenne != "null" ? double.parse(rideData!.moyenne.toString()) : 0.0,
                                             color: ConstantColors.yellow),
                                       ],
                                     ),
@@ -465,25 +425,15 @@ class _RouteViewScreenState extends State<RouteViewScreen> {
                                     Row(
                                       children: [
                                         Visibility(
-                                          visible:
-                                              rideData!.statut == "confirmed"
-                                                  ? true
-                                                  : false,
+                                          visible: rideData!.statut == "confirmed" ? true : false,
                                           child: InkWell(
                                               onTap: () {
-                                                Get.to(ConversationScreen(),
-                                                    arguments: {
-                                                      'receiverId': int.parse(
-                                                          rideData!.idConducteur
-                                                              .toString()),
-                                                      'orderId': int.parse(
-                                                          rideData!.id
-                                                              .toString()),
-                                                      'receiverName':
-                                                          "${rideData!.prenomConducteur} ${rideData!.nomConducteur}",
-                                                      'receiverPhoto':
-                                                          rideData!.photoPath
-                                                    });
+                                                Get.to(ConversationScreen(), arguments: {
+                                                  'receiverId': int.parse(rideData!.idConducteur.toString()),
+                                                  'orderId': int.parse(rideData!.id.toString()),
+                                                  'receiverName': "${rideData!.prenomConducteur} ${rideData!.nomConducteur}",
+                                                  'receiverPhoto': rideData!.photoPath
+                                                });
                                               },
                                               child: Image.asset(
                                                 'assets/icons/chat_icon.png',
@@ -493,34 +443,23 @@ class _RouteViewScreenState extends State<RouteViewScreen> {
                                         ),
                                         rideData!.statut != "completed"
                                             ? Padding(
-                                                padding: const EdgeInsets.only(
-                                                    left: 10),
+                                                padding: const EdgeInsets.only(left: 10),
                                                 child: InkWell(
                                                     onTap: () async {
-                                                      ShowToastDialog
-                                                          .showLoader(
-                                                              "Please wait".tr);
-                                                      final Location
-                                                          currentLocation =
-                                                          Location();
-                                                      LocationData location =
-                                                          await currentLocation
-                                                              .getLocation();
+                                                      ShowToastDialog.showLoader("Please wait".tr);
+                                                      final Location currentLocation = Location();
+                                                      LocationData location = await currentLocation.getLocation();
 
-                                                      await FlutterShareMe()
-                                                          .shareToWhatsApp(
-                                                              msg:
-                                                                  'https://www.google.com/maps/search/?api=1&query=${location.latitude},${location.longitude}');
+                                                      await FlutterShareMe().shareToWhatsApp(
+                                                          msg:
+                                                              'https://www.google.com/maps/search/?api=1&query=${location.latitude},${location.longitude}');
                                                     },
                                                     child: Container(
                                                         height: 36,
                                                         width: 36,
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          shape:
-                                                              BoxShape.circle,
-                                                          color: ConstantColors
-                                                              .primary,
+                                                        decoration: BoxDecoration(
+                                                          shape: BoxShape.circle,
+                                                          color: ConstantColors.primary,
                                                         ),
                                                         child: const Icon(
                                                           Icons.share_rounded,
@@ -530,13 +469,10 @@ class _RouteViewScreenState extends State<RouteViewScreen> {
                                               )
                                             : const Offstage(),
                                         Padding(
-                                          padding:
-                                              const EdgeInsets.only(left: 10),
+                                          padding: const EdgeInsets.only(left: 10),
                                           child: InkWell(
                                               onTap: () {
-                                                Constant.makePhoneCall(rideData!
-                                                    .driverPhone
-                                                    .toString());
+                                                Constant.makePhoneCall(rideData!.driverPhone.toString());
                                               },
                                               child: Image.asset(
                                                 'assets/icons/call_icon.png',
@@ -545,12 +481,9 @@ class _RouteViewScreenState extends State<RouteViewScreen> {
                                               )),
                                         ),
                                         Visibility(
-                                          visible: rideData!.statut == "on ride"
-                                              ? true
-                                              : false,
+                                          visible: rideData!.statut == "on ride" ? true : false,
                                           child: Padding(
-                                            padding:
-                                                const EdgeInsets.only(left: 10),
+                                            padding: const EdgeInsets.only(left: 10),
                                             child: ButtonThem.buildButton(
                                               context,
                                               title: 'sos'.tr,
@@ -559,23 +492,16 @@ class _RouteViewScreenState extends State<RouteViewScreen> {
                                               btnColor: ConstantColors.primary,
                                               txtColor: Colors.white,
                                               onPress: () async {
-                                                LocationData location =
-                                                    await Location()
-                                                        .getLocation();
-                                                Map<String, dynamic>
-                                                    bodyParams = {
+                                                LocationData location = await Location().getLocation();
+                                                Map<String, dynamic> bodyParams = {
                                                   'lat': location.latitude,
                                                   'lng': location.longitude,
                                                   'ride_id': rideData!.id,
                                                 };
-                                                controllerRideDetails
-                                                    .sos(bodyParams)
-                                                    .then((value) {
+                                                controllerRideDetails.sos(bodyParams).then((value) {
                                                   if (value != null) {
-                                                    if (value['success'] ==
-                                                        "success") {
-                                                      ShowToastDialog.showToast(
-                                                          value['message']);
+                                                    if (value['success'] == "success") {
+                                                      ShowToastDialog.showToast(value['message']);
                                                     }
                                                   }
                                                 });
@@ -587,11 +513,8 @@ class _RouteViewScreenState extends State<RouteViewScreen> {
                                     ),
                                     Padding(
                                       padding: const EdgeInsets.only(top: 5.0),
-                                      child: Text(
-                                          rideData!.dateRetour.toString(),
-                                          style: const TextStyle(
-                                              color: Colors.black26,
-                                              fontWeight: FontWeight.w600)),
+                                      child: Text(rideData!.dateRetour.toString(),
+                                          style: const TextStyle(color: Colors.black26, fontWeight: FontWeight.w600)),
                                     ),
                                   ],
                                 )
@@ -611,6 +534,7 @@ class _RouteViewScreenState extends State<RouteViewScreen> {
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: Row(
                     children: [
+                      // TODO: NOT FEEL SAFE
                       Visibility(
                         visible: rideData!.statut == "on ride" ? true : false,
                         child: Expanded(
@@ -624,29 +548,22 @@ class _RouteViewScreenState extends State<RouteViewScreen> {
                               btnColor: ConstantColors.primary,
                               txtColor: Colors.white,
                               onPress: () async {
-                                LocationData location =
-                                    await Location().getLocation();
+                                LocationData location = await Location().getLocation();
                                 Map<String, dynamic> bodyParams = {
                                   'lat': location.latitude,
                                   'lng': location.longitude,
-                                  'user_id':
-                                      Preferences.getInt(Preferences.userId)
-                                          .toString(),
+                                  'user_id': Preferences.getInt(Preferences.userId).toString(),
                                   'user_name':
                                       "${controllerRideDetails.userModel!.data!.prenom} ${controllerRideDetails.userModel!.data!.nom}",
-                                  'user_cat': controllerRideDetails
-                                      .userModel!.data!.userCat,
+                                  'user_cat': controllerRideDetails.userModel!.data!.userCat,
                                   'id_driver': rideData!.idConducteur,
                                   'feel_safe': 0,
                                   'trip_id': rideData!.id,
                                 };
-                                controllerRideDetails
-                                    .feelNotSafe(bodyParams)
-                                    .then((value) {
+                                controllerRideDetails.feelNotSafe(bodyParams).then((value) {
                                   if (value != null) {
                                     if (value['success'] == "success") {
-                                      ShowToastDialog.showToast(
-                                          "Report submitted".tr);
+                                      ShowToastDialog.showToast("Report submitted".tr);
                                     }
                                   }
                                 });
@@ -787,16 +704,14 @@ class _RouteViewScreenState extends State<RouteViewScreen> {
   buildShowBottomSheet(BuildContext context) {
     return showModalBottomSheet(
         shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(
-                topRight: Radius.circular(15), topLeft: Radius.circular(15))),
+            borderRadius: BorderRadius.only(topRight: Radius.circular(15), topLeft: Radius.circular(15))),
         context: context,
         isDismissible: true,
         isScrollControlled: true,
         builder: (context) {
           return StatefulBuilder(builder: (context, setState) {
             return Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10),
               child: Padding(
                 padding: MediaQuery.of(context).viewInsets,
                 child: Column(
@@ -825,12 +740,10 @@ class _RouteViewScreenState extends State<RouteViewScreen> {
                         textInputAction: TextInputAction.done,
                         decoration: const InputDecoration(
                           focusedBorder: OutlineInputBorder(
-                            borderSide:
-                                BorderSide(color: Colors.grey, width: 1.0),
+                            borderSide: BorderSide(color: Colors.grey, width: 1.0),
                           ),
                           enabledBorder: OutlineInputBorder(
-                            borderSide:
-                                BorderSide(color: Colors.grey, width: 1.0),
+                            borderSide: BorderSide(color: Colors.grey, width: 1.0),
                           ),
                         ),
                       ),
@@ -857,50 +770,33 @@ class _RouteViewScreenState extends State<RouteViewScreen> {
                                       context: context,
                                       builder: (context) {
                                         return CustomAlertDialog(
-                                          title:
-                                              "Do you want to cancel this booking?"
-                                                  .tr,
+                                          title: "Do you want to cancel this booking?".tr,
                                           onPressNegative: () {
                                             Get.back();
                                           },
                                           onPressPositive: () {
                                             Map<String, String> bodyParams = {
-                                              'id_ride':
-                                                  rideData!.id.toString(),
-                                              'id_user': rideData!.idConducteur
-                                                  .toString(),
-                                              'name':
-                                                  "${rideData!.prenom} ${rideData!.nom}",
-                                              'from_id': Preferences.getInt(
-                                                      Preferences.userId)
-                                                  .toString(),
-                                              'user_cat': controllerRideDetails
-                                                  .userModel!.data!.userCat
-                                                  .toString(),
-                                              'reason': resonController.text
-                                                  .toString(),
+                                              'id_ride': rideData!.id.toString(),
+                                              'id_user': rideData!.idConducteur.toString(),
+                                              'name': "${rideData!.prenom} ${rideData!.nom}",
+                                              'from_id': Preferences.getInt(Preferences.userId).toString(),
+                                              'user_cat': controllerRideDetails.userModel!.data!.userCat.toString(),
+                                              'reason': resonController.text.toString(),
                                             };
-                                            controllerRideDetails
-                                                .canceledRide(bodyParams)
-                                                .then((value) {
+                                            controllerRideDetails.canceledRide(bodyParams).then((value) {
                                               Get.back();
                                               if (value != null) {
                                                 showDialog(
                                                     context: context,
-                                                    builder:
-                                                        (BuildContext context) {
+                                                    builder: (BuildContext context) {
                                                       return CustomDialogBox(
-                                                        title:
-                                                            "Cancel Successfully",
-                                                        descriptions:
-                                                            "Ride Successfully cancel.",
+                                                        title: "Cancel Successfully",
+                                                        descriptions: "Ride Successfully cancel.",
                                                         onPress: () {
                                                           Get.back();
-                                                          controllerDashBoard
-                                                              .onSelectItem(1);
+                                                          controllerDashBoard.onSelectItem(1);
                                                         },
-                                                        img: Image.asset(
-                                                            'assets/images/green_checked.png'),
+                                                        img: Image.asset('assets/images/green_checked.png'),
                                                       );
                                                     });
                                               }
@@ -910,8 +806,7 @@ class _RouteViewScreenState extends State<RouteViewScreen> {
                                       },
                                     );
                                   } else {
-                                    ShowToastDialog.showToast(
-                                        "Please enter a reason".tr);
+                                    ShowToastDialog.showToast("Please enter a reason".tr);
                                   }
                                 },
                               ),
@@ -919,8 +814,7 @@ class _RouteViewScreenState extends State<RouteViewScreen> {
                           ),
                           Expanded(
                             child: Padding(
-                              padding:
-                                  const EdgeInsets.only(bottom: 5, left: 10),
+                              padding: const EdgeInsets.only(bottom: 5, left: 10),
                               child: ButtonThem.buildBorderButton(
                                 context,
                                 title: 'Close'.tr,
@@ -951,15 +845,13 @@ class _RouteViewScreenState extends State<RouteViewScreen> {
     PolylineResult result;
     List<PolylineWayPoint> wayPointList = [];
     for (var i = 0; i < rideData!.stops!.length; i++) {
-      wayPointList
-          .add(PolylineWayPoint(location: rideData!.stops![i].location!));
+      wayPointList.add(PolylineWayPoint(location: rideData!.stops![i].location!));
     }
 
     if (rideData!.statut == "confirmed") {
       result = await polylinePoints.getRouteBetweenCoordinates(
         Constant.kGoogleApiKey.toString(),
-        PointLatLng(double.parse(rideData!.latitudeDepart.toString()),
-            double.parse(rideData!.longitudeDepart.toString())),
+        PointLatLng(double.parse(rideData!.latitudeDepart.toString()), double.parse(rideData!.longitudeDepart.toString())),
         PointLatLng(dLat, dLng),
         wayPoints: wayPointList,
         optimizeWaypoints: true,
@@ -988,8 +880,7 @@ class _RouteViewScreenState extends State<RouteViewScreen> {
     _markers['Departure'] = Marker(
       markerId: const MarkerId('Departure'),
       infoWindow: const InfoWindow(title: "Departure"),
-      position: LatLng(double.parse(rideData!.latitudeDepart.toString()),
-          double.parse(rideData!.longitudeDepart.toString())),
+      position: LatLng(double.parse(rideData!.latitudeDepart.toString()), double.parse(rideData!.longitudeDepart.toString())),
       icon: departureIcon!,
     );
 
@@ -1004,8 +895,7 @@ class _RouteViewScreenState extends State<RouteViewScreen> {
       _markers['${rideData!.stops![i]}'] = Marker(
         markerId: MarkerId('${rideData!.stops![i]}'),
         infoWindow: InfoWindow(title: rideData!.stops![i].location!),
-        position: LatLng(double.parse(rideData!.stops![i].latitude!),
-            double.parse(rideData!.stops![i].longitude!)),
+        position: LatLng(double.parse(rideData!.stops![i].latitude!), double.parse(rideData!.stops![i].longitude!)),
         icon: stopIcon!,
       );
     }
@@ -1029,8 +919,7 @@ class _RouteViewScreenState extends State<RouteViewScreen> {
       geodesic: true,
     );
     polyLines[id] = polyline;
-    updateCameraLocation(
-        polylineCoordinates.first, polylineCoordinates.last, _controller);
+    updateCameraLocation(polylineCoordinates.first, polylineCoordinates.last, _controller);
 
     setState(() {});
   }
@@ -1044,17 +933,14 @@ class _RouteViewScreenState extends State<RouteViewScreen> {
 
     LatLngBounds bounds;
 
-    if (source.latitude > destination.latitude &&
-        source.longitude > destination.longitude) {
+    if (source.latitude > destination.latitude && source.longitude > destination.longitude) {
       bounds = LatLngBounds(southwest: destination, northeast: source);
     } else if (source.longitude > destination.longitude) {
       bounds = LatLngBounds(
-          southwest: LatLng(source.latitude, destination.longitude),
-          northeast: LatLng(destination.latitude, source.longitude));
+          southwest: LatLng(source.latitude, destination.longitude), northeast: LatLng(destination.latitude, source.longitude));
     } else if (source.latitude > destination.latitude) {
       bounds = LatLngBounds(
-          southwest: LatLng(destination.latitude, source.longitude),
-          northeast: LatLng(source.latitude, destination.longitude));
+          southwest: LatLng(destination.latitude, source.longitude), northeast: LatLng(source.latitude, destination.longitude));
     } else {
       bounds = LatLngBounds(southwest: source, northeast: destination);
     }
@@ -1064,8 +950,7 @@ class _RouteViewScreenState extends State<RouteViewScreen> {
     return checkCameraLocation(cameraUpdate, mapController);
   }
 
-  Future<void> checkCameraLocation(
-      CameraUpdate cameraUpdate, GoogleMapController mapController) async {
+  Future<void> checkCameraLocation(CameraUpdate cameraUpdate, GoogleMapController mapController) async {
     mapController.animateCamera(cameraUpdate);
     LatLngBounds l1 = await mapController.getVisibleRegion();
     LatLngBounds l2 = await mapController.getVisibleRegion();

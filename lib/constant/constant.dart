@@ -11,6 +11,7 @@ import 'package:cabme/model/payment_setting_model.dart';
 import 'package:cabme/model/tax_model.dart';
 import 'package:cabme/model/user_model.dart';
 import 'package:cabme/page/chats_screen/conversation_screen.dart';
+import 'package:cabme/routes/routes.dart';
 import 'package:cabme/service/api.dart';
 import 'package:cabme/themes/button_them.dart';
 import 'package:cabme/themes/constant_colors.dart';
@@ -128,7 +129,7 @@ class Constant {
               btnColor: ConstantColors.primary,
               txtColor: Colors.white,
               onPress: () async {
-                controllerDashBoard.onSelectItem(1);
+                controllerDashBoard.onRouteSelected(Routes.allRides);
               },
             ),
           ),

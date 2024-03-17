@@ -85,6 +85,16 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                           child: Stack(
                             alignment: Alignment.bottomCenter,
                             children: [
+                              Positioned(
+                                top: -2,
+                                child: Text(
+                                  'Cust. #${Constant.getUserData().data!.custNumber}',
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w800,
+                                  ),
+                                ),
+                              ),
                               Center(
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(16),

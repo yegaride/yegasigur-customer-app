@@ -5,12 +5,11 @@ import 'dart:io';
 
 import 'package:cabme/constant/constant.dart';
 import 'package:cabme/constant/show_toast_dialog.dart';
+import 'package:cabme/model/drawer_item_model.dart';
 import 'package:cabme/model/user_model.dart';
 import 'package:cabme/page/auth_screens/login_screen.dart';
 import 'package:cabme/page/contact_us/contact_us_screen.dart';
 import 'package:cabme/page/coupon_code/coupon_code_screen.dart';
-import 'package:cabme/page/dash_board.dart';
-import 'package:cabme/page/favotite_ride_screens/favorite_ride_screen.dart';
 import 'package:cabme/page/home_screens/home_screen.dart';
 import 'package:cabme/page/localization_screens/localization_screen.dart';
 import 'package:cabme/page/my_profile/my_profile_screen.dart';
@@ -27,10 +26,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-import 'package:launch_review/launch_review.dart';
+import 'package:cabme/routes/routes.dart';
+// import 'package:launch_review/launch_review.dart';
 
 class DashBoardController extends GetxController {
-  RxInt selectedDrawerIndex = 0.obs;
+  RxString selectedRoute = Routes.home.obs;
 
   @override
   void onInit() {
@@ -55,91 +55,37 @@ class DashBoardController extends GetxController {
     }
   }
 
-  final drawerItems = [
-    DrawerItem('home', CupertinoIcons.home),
-    DrawerItem('order_yegasigur', Icons.car_crash_sharp),
-    DrawerItem('my_profile', Icons.person_outline),
-    DrawerItem('All Rides', Icons.local_car_wash),
-    DrawerItem('favorite_ride', CupertinoIcons.star),
-    // DrawerItem('confirmed', CupertinoIcons.checkmark_circle),
-    // DrawerItem('on_ride', Icons.directions_boat_outlined),
-    // DrawerItem("completed", Icons.incomplete_circle),
-    // DrawerItem('canceled', Icons.cancel_outlined),
-    // DrawerItem('rent_a_vehicle', Icons.car_rental),
-    // DrawerItem('rented_vehicle', Icons.car_rental),
-    DrawerItem('promo_code', Icons.discount),
-    DrawerItem('my_wallet', Icons.account_balance_wallet_outlined),
-    DrawerItem('refer_a_friend', Icons.people_sharp),
-    DrawerItem('change_language', Icons.language),
-    DrawerItem('term_service', Icons.design_services),
-    DrawerItem('privacy_policy', Icons.privacy_tip),
-    DrawerItem('contact_us', Icons.support_agent),
-    DrawerItem('rate_business', Icons.rate_review_outlined),
-    DrawerItem('sign_out', Icons.logout),
+  final drawerRoutes = [
+    DrawerRoute(Routes.home, CupertinoIcons.home, const HomeScreen()),
+    DrawerRoute(Routes.orderYegasigur, CupertinoIcons.car_detailed, OrderYegasigurScreen()),
+    DrawerRoute(Routes.myProfile, Icons.person_outline, MyProfileScreen()),
+    DrawerRoute(Routes.allRides, Icons.local_car_wash, const NewRideScreen()),
+    DrawerRoute(Routes.promoCode, Icons.discount, const CouponCodeScreen()),
+    DrawerRoute(Routes.wallet, Icons.account_balance_wallet_outlined, WalletScreen()),
+    DrawerRoute(Routes.referAFriend, Icons.people_sharp, const ReferralScreen()),
+    DrawerRoute(Routes.changeLanguage, Icons.language, const LocalizationScreens(intentType: "dashBoard")),
+    DrawerRoute(Routes.termsOfService, Icons.design_services, const TermsOfServiceScreen()),
+    DrawerRoute(Routes.privacyPolice, Icons.privacy_tip, const PrivacyPolicyScreen()),
+    DrawerRoute(Routes.contactUs, Icons.support_agent, const ContactUsScreen()),
+    DrawerRoute(Routes.signOut, Icons.logout),
   ];
 
-  getDrawerItemWidget(int pos) {
-    switch (pos) {
-      case 0:
-        return const HomeScreen();
-      case 1:
-        return OrderYegasigurScreen();
-      case 2:
-        return MyProfileScreen();
-      case 3:
-        return const NewRideScreen();
-
-      // case 3:
-      //   return const ConfirmedRideScreen();
-      // case 4:
-      //   return OnRideScreens();
-      // case 5:
-      //   return const CompletedRideScreen();
-      // case 6:
-      //   return const CanceledRideScreens();
-      // case 4:
-      //   return RentVehicleScreen();
-      // case 5:
-      //   return const RentedVehicleScreen();
-      case 4:
-        return const FavoriteRideScreen();
-      case 5:
-        return const CouponCodeScreen();
-      case 6:
-        return WalletScreen();
-      case 7:
-        return const ReferralScreen();
-      case 8:
-        return const LocalizationScreens(
-          intentType: "dashBoard",
-        );
-      case 9:
-        return const TermsOfServiceScreen();
-      case 10:
-        return const PrivacyPolicyScreen();
-      case 11:
-        return const ContactUsScreen();
-
-      default:
-        return const Text("Error");
-    }
-  }
-
-  onSelectItem(int index) {
-    if (index == 12) {
-      LaunchReview.launch(
-        androidAppId: "com.cabme",
-        iOSAppId: "com.cabme.ios",
-      );
-      // log out
-    } else if (index == 13) {
+  void onRouteSelected(String route) {
+    // rate app
+    // LaunchReview.launch(
+    //   androidAppId: "com.cabme",
+    //   iOSAppId: "com.cabme.ios",
+    // );
+    // log out
+    if (route == Routes.signOut) {
       Preferences.clearKeyData(Preferences.isLogin);
       Preferences.clearKeyData(Preferences.user);
       Preferences.clearKeyData(Preferences.userId);
       Get.offAll(LoginScreen());
     } else {
-      selectedDrawerIndex.value = index;
+      selectedRoute.value = route;
     }
+
     Get.back();
   }
 

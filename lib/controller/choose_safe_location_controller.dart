@@ -15,7 +15,7 @@ import 'package:google_api_headers/google_api_headers.dart';
 import 'package:pinput/pinput.dart';
 
 class ChooseSafeLocationController extends GetxController {
-  LatLng currentLocation = const LatLng(12.566199, -70.019366);
+  LatLng currentLocation = const LatLng(12.515828146386, -70.035369805992);
 
   final TextEditingController searchLocationController = TextEditingController();
   GoogleMapController? mapController;

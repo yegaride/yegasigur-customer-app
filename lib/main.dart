@@ -10,6 +10,7 @@ import 'package:cabme/page/auth_screens/signup_screen.dart';
 import 'package:cabme/page/localization_screens/localization_screen.dart';
 import 'package:cabme/page/route_view_screen/route_view_screen.dart';
 import 'package:cabme/page/safe_location/choose_safe_location_screen.dart';
+import 'package:cabme/routes/routes.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -85,7 +86,7 @@ class MyApp extends StatelessWidget {
           });
         } else if (message.data['statut'] == "confirmed" || message.data['statut'] == "driver_rejected") {
           DashBoardController dashBoardController = Get.put(DashBoardController());
-          dashBoardController.selectedDrawerIndex.value = 3;
+          dashBoardController.selectedRoute.value = Routes.allRides;
           await Get.to(DashBoard());
         } else if (message.data['statut'] == "on ride") {
           var argumentData = {'type': 'on_ride'.tr, 'data': RideData.fromJson(message.data)};

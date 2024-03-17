@@ -3,8 +3,8 @@ import 'dart:io';
 import 'package:cabme/utils/Preferences.dart';
 
 class API {
-  // static const host = "https://admin.dev.yegasigur.com";
-  static const host = "http://10.0.2.2/admin";
+  static const host = "https://admin.dev.yegasigur.com";
+  // static const host = "http://10.0.2.2/admin";
   static const baseUrl = "$host/api/v1/";
   static const apiKey = "base64:4CGWBlDsMFiCkyEavKMUTP7JBwBQj7xVoelRB+jOZF4=";
   // static const baseUrl = "${'https://admin.dev.yegasigur.com'}/api/v1/";

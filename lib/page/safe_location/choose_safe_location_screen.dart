@@ -53,7 +53,7 @@ class _ChooseSafeLocationScreenState extends State<ChooseSafeLocationScreen> {
               myLocationButtonEnabled: true,
               initialCameraPosition: CameraPosition(
                 target: controller.currentLocation,
-                zoom: 14,
+                zoom: 17,
               ),
               onCameraMove: (cameraPosition) {
                 controller.currentLocation = cameraPosition.target;
@@ -127,7 +127,7 @@ class _ChooseSafeLocationScreenState extends State<ChooseSafeLocationScreen> {
                       const Spacer(),
                       ButtonThem.buildButton(
                         context,
-                        title: 'Continue'.tr,
+                        title: widget.continueButtonType == 'back' ? 'Save'.tr : 'Continue'.tr,
                         btnColor: ConstantColors.primary,
                         txtColor: Colors.white,
                         onPress: () => controller.saveSafeLocation().then(

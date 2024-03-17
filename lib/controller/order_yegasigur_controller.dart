@@ -1,5 +1,3 @@
-// ignore_for_file: dead_code
-
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
@@ -16,7 +14,7 @@ class OrderYegasigurController extends GetxController {
   var distance = 0.0.obs;
   var duration = ''.obs;
 
-  Future<void> orderYegaSigur() async {
+  Future<int?> orderYegaSigur() async {
     try {
       ShowToastDialog.showLoader("Please wait");
 
@@ -39,6 +37,10 @@ class OrderYegasigurController extends GetxController {
         headers: API.header,
       );
 
+      if (userSafeLocationResponse.statusCode != 200) {
+        throw const HttpException('Something went wrong');
+      }
+
       final userSafeLocation = json.decode(userSafeLocationResponse.body);
 
       final safeLocationLat = userSafeLocation['safe_location_lat'];
@@ -50,6 +52,10 @@ class OrderYegasigurController extends GetxController {
           '$startLng&destinations=$safeLocationLat,$safeLocationLng&key=${Constant.kGoogleApiKey}',
         ),
       );
+
+      if (tripDetailsResponse.statusCode != 200) {
+        throw const HttpException('Something went wrong');
+      }
 
       final tripDetails = json.decode(tripDetailsResponse.body);
 
@@ -69,13 +75,22 @@ class OrderYegasigurController extends GetxController {
         headers: API.header,
       );
 
+      if (res.statusCode != 200) {
+        throw const HttpException('Failed to load data');
+      }
+
       final vehicleData = jsonDecode(res.body);
 
-      final tripPrice = (distance.value * double.parse(vehicleData["data"][0]["minimum_delivery_charges"]))
-          .toDouble()
-          .toStringAsFixed(int.parse(Constant.decimal ?? "2"));
+      final double minimunTripPrice = double.parse(vehicleData["data"][0]["minimum_delivery_charges"]);
+      final double minimunDeliveryChargesWithinKm = double.parse(vehicleData["data"][0]["minimum_delivery_charges_within"]);
+      final double pricePerKm = double.parse(vehicleData["data"][0]["delivery_charges"]);
 
-      await http.post(
+      final double tripPriceNumber =
+          distance.value < minimunDeliveryChargesWithinKm ? minimunTripPrice : distance.value * pricePerKm;
+
+      final String tripPrice = tripPriceNumber.toDouble().toStringAsFixed(int.parse(Constant.decimal ?? "2"));
+
+      final requestResponse = await http.post(
         Uri.parse(API.bookRides),
         headers: API.header,
         body: jsonEncode(
@@ -107,7 +122,13 @@ class OrderYegasigurController extends GetxController {
         ),
       );
 
+      if (requestResponse.statusCode != 200) {
+        throw const HttpException('Failed to load data');
+      }
+
       ShowToastDialog.closeLoader();
+
+      return requestResponse.statusCode;
     } on TimeoutException catch (e) {
       ShowToastDialog.closeLoader();
 
@@ -125,5 +146,7 @@ class OrderYegasigurController extends GetxController {
 
       ShowToastDialog.showToast(e.toString());
     }
+
+    return null;
   }
 }

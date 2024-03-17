@@ -2,6 +2,7 @@
 
 import 'package:cabme/constant/constant.dart';
 import 'package:cabme/controller/dash_board_controller.dart';
+import 'package:cabme/routes/routes.dart';
 import 'package:cabme/themes/constant_colors.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -16,9 +17,11 @@ class DashBoard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarColor: ConstantColors.primary,
-    ));
+    SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(
+        statusBarColor: ConstantColors.primary,
+      ),
+    );
     return GetX<DashBoardController>(
       init: DashBoardController(),
       builder: (controller) {
@@ -44,21 +47,23 @@ class DashBoard extends StatelessWidget {
               }
             },
             child: Scaffold(
-              appBar: controller.selectedDrawerIndex.value != 6
+              appBar: controller.selectedRoute.value != Routes.wallet
                   ? AppBar(
-                      backgroundColor: controller.selectedDrawerIndex.value == 2 || controller.selectedDrawerIndex.value == 1
+                      backgroundColor: controller.selectedRoute.value == Routes.myProfile ||
+                              controller.selectedRoute.value == Routes.orderYegasigur
                           ? ConstantColors.primary
                           : ConstantColors.background,
                       elevation: 0,
                       centerTitle: true,
-                      title: controller.selectedDrawerIndex.value != 1 && controller.selectedDrawerIndex.value != 6
+                      title: controller.selectedRoute.value != Routes.orderYegasigur &&
+                              controller.selectedRoute.value != Routes.wallet
                           ? Text(
-                              controller.drawerItems[controller.selectedDrawerIndex.value].title.tr,
+                              controller.drawerRoutes.firstWhere((item) => item.route == controller.selectedRoute.value).route.tr,
                               style: TextStyle(
-                                color: controller.selectedDrawerIndex.value == 2 ? Colors.white : Colors.black,
+                                color: controller.selectedRoute.value == Routes.myProfile ? Colors.white : Colors.black,
                               ),
                             )
-                          : controller.selectedDrawerIndex.value == 1
+                          : controller.selectedRoute.value == Routes.orderYegasigur
                               ? Row(
                                   mainAxisSize: MainAxisSize.min,
                                   crossAxisAlignment: CrossAxisAlignment.end,
@@ -110,7 +115,8 @@ class DashBoard extends StatelessWidget {
                     )
                   : null,
               drawer: buildAppDrawer(context, controller),
-              body: controller.getDrawerItemWidget(controller.selectedDrawerIndex.value),
+              body: controller.drawerRoutes.firstWhere((item) => item.route == controller.selectedRoute.value).screen ??
+                  const Text('Error'),
             ),
           ),
         );
@@ -119,26 +125,25 @@ class DashBoard extends StatelessWidget {
   }
 
   buildAppDrawer(BuildContext context, DashBoardController controller) {
-    var drawerOptions = <Widget>[];
-    for (var i = 0; i < controller.drawerItems.length; i++) {
-      var d = controller.drawerItems[i];
-      drawerOptions.add(ListTile(
-        leading: Icon(d.icon),
-        title: Text(d.title.tr),
-        selected: i == controller.selectedDrawerIndex.value,
-        onTap: () => controller.onSelectItem(i),
-      ));
-    }
+    final List<Widget> drawerRoutes = controller.drawerRoutes.map((route) {
+      return ListTile(
+        leading: Icon(route.drawerIcon),
+        title: Text(route.route.tr),
+        selected: route.route == controller.selectedRoute.value,
+        onTap: () => controller.onRouteSelected(route.route),
+      );
+    }).toList();
+
     return Drawer(
       child: ListView(
         padding: EdgeInsets.zero,
         children: [
           controller.userModel == null
-              ? Center(
+              ? const Center(
                   child: CircularProgressIndicator(color: ConstantColors.primary),
                 )
               : UserAccountsDrawerHeader(
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     color: ConstantColors.primary,
                   ),
                   currentAccountPicture: ClipOval(
@@ -163,7 +168,8 @@ class DashBoard extends StatelessWidget {
                   ),
                   accountEmail: Text(controller.userModel!.data!.email.toString(), style: const TextStyle(color: Colors.white)),
                 ),
-          Column(children: drawerOptions),
+          // Column(children: drawerOptions),
+          Column(children: drawerRoutes),
           Text(
             'V : ${Constant.appVersion}',
             textAlign: TextAlign.center,
@@ -173,11 +179,4 @@ class DashBoard extends StatelessWidget {
       ),
     );
   }
-}
-
-class DrawerItem {
-  String title;
-  IconData icon;
-
-  DrawerItem(this.title, this.icon);
 }

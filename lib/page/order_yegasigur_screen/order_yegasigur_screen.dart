@@ -1,5 +1,10 @@
 import 'package:cabme/constant/constant.dart';
+import 'package:cabme/constant/show_toast_dialog.dart';
+import 'package:cabme/controller/dash_board_controller.dart';
+import 'package:cabme/controller/new_ride_controller.dart';
 import 'package:cabme/controller/order_yegasigur_controller.dart';
+import 'package:cabme/page/route_view_screen/route_view_screen.dart';
+import 'package:cabme/routes/routes.dart';
 import 'package:cabme/themes/constant_colors.dart';
 import 'package:cabme/themes/custom_alert_dialog.dart';
 import 'package:cabme/themes/custom_dialog_box.dart';
@@ -49,34 +54,59 @@ class OrderYegasigurScreen extends StatelessWidget {
                 child: GestureDetector(
                   onTap: () => {
                     showDialog(
-                        context: context,
-                        builder: (context) {
-                          return CustomAlertDialog(
-                            title: "Are you sure you want to order yegasigur?",
-                            onPressNegative: () => Get.back(),
-                            onPressPositive: () async {
-                              await controller.orderYegaSigur();
+                      context: context,
+                      builder: (context) {
+                        return CustomAlertDialog(
+                          title: "Are you sure you want to order yegasigur?",
+                          onPressNegative: () => Get.back(),
+                          onPressPositive: () async {
+                            final res = await controller.orderYegaSigur();
 
-                              if (!context.mounted) return;
+                            if (res == null) return;
 
-                              showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return CustomDialogBox(
-                                    title: "Confirmed Successfully".tr,
-                                    descriptions: "Ride Successfully confirmed.".tr,
-                                    // text: "Ok".tr,
-                                    onPress: () {
-                                      Get.back();
-                                      Get.back();
-                                    },
-                                    img: Image.asset('assets/images/green_checked.png'),
-                                  );
-                                },
-                              );
-                            },
-                          );
-                        })
+                            if (!context.mounted) return;
+
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return CustomDialogBox(
+                                  // TODO: i18n
+                                  title: "Yegasigur requested successfully",
+                                  // TODO: i18n
+                                  descriptions: "You will be notified when a driver accepts your request",
+                                  onPress: () {
+                                    Get.back();
+                                    Get.back();
+                                    final controllerDashBoard = Get.put(DashBoardController());
+
+                                    ShowToastDialog.showLoader("Please wait");
+                                    Future.delayed(
+                                      const Duration(seconds: 1),
+                                      () {
+                                        final newRideController = Get.put(NewRideController());
+                                        newRideController.getNewRide().then((value) {
+                                          controllerDashBoard.onRouteSelected(Routes.allRides);
+                                          final lastRide = newRideController.rideList.first;
+
+                                          var argumentData = {
+                                            'type': 'new',
+                                            'data': lastRide,
+                                          };
+
+                                          ShowToastDialog.closeLoader();
+                                          Get.to(const RouteViewScreen(), arguments: argumentData);
+                                        }).catchError((e) => ShowToastDialog.closeLoader());
+                                      },
+                                    );
+                                  },
+                                  img: Image.asset('assets/images/green_checked.png'),
+                                );
+                              },
+                            );
+                          },
+                        );
+                      },
+                    )
                   },
                   child: Container(
                     width: 250,

@@ -5,6 +5,7 @@ import 'package:cabme/controller/ride_details_controller.dart';
 import 'package:cabme/model/driver_location_update.dart';
 import 'package:cabme/model/ride_model.dart';
 import 'package:cabme/page/chats_screen/conversation_screen.dart';
+import 'package:cabme/routes/routes.dart';
 import 'package:cabme/themes/button_them.dart';
 import 'package:cabme/themes/constant_colors.dart';
 import 'package:cabme/themes/custom_alert_dialog.dart';
@@ -165,367 +166,370 @@ class _RouteViewScreenState extends State<RouteViewScreen> {
             Column(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 8.0,
-                    vertical: 10,
-                  ),
-                  child: Container(
-                    decoration: const BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.all(Radius.circular(15.0)),
+                if (rideData?.idConducteur != '0')
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8.0,
+                      vertical: 10,
                     ),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                      child: Column(
-                        children: [
-                          if (rideData!.statut == 'confirmed')
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    child: Text(
-                                      'Driver Estimate Arrival Time : '.tr,
-                                      maxLines: 2,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(fontSize: 16),
+                    child: Container(
+                      decoration: const BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.all(Radius.circular(15.0)),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                        child: Column(
+                          children: [
+                            if (rideData!.statut == 'confirmed')
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      child: Text(
+                                        'Driver Estimate Arrival Time : '.tr,
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(fontSize: 16),
+                                      ),
                                     ),
+                                    Text(
+                                      driverEstimateArrivalTime,
+                                      style: TextStyle(color: ConstantColors.yellow, fontSize: 16),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            Visibility(
+                              visible: Constant.rideOtp.toString().toLowerCase() == 'yes'.toLowerCase() &&
+                                      rideData!.statut == 'confirmed' &&
+                                      rideData!.rideType != 'driver'
+                                  ? true
+                                  : false,
+                              child: Column(
+                                children: [
+                                  Divider(
+                                    color: Colors.grey.withOpacity(0.20),
+                                    thickness: 1,
                                   ),
-                                  Text(
-                                    driverEstimateArrivalTime,
-                                    style: TextStyle(color: ConstantColors.yellow, fontSize: 16),
+                                  Row(
+                                    children: [
+                                      const Text(
+                                        'OTP : ',
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w800,
+                                          color: Colors.black54,
+                                        ),
+                                      ),
+                                      Text(
+                                        rideData!.otp.toString(),
+                                      ),
+                                    ],
+                                  ),
+                                  Divider(
+                                    color: Colors.grey.withOpacity(0.20),
+                                    thickness: 1,
                                   ),
                                 ],
                               ),
                             ),
-                          Visibility(
-                            visible: Constant.rideOtp.toString().toLowerCase() == 'yes'.toLowerCase() &&
-                                    rideData!.statut == 'confirmed' &&
-                                    rideData!.rideType != 'driver'
-                                ? true
-                                : false,
-                            child: Column(
-                              children: [
-                                Divider(
-                                  color: Colors.grey.withOpacity(0.20),
-                                  thickness: 1,
-                                ),
-                                Row(
-                                  children: [
-                                    const Text(
-                                      'OTP : ',
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w800,
-                                        color: Colors.black54,
+                            // Padding(
+                            //   padding: const EdgeInsets.all(8.0),
+                            //   child: Row(
+                            //     crossAxisAlignment: CrossAxisAlignment.center,
+                            //     children: [
+                            //       Expanded(
+                            //         child: Padding(
+                            //           padding: const EdgeInsets.only(left: 5.0),
+                            //           child: Container(
+                            //             height: 100,
+                            //             decoration: BoxDecoration(
+                            //                 border: Border.all(
+                            //                   color: Colors.black12,
+                            //                 ),
+                            //                 borderRadius: const BorderRadius.all(Radius.circular(10))),
+                            //             child: Padding(
+                            //               padding: const EdgeInsets.symmetric(vertical: 20),
+                            //               child: Column(
+                            //                 mainAxisAlignment: MainAxisAlignment.center,
+                            //                 children: [
+                            //                   Image.asset(
+                            //                     'assets/icons/passenger.png',
+                            //                     height: 22,
+                            //                     width: 22,
+                            //                     color: ConstantColors.yellow,
+                            //                   ),
+                            //                   Padding(
+                            //                     padding: const EdgeInsets.only(top: 8.0),
+                            //                     child: Text(" ${rideData!.numberPoeple.toString()}",
+                            //                         //DateFormat('\$ KK:mm a, dd MMM yyyy').format(date),
+                            //                         style: const TextStyle(fontWeight: FontWeight.w800, color: Colors.black54)),
+                            //                   ),
+                            //                 ],
+                            //               ),
+                            //             ),
+                            //           ),
+                            //         ),
+                            //       ),
+                            //       Expanded(
+                            //         child: Padding(
+                            //           padding: const EdgeInsets.only(left: 5.0),
+                            //           child: Container(
+                            //             height: 100,
+                            //             decoration: BoxDecoration(
+                            //                 border: Border.all(
+                            //                   color: Colors.black12,
+                            //                 ),
+                            //                 borderRadius: const BorderRadius.all(Radius.circular(10))),
+                            //             child: Padding(
+                            //               padding: const EdgeInsets.symmetric(vertical: 20),
+                            //               child: Column(
+                            //                 mainAxisAlignment: MainAxisAlignment.center,
+                            //                 children: [
+                            //                   Text(
+                            //                     Constant.currency.toString(),
+                            //                     style: TextStyle(
+                            //                       color: ConstantColors.yellow,
+                            //                       fontWeight: FontWeight.bold,
+                            //                       fontSize: 20,
+                            //                     ),
+                            //                   ),
+                            //                   Text(
+                            //                     Constant().amountShow(amount: rideData!.montant!.toString()),
+                            //                     style: const TextStyle(
+                            //                       fontWeight: FontWeight.w800,
+                            //                       color: Colors.black54,
+                            //                     ),
+                            //                   ),
+                            //                 ],
+                            //               ),
+                            //             ),
+                            //           ),
+                            //         ),
+                            //       ),
+                            //       Expanded(
+                            //         child: Padding(
+                            //           padding: const EdgeInsets.only(left: 5.0),
+                            //           child: Container(
+                            //             height: 100,
+                            //             decoration: BoxDecoration(
+                            //                 border: Border.all(
+                            //                   color: Colors.black12,
+                            //                 ),
+                            //                 borderRadius: const BorderRadius.all(Radius.circular(10))),
+                            //             child: Padding(
+                            //               padding: const EdgeInsets.symmetric(vertical: 20),
+                            //               child: Column(
+                            //                 mainAxisAlignment: MainAxisAlignment.center,
+                            //                 children: [
+                            //                   Image.asset(
+                            //                     'assets/icons/ic_distance.png',
+                            //                     height: 22,
+                            //                     width: 22,
+                            //                     color: ConstantColors.yellow,
+                            //                   ),
+                            //                   Padding(
+                            //                     padding: const EdgeInsets.only(top: 8.0),
+                            //                     child: Text(
+                            //                       "${rideData!.distance.toString()} ${rideData!.distanceUnit}",
+                            //                       overflow: TextOverflow.ellipsis,
+                            //                       style: const TextStyle(
+                            //                         fontWeight: FontWeight.w800,
+                            //                         color: Colors.black54,
+                            //                       ),
+                            //                     ),
+                            //                   ),
+                            //                 ],
+                            //               ),
+                            //             ),
+                            //           ),
+                            //         ),
+                            //       ),
+                            //       Expanded(
+                            //         child: Padding(
+                            //           padding: const EdgeInsets.only(left: 5.0),
+                            //           child: Container(
+                            //             height: 100,
+                            //             decoration: BoxDecoration(
+                            //                 border: Border.all(
+                            //                   color: Colors.black12,
+                            //                 ),
+                            //                 borderRadius: const BorderRadius.all(Radius.circular(10))),
+                            //             child: Padding(
+                            //               padding: const EdgeInsets.symmetric(vertical: 20),
+                            //               child: Column(
+                            //                 mainAxisAlignment: MainAxisAlignment.center,
+                            //                 children: [
+                            //                   Image.asset(
+                            //                     'assets/icons/time.png',
+                            //                     height: 22,
+                            //                     width: 22,
+                            //                     color: ConstantColors.yellow,
+                            //                   ),
+                            //                   Padding(
+                            //                     padding: const EdgeInsets.only(top: 8.0),
+                            //                     child: Text(
+                            //                       rideData!.duree.toString(),
+                            //                       overflow: TextOverflow.ellipsis,
+                            //                       style: const TextStyle(
+                            //                         fontWeight: FontWeight.w800,
+                            //                         color: Colors.black54,
+                            //                       ),
+                            //                     ),
+                            //                   ),
+                            //                 ],
+                            //               ),
+                            //             ),
+                            //           ),
+                            //         ),
+                            //       ),
+                            //     ],
+                            //   ),
+                            // ),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 10),
+                              child: Row(
+                                children: [
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(10),
+                                    child: CachedNetworkImage(
+                                      imageUrl: rideData!.photoPath.toString(),
+                                      height: 80,
+                                      width: 80,
+                                      fit: BoxFit.cover,
+                                      placeholder: (context, url) => Constant.loader(),
+                                      errorWidget: (context, url, error) => const Icon(Icons.error),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(left: 8.0),
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text("${rideData!.prenomConducteur.toString()} ${rideData!.nomConducteur.toString()}",
+                                              overflow: TextOverflow.ellipsis,
+                                              style: const TextStyle(color: Colors.black87, fontWeight: FontWeight.w600)),
+                                          StarRating(
+                                              size: 18,
+                                              rating:
+                                                  rideData!.moyenne != "null" ? double.parse(rideData!.moyenne.toString()) : 0.0,
+                                              color: ConstantColors.yellow),
+                                        ],
                                       ),
                                     ),
-                                    Text(
-                                      rideData!.otp.toString(),
-                                    ),
-                                  ],
-                                ),
-                                Divider(
-                                  color: Colors.grey.withOpacity(0.20),
-                                  thickness: 1,
-                                ),
-                              ],
-                            ),
-                          ),
-                          // Padding(
-                          //   padding: const EdgeInsets.all(8.0),
-                          //   child: Row(
-                          //     crossAxisAlignment: CrossAxisAlignment.center,
-                          //     children: [
-                          //       Expanded(
-                          //         child: Padding(
-                          //           padding: const EdgeInsets.only(left: 5.0),
-                          //           child: Container(
-                          //             height: 100,
-                          //             decoration: BoxDecoration(
-                          //                 border: Border.all(
-                          //                   color: Colors.black12,
-                          //                 ),
-                          //                 borderRadius: const BorderRadius.all(Radius.circular(10))),
-                          //             child: Padding(
-                          //               padding: const EdgeInsets.symmetric(vertical: 20),
-                          //               child: Column(
-                          //                 mainAxisAlignment: MainAxisAlignment.center,
-                          //                 children: [
-                          //                   Image.asset(
-                          //                     'assets/icons/passenger.png',
-                          //                     height: 22,
-                          //                     width: 22,
-                          //                     color: ConstantColors.yellow,
-                          //                   ),
-                          //                   Padding(
-                          //                     padding: const EdgeInsets.only(top: 8.0),
-                          //                     child: Text(" ${rideData!.numberPoeple.toString()}",
-                          //                         //DateFormat('\$ KK:mm a, dd MMM yyyy').format(date),
-                          //                         style: const TextStyle(fontWeight: FontWeight.w800, color: Colors.black54)),
-                          //                   ),
-                          //                 ],
-                          //               ),
-                          //             ),
-                          //           ),
-                          //         ),
-                          //       ),
-                          //       Expanded(
-                          //         child: Padding(
-                          //           padding: const EdgeInsets.only(left: 5.0),
-                          //           child: Container(
-                          //             height: 100,
-                          //             decoration: BoxDecoration(
-                          //                 border: Border.all(
-                          //                   color: Colors.black12,
-                          //                 ),
-                          //                 borderRadius: const BorderRadius.all(Radius.circular(10))),
-                          //             child: Padding(
-                          //               padding: const EdgeInsets.symmetric(vertical: 20),
-                          //               child: Column(
-                          //                 mainAxisAlignment: MainAxisAlignment.center,
-                          //                 children: [
-                          //                   Text(
-                          //                     Constant.currency.toString(),
-                          //                     style: TextStyle(
-                          //                       color: ConstantColors.yellow,
-                          //                       fontWeight: FontWeight.bold,
-                          //                       fontSize: 20,
-                          //                     ),
-                          //                   ),
-                          //                   Text(
-                          //                     Constant().amountShow(amount: rideData!.montant!.toString()),
-                          //                     style: const TextStyle(
-                          //                       fontWeight: FontWeight.w800,
-                          //                       color: Colors.black54,
-                          //                     ),
-                          //                   ),
-                          //                 ],
-                          //               ),
-                          //             ),
-                          //           ),
-                          //         ),
-                          //       ),
-                          //       Expanded(
-                          //         child: Padding(
-                          //           padding: const EdgeInsets.only(left: 5.0),
-                          //           child: Container(
-                          //             height: 100,
-                          //             decoration: BoxDecoration(
-                          //                 border: Border.all(
-                          //                   color: Colors.black12,
-                          //                 ),
-                          //                 borderRadius: const BorderRadius.all(Radius.circular(10))),
-                          //             child: Padding(
-                          //               padding: const EdgeInsets.symmetric(vertical: 20),
-                          //               child: Column(
-                          //                 mainAxisAlignment: MainAxisAlignment.center,
-                          //                 children: [
-                          //                   Image.asset(
-                          //                     'assets/icons/ic_distance.png',
-                          //                     height: 22,
-                          //                     width: 22,
-                          //                     color: ConstantColors.yellow,
-                          //                   ),
-                          //                   Padding(
-                          //                     padding: const EdgeInsets.only(top: 8.0),
-                          //                     child: Text(
-                          //                       "${rideData!.distance.toString()} ${rideData!.distanceUnit}",
-                          //                       overflow: TextOverflow.ellipsis,
-                          //                       style: const TextStyle(
-                          //                         fontWeight: FontWeight.w800,
-                          //                         color: Colors.black54,
-                          //                       ),
-                          //                     ),
-                          //                   ),
-                          //                 ],
-                          //               ),
-                          //             ),
-                          //           ),
-                          //         ),
-                          //       ),
-                          //       Expanded(
-                          //         child: Padding(
-                          //           padding: const EdgeInsets.only(left: 5.0),
-                          //           child: Container(
-                          //             height: 100,
-                          //             decoration: BoxDecoration(
-                          //                 border: Border.all(
-                          //                   color: Colors.black12,
-                          //                 ),
-                          //                 borderRadius: const BorderRadius.all(Radius.circular(10))),
-                          //             child: Padding(
-                          //               padding: const EdgeInsets.symmetric(vertical: 20),
-                          //               child: Column(
-                          //                 mainAxisAlignment: MainAxisAlignment.center,
-                          //                 children: [
-                          //                   Image.asset(
-                          //                     'assets/icons/time.png',
-                          //                     height: 22,
-                          //                     width: 22,
-                          //                     color: ConstantColors.yellow,
-                          //                   ),
-                          //                   Padding(
-                          //                     padding: const EdgeInsets.only(top: 8.0),
-                          //                     child: Text(
-                          //                       rideData!.duree.toString(),
-                          //                       overflow: TextOverflow.ellipsis,
-                          //                       style: const TextStyle(
-                          //                         fontWeight: FontWeight.w800,
-                          //                         color: Colors.black54,
-                          //                       ),
-                          //                     ),
-                          //                   ),
-                          //                 ],
-                          //               ),
-                          //             ),
-                          //           ),
-                          //         ),
-                          //       ),
-                          //     ],
-                          //   ),
-                          // ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 10),
-                            child: Row(
-                              children: [
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(10),
-                                  child: CachedNetworkImage(
-                                    imageUrl: rideData!.photoPath.toString(),
-                                    height: 80,
-                                    width: 80,
-                                    fit: BoxFit.cover,
-                                    placeholder: (context, url) => Constant.loader(),
-                                    errorWidget: (context, url, error) => const Icon(Icons.error),
                                   ),
-                                ),
-                                Expanded(
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(left: 8.0),
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text("${rideData!.prenomConducteur.toString()} ${rideData!.nomConducteur.toString()}",
-                                            overflow: TextOverflow.ellipsis,
-                                            style: const TextStyle(color: Colors.black87, fontWeight: FontWeight.w600)),
-                                        StarRating(
-                                            size: 18,
-                                            rating:
-                                                rideData!.moyenne != "null" ? double.parse(rideData!.moyenne.toString()) : 0.0,
-                                            color: ConstantColors.yellow),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Visibility(
-                                          visible: rideData!.statut == "confirmed" ? true : false,
-                                          child: InkWell(
-                                              onTap: () {
-                                                Get.to(ConversationScreen(), arguments: {
-                                                  'receiverId': int.parse(rideData!.idConducteur.toString()),
-                                                  'orderId': int.parse(rideData!.id.toString()),
-                                                  'receiverName': "${rideData!.prenomConducteur} ${rideData!.nomConducteur}",
-                                                  'receiverPhoto': rideData!.photoPath
-                                                });
-                                              },
-                                              child: Image.asset(
-                                                'assets/icons/chat_icon.png',
-                                                height: 36,
-                                                width: 36,
-                                              )),
-                                        ),
-                                        rideData!.statut != "completed"
-                                            ? Padding(
-                                                padding: const EdgeInsets.only(left: 10),
-                                                child: InkWell(
-                                                    onTap: () async {
-                                                      ShowToastDialog.showLoader("Please wait".tr);
-                                                      final Location currentLocation = Location();
-                                                      LocationData location = await currentLocation.getLocation();
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Visibility(
+                                            visible: false,
+                                            // visible: rideData!.statut == "confirmed" ? true : false,
+                                            child: InkWell(
+                                                onTap: () {
+                                                  Get.to(ConversationScreen(), arguments: {
+                                                    'receiverId': int.parse(rideData!.idConducteur.toString()),
+                                                    'orderId': int.parse(rideData!.id.toString()),
+                                                    'receiverName': "${rideData!.prenomConducteur} ${rideData!.nomConducteur}",
+                                                    'receiverPhoto': rideData!.photoPath
+                                                  });
+                                                },
+                                                child: Image.asset(
+                                                  'assets/icons/chat_icon.png',
+                                                  height: 36,
+                                                  width: 36,
+                                                )),
+                                          ),
+                                          rideData!.statut != "completed"
+                                              ? Padding(
+                                                  padding: const EdgeInsets.only(left: 10),
+                                                  child: InkWell(
+                                                      onTap: () async {
+                                                        ShowToastDialog.showLoader("Please wait".tr);
+                                                        final Location currentLocation = Location();
+                                                        LocationData location = await currentLocation.getLocation();
 
-                                                      await FlutterShareMe().shareToWhatsApp(
-                                                          msg:
-                                                              'https://www.google.com/maps/search/?api=1&query=${location.latitude},${location.longitude}');
-                                                    },
-                                                    child: Container(
-                                                        height: 36,
-                                                        width: 36,
-                                                        decoration: BoxDecoration(
-                                                          shape: BoxShape.circle,
-                                                          color: ConstantColors.primary,
-                                                        ),
-                                                        child: const Icon(
-                                                          Icons.share_rounded,
-                                                          size: 26,
-                                                          color: Colors.white,
-                                                        ))),
-                                              )
-                                            : const Offstage(),
-                                        Padding(
-                                          padding: const EdgeInsets.only(left: 10),
-                                          child: InkWell(
-                                              onTap: () {
-                                                Constant.makePhoneCall(rideData!.driverPhone.toString());
-                                              },
-                                              child: Image.asset(
-                                                'assets/icons/call_icon.png',
-                                                height: 36,
-                                                width: 36,
-                                              )),
-                                        ),
-                                        Visibility(
-                                          visible: rideData!.statut == "on ride" ? true : false,
-                                          child: Padding(
+                                                        await FlutterShareMe().shareToWhatsApp(
+                                                            msg:
+                                                                'https://www.google.com/maps/search/?api=1&query=${location.latitude},${location.longitude}');
+                                                      },
+                                                      child: Container(
+                                                          height: 36,
+                                                          width: 36,
+                                                          decoration: BoxDecoration(
+                                                            shape: BoxShape.circle,
+                                                            color: ConstantColors.primary,
+                                                          ),
+                                                          child: const Icon(
+                                                            Icons.share_rounded,
+                                                            size: 26,
+                                                            color: Colors.white,
+                                                          ))),
+                                                )
+                                              : const Offstage(),
+                                          Padding(
                                             padding: const EdgeInsets.only(left: 10),
-                                            child: ButtonThem.buildButton(
-                                              context,
-                                              title: 'sos'.tr,
-                                              btnHeight: 35,
-                                              btnWidthRatio: 0.16,
-                                              btnColor: ConstantColors.primary,
-                                              txtColor: Colors.white,
-                                              onPress: () async {
-                                                LocationData location = await Location().getLocation();
-                                                Map<String, dynamic> bodyParams = {
-                                                  'lat': location.latitude,
-                                                  'lng': location.longitude,
-                                                  'ride_id': rideData!.id,
-                                                };
-                                                controllerRideDetails.sos(bodyParams).then((value) {
-                                                  if (value != null) {
-                                                    if (value['success'] == "success") {
-                                                      ShowToastDialog.showToast(value['message']);
+                                            child: InkWell(
+                                                onTap: () {
+                                                  Constant.makePhoneCall(rideData!.driverPhone.toString());
+                                                },
+                                                child: Image.asset(
+                                                  'assets/icons/call_icon.png',
+                                                  height: 36,
+                                                  width: 36,
+                                                )),
+                                          ),
+                                          Visibility(
+                                            // visible: rideData!.statut == "on ride" ? true : false,
+                                            visible: false,
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(left: 10),
+                                              child: ButtonThem.buildButton(
+                                                context,
+                                                title: 'sos'.tr,
+                                                btnHeight: 35,
+                                                btnWidthRatio: 0.16,
+                                                btnColor: ConstantColors.primary,
+                                                txtColor: Colors.white,
+                                                onPress: () async {
+                                                  LocationData location = await Location().getLocation();
+                                                  Map<String, dynamic> bodyParams = {
+                                                    'lat': location.latitude,
+                                                    'lng': location.longitude,
+                                                    'ride_id': rideData!.id,
+                                                  };
+                                                  controllerRideDetails.sos(bodyParams).then((value) {
+                                                    if (value != null) {
+                                                      if (value['success'] == "success") {
+                                                        ShowToastDialog.showToast(value['message']);
+                                                      }
                                                     }
-                                                  }
-                                                });
-                                              },
+                                                  });
+                                                },
+                                              ),
                                             ),
                                           ),
-                                        ),
-                                      ],
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(top: 5.0),
-                                      child: Text(rideData!.dateRetour.toString(),
-                                          style: const TextStyle(color: Colors.black26, fontWeight: FontWeight.w600)),
-                                    ),
-                                  ],
-                                )
-                              ],
+                                        ],
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(top: 5.0),
+                                        child: Text(rideData!.dateRetour.toString(),
+                                            style: const TextStyle(color: Colors.black26, fontWeight: FontWeight.w600)),
+                                      ),
+                                    ],
+                                  )
+                                ],
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                ),
                 Divider(
                   color: Colors.grey.withOpacity(0.20),
                   thickness: 1,
@@ -536,7 +540,8 @@ class _RouteViewScreenState extends State<RouteViewScreen> {
                     children: [
                       // TODO: NOT FEEL SAFE
                       Visibility(
-                        visible: rideData!.statut == "on ride" ? true : false,
+                        // visible: rideData!.statut == "on ride" ? true : false,
+                        visible: false,
                         child: Expanded(
                           child: Padding(
                             padding: const EdgeInsets.only(bottom: 5),
@@ -630,13 +635,14 @@ class _RouteViewScreenState extends State<RouteViewScreen> {
                       //   ),
                       // ),
                       Visibility(
-                        visible: rideData!.statut == "rejected" ? false : true,
+                        visible: !(rideData!.statut == "rejected" || rideData!.statut == "completed"),
                         child: Expanded(
                           child: Padding(
                             padding: const EdgeInsets.only(bottom: 5, left: 10),
                             child: ButtonThem.buildBorderButton(
                               context,
-                              title: 'Cancel Ride'.tr,
+                              // TODO: i18n
+                              title: 'Cancel request',
                               btnHeight: 45,
                               btnWidthRatio: 0.8,
                               btnColor: Colors.white,
@@ -794,7 +800,7 @@ class _RouteViewScreenState extends State<RouteViewScreen> {
                                                         descriptions: "Ride Successfully cancel.",
                                                         onPress: () {
                                                           Get.back();
-                                                          controllerDashBoard.onSelectItem(1);
+                                                          controllerDashBoard.onRouteSelected(Routes.allRides);
                                                         },
                                                         img: Image.asset('assets/images/green_checked.png'),
                                                       );

@@ -3,11 +3,9 @@ import 'package:flutter/cupertino.dart';
 class DrawerRoute {
   DrawerRoute(
     this.route,
-    this.drawerIcon, [
-    this.screen,
-  ]);
+    this.drawerIcon,
+  );
 
   final String route;
   final IconData drawerIcon;
-  final Widget? screen;
 }

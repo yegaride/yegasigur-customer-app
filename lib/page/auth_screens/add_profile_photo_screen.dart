@@ -7,7 +7,6 @@ import 'package:cabme/controller/add_photo_controller.dart';
 import 'package:cabme/model/user_model.dart';
 import 'package:cabme/page/auth_screens/login_screen.dart';
 import 'package:cabme/page/dash_board.dart';
-import 'package:cabme/page/home_screens/home_screen.dart';
 import 'package:cabme/page/order_yegasigur_screen/order_yegasigur_screen.dart';
 import 'package:cabme/themes/button_them.dart';
 import 'package:cabme/themes/constant_colors.dart';
@@ -102,14 +101,12 @@ class AddProfilePhotoScreen extends StatelessWidget {
                   child: Text('skip'.tr),
                   onTap: () {
                     UserModel userModel = Constant.getUserData();
-                    userModel.data!.photoPath = userModel.data?.gender == 'male'
-                        ? Constant.maleImagePathPlaceholder
-                        : Constant.femaleImagePathPlaceholder;
+                    userModel.data!.photoPath = Constant.getPhotoPlaceholderBasedOnGender(userModel.data!.gender!);
 
                     Preferences.setString(Preferences.user, jsonEncode(userModel.toJson()));
                     Preferences.setBoolean(Preferences.isLogin, true);
 
-                    Get.offAll(DashBoard());
+                    Get.offAll(const DashBoard());
                   },
                 )
               : FloatingActionButton(

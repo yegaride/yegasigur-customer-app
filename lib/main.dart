@@ -2,15 +2,6 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:cabme/constant/constant.dart';
-import 'package:cabme/controller/dash_board_controller.dart';
-import 'package:cabme/controller/settings_controller.dart';
-import 'package:cabme/model/ride_model.dart';
-import 'package:cabme/page/auth_screens/signup_screen.dart';
-import 'package:cabme/page/localization_screens/localization_screen.dart';
-import 'package:cabme/page/route_view_screen/route_view_screen.dart';
-import 'package:cabme/page/safe_location/choose_safe_location_screen.dart';
-import 'package:cabme/routes/routes.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -20,13 +11,19 @@ import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import 'page/chats_screen/conversation_screen.dart';
-import 'page/completed_ride_screens/trip_history_screen.dart';
-import 'page/dash_board.dart';
-import 'page/on_boarding_screen.dart';
-import 'service/localization_service.dart';
-import 'themes/constant_colors.dart';
-import 'utils/Preferences.dart';
+import 'package:cabme/constant/constant.dart';
+import 'package:cabme/controller/dash_board_controller.dart';
+import 'package:cabme/controller/splash_screen_controller.dart';
+import 'package:cabme/model/ride_model.dart';
+import 'package:cabme/page/route_view_screen/route_view_screen.dart';
+import 'package:cabme/page/splash_screen/splash_screen.dart';
+import 'package:cabme/routes/routes.dart';
+import 'package:cabme/utils/Preferences.dart';
+import 'package:cabme/page/chats_screen/conversation_screen.dart';
+import 'package:cabme/page/completed_ride_screens/trip_history_screen.dart';
+import 'package:cabme/page/dash_board.dart';
+import 'package:cabme/service/localization_service.dart';
+import 'package:cabme/themes/constant_colors.dart';
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
@@ -35,6 +32,7 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 void main() async {
   Stripe.publishableKey = Constant.stripePublishablekey;
   WidgetsFlutterBinding.ensureInitialized();
+
   await Preferences.initPref();
 
   await Firebase.initializeApp();
@@ -170,14 +168,8 @@ class MyApp extends StatelessWidget {
         translations: LocalizationService(),
         builder: EasyLoading.init(),
         home: GetBuilder(
-          init: SettingsController(),
-          builder: (controller) {
-            return Preferences.getString(Preferences.languageCodeKey).toString().isEmpty
-                ? const LocalizationScreens(intentType: "main")
-                : Preferences.getBoolean(Preferences.isLogin)
-                    ? DashBoard()
-                    : const OnBoardingScreen();
-          },
+          init: SplashScreenController(),
+          builder: (_) => const SplashScreen(),
         ),
       ),
     );

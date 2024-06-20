@@ -11,4 +11,6 @@ abstract class Routes {
   static const String termsOfService = 'term_service';
   static const String privacyPolice = 'privacy_policy';
   static const String contactUs = 'contact_us';
+  static const String settings = 'settings';
+  static const String mapView = 'map_view';
 }

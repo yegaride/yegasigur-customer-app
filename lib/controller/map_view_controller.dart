@@ -10,7 +10,7 @@ import 'package:cabme/constant/show_toast_dialog.dart';
 import 'package:cabme/model/driver_location_update.dart';
 import 'package:cabme/model/driver_model.dart';
 import 'package:cabme/model/payment_method_model.dart';
-import 'package:cabme/model/taxi_model.dart';
+import 'package:cabme/model/ride_model.dart';
 import 'package:cabme/model/vehicle_category_model.dart';
 import 'package:cabme/service/api.dart';
 import 'package:cabme/utils/Preferences.dart';
@@ -24,8 +24,9 @@ import 'package:http/http.dart' as http;
 
 import '../model/payment_setting_model.dart';
 
-class HomeController extends GetxController {
-  //for Choose your Rider
+class MapViewController extends GetxController {
+  String? currenDriverId;
+  bool isListeningDriversLocation = false;
 
   LatLng center = const LatLng(41.4219057, -102.0840772);
 
@@ -66,8 +67,19 @@ class HomeController extends GetxController {
   void onInit() {
     paymentSettingModel.value = Constant.getPaymentSetting();
     setIcons();
-    getTaxiData();
     super.onInit();
+  }
+
+  void getCurrentDriver(RxList<RideData> rideList) {
+    final RideData? lastRide = rideList.firstWhereOrNull((ride) {
+      return ride.statut == 'on ride' || ride.statut == 'confirmed';
+    });
+
+    currenDriverId = lastRide?.idConducteur;
+
+    print(currenDriverId);
+
+    getTaxiData();
   }
 
   BitmapDescriptor? departureIcon;
@@ -138,23 +150,40 @@ class HomeController extends GetxController {
   RxList<DriverLocationUpdate> driverLocationList = <DriverLocationUpdate>[].obs;
 
   Future getTaxiData() async {
+    markers.clear();
+    driverLocationList.clear();
+
     Constant.driverLocationUpdateCollection.where("active", isEqualTo: true).snapshots().listen((event) {
       print("=======>");
       print(event.docs.length);
-      for (var element in event.docs) {
-        DriverLocationUpdate driverLocationUpdate = DriverLocationUpdate.fromJson(element.data() as Map<String, dynamic>);
-        driverLocationList.add(driverLocationUpdate);
-        driverLocationList.forEach((element) {
-          markers[element.driverId.toString()] = Marker(
-            markerId: MarkerId(element.driverId.toString()),
-            rotation: double.parse(element.rotation.toString()),
+
+      for (var driverSnapshot in event.docs) {
+        DriverLocationUpdate driverLocationUpdate = DriverLocationUpdate.fromJson(driverSnapshot.data() as Map<String, dynamic>);
+
+        print('🚀🚀 $driverLocationUpdate');
+
+        if (currenDriverId == null) {
+          print('🚀🚀 es null');
+          driverLocationList.add(driverLocationUpdate);
+        } else {
+          print('🚀🚀 no es null');
+          if (currenDriverId != driverLocationUpdate.driverId) continue;
+
+          driverLocationList.add(driverLocationUpdate);
+        }
+
+        for (var driver in driverLocationList) {
+          markers[driver.driverId.toString()] = Marker(
+            markerId: MarkerId(driver.driverId.toString()),
+            rotation: double.parse(driver.rotation.toString()),
             // infoWindow: InfoWindow(title: element.prenom.toString(), snippet: "${element.brand},${element.model},${element.numberplate}"),
             position: LatLng(
-                double.parse(element.driverLatitude.toString().isNotEmpty ? element.driverLatitude.toString() : "0.0"),
-                double.parse(element.driverLongitude.toString().isNotEmpty ? element.driverLongitude.toString() : "0.0")),
+              double.parse(driver.driverLatitude.toString().isNotEmpty ? driver.driverLatitude.toString() : "0.0"),
+              double.parse(driver.driverLongitude.toString().isNotEmpty ? driver.driverLongitude.toString() : "0.0"),
+            ),
             icon: taxiIcon!,
           );
-        });
+        }
       }
     });
   }

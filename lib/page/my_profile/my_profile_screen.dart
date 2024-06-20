@@ -69,9 +69,9 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                       Container(
                         height: Responsive.height(16, context),
                         width: Responsive.width(100, context),
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                             color: ConstantColors.primary,
-                            borderRadius: const BorderRadius.only(
+                            borderRadius: BorderRadius.only(
                               bottomLeft: Radius.circular(25.0),
                               bottomRight: Radius.circular(25.0),
                             )),
@@ -100,11 +100,9 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                   borderRadius: BorderRadius.circular(16),
                                   child: myProfileController.photoPath.isEmpty
                                       ? CachedNetworkImage(
-                                          imageUrl: switch (myProfileController.gender.toString()) {
-                                            'male' => Constant.maleImagePathPlaceholder,
-                                            'female' => Constant.femaleImagePathPlaceholder,
-                                            _ => ''
-                                          },
+                                          imageUrl: Constant.getPhotoPlaceholderBasedOnGender(
+                                            myProfileController.gender.toString(),
+                                          ),
                                           height: 120,
                                           width: 120,
                                           fit: BoxFit.cover,
@@ -152,17 +150,17 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                   ),
                   SingleChildScrollView(
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           buildShowDetails(
                             title: 'Safe location',
-                            subtitle: 'Add your safe location',
+                            subtitle: '${Constant.getUserData().data!.address}.',
                             isEditIcon: true,
                             iconData: Icons.location_on,
                             onPress: () => Get.to(const ChooseSafeLocationScreen(
-                              continueButtonType: 'back',
+                              saveButtonBehavior: SavebuttonBehavior.saveAndBack,
                             )),
                           ),
                           buildShowDetails(
@@ -562,7 +560,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
             children: [
               TextFieldThem.boxBuildTextField(
                 hintText: "Current Password".tr,
-                obscureText: false,
+                obscureText: true,
                 controller: currentPasswordController,
                 validators: (valve) {
                   if (valve!.isNotEmpty) {
@@ -577,7 +575,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
               ),
               TextFieldThem.boxBuildTextField(
                 hintText: "New Password".tr,
-                obscureText: false,
+                obscureText: true,
                 controller: newPasswordController,
                 validators: (valve) {
                   if (valve!.isNotEmpty) {
@@ -592,7 +590,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
               ),
               TextFieldThem.boxBuildTextField(
                 hintText: "confirm_password".tr,
-                obscureText: false,
+                obscureText: true,
                 controller: confirmPasswordController,
                 validators: (valve) {
                   if (valve == newPasswordController.text) {

@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:cabme/constant/constant.dart';
 import 'package:cabme/constant/show_toast_dialog.dart';
-import 'package:cabme/controller/home_controller_old.dart';
+import 'package:cabme/controller/map_view_controller.dart';
+import 'package:cabme/controller/new_ride_controller.dart';
 import 'package:cabme/model/driver_model.dart';
 import 'package:cabme/model/vehicle_category_model.dart';
 import 'package:cabme/themes/button_them.dart';
@@ -17,15 +20,18 @@ import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+class MapViewScreen extends StatefulWidget {
+  const MapViewScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<MapViewScreen> createState() => _MapViewScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
-  final controller = Get.put(HomeController());
+class _MapViewScreenState extends State<MapViewScreen> {
+  final controller = Get.put(MapViewController());
+  final newRideController = Get.put(NewRideController());
+
+  Timer? timer;
 
   GoogleMapController? _controller;
   final Location currentLocation = Location();
@@ -40,12 +46,30 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     controller.multiStopList.clear();
     controller.multiStopListNew.clear();
+    controller.markers.clear();
     getCurrentLocation(true);
+    getCurrentDriver();
+
+    timer = Timer.periodic(const Duration(seconds: 15), (timer) {
+      getCurrentDriver();
+    });
+
     super.initState();
+  }
+
+  Future<void> getCurrentDriver() async {
+    await newRideController.getNewRide();
+    controller.getCurrentDriver(newRideController.rideList);
   }
 
   @override
   void dispose() {
+    Get.delete<NewRideController>();
+
+    if (timer != null) {
+      timer!.cancel();
+    }
+
     super.dispose();
   }
 
@@ -121,355 +145,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                child: Container(
-                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.white),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 10),
-                    child: Column(
-                      children: [
-                        Builder(builder: (context) {
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 00),
-                            child: Row(
-                              children: [
-                                Image.asset(
-                                  "assets/icons/location.png",
-                                  height: 25,
-                                  width: 25,
-                                ),
-                                Expanded(
-                                  child: InkWell(
-                                    onTap: () async {
-                                      await controller.placeSelectAPI(context).then((value) {
-                                        if (value != null) {
-                                          controller.departureController.text = value.result.formattedAddress.toString();
-                                          setDepartureMarker(
-                                              LatLng(value.result.geometry!.location.lat, value.result.geometry!.location.lng));
-                                        }
-                                      });
-                                    },
-                                    child: buildTextField(
-                                      title: "Departure".tr,
-                                      textController: controller.departureController,
-                                    ),
-                                  ),
-                                ),
-                                IconButton(
-                                  onPressed: () {
-                                    getCurrentLocation(true);
-                                  },
-                                  autofocus: false,
-                                  icon: const Icon(
-                                    Icons.my_location_outlined,
-                                    size: 18,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          );
-                        }),
-                        ReorderableListView(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          children: <Widget>[
-                            for (int index = 0; index < controller.multiStopListNew.length; index += 1)
-                              Container(
-                                key: ValueKey(controller.multiStopListNew[index]),
-                                child: Column(
-                                  children: [
-                                    const Divider(),
-                                    InkWell(
-                                        onTap: () async {
-                                          await controller.placeSelectAPI(context).then((value) {
-                                            if (value != null) {
-                                              controller.multiStopListNew[index].editingController.text =
-                                                  value.result.formattedAddress.toString();
-                                              controller.multiStopListNew[index].latitude =
-                                                  value.result.geometry!.location.lat.toString();
-                                              controller.multiStopListNew[index].longitude =
-                                                  value.result.geometry!.location.lng.toString();
-                                              setStopMarker(
-                                                  LatLng(
-                                                      value.result.geometry!.location.lat, value.result.geometry!.location.lng),
-                                                  index);
-                                            }
-                                          });
-                                        },
-                                        child: Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
-                                          Text(
-                                            String.fromCharCode(index + 65),
-                                            style: TextStyle(fontSize: 16, color: ConstantColors.hintTextColor),
-                                          ),
-                                          const SizedBox(
-                                            width: 5,
-                                          ),
-                                          Expanded(
-                                            child: buildTextField(
-                                              title: "Where do you want to stop ?".tr,
-                                              textController: controller.multiStopListNew[index].editingController,
-                                            ),
-                                          ),
-                                          const SizedBox(
-                                            width: 5,
-                                          ),
-                                          InkWell(
-                                            onTap: () {
-                                              controller.removeStops(index);
-                                              controller.markers.remove("Stop $index");
-                                              getDirections();
-                                            },
-                                            child: Icon(
-                                              Icons.close,
-                                              size: 25,
-                                              color: ConstantColors.hintTextColor,
-                                            ),
-                                          )
-                                        ])),
-                                  ],
-                                ),
-                              ),
-                          ],
-                          onReorder: (int oldIndex, int newIndex) {
-                            setState(() {
-                              if (oldIndex < newIndex) {
-                                newIndex -= 1;
-                              }
-                              final AddStopModel item = controller.multiStopListNew.removeAt(oldIndex);
-                              controller.multiStopListNew.insert(newIndex, item);
-                            });
-                          },
-                        ),
-
-                        const Divider(),
-                        Row(
-                          children: [
-                            Image.asset(
-                              "assets/icons/dropoff.png",
-                              height: 25,
-                              width: 25,
-                            ),
-                            Expanded(
-                              child: InkWell(
-                                onTap: () async {
-                                  await controller.placeSelectAPI(context).then((value) {
-                                    if (value != null) {
-                                      controller.destinationController.text = value.result.formattedAddress.toString();
-                                      setDestinationMarker(
-                                          LatLng(value.result.geometry!.location.lat, value.result.geometry!.location.lng));
-                                    }
-                                  });
-                                },
-                                child: buildTextField(
-                                  title: "Where do you want to go ?".tr,
-                                  textController: controller.destinationController,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        // ListView.builder(
-                        //     shrinkWrap: true,
-                        //     itemCount: controller.multiStopList.length,
-                        //     itemBuilder: (context, int index) {
-                        //       return Draggable(
-                        //         onDragEnd: (DraggableDetails details) {
-                        //           print(
-                        //               '\x1b[92m ====== ${details.velocity.pixelsPerSecond}');
-                        //           print('\x1b[92m ====== ${details.offset}');
-                        //         },
-                        //         feedback: Material(
-                        //           child: ConstrainedBox(
-                        //             constraints: BoxConstraints(
-                        //                 maxWidth:
-                        //                     MediaQuery.of(context).size.width),
-                        //             child: Column(
-                        //               children: [
-                        //                 const Divider(),
-                        //                 InkWell(
-                        //                   onTap: () async {
-                        //                     await controller
-                        //                         .placeSelectAPI(context)
-                        //                         .then((value) {
-                        //                       if (value != null) {
-                        //                         controller
-                        //                                 .multiStopList[index]
-                        //                                 .editingController
-                        //                                 .text =
-                        //                             value
-                        //                                 .result.formattedAddress
-                        //                                 .toString();
-                        //                         controller.multiStopList[index]
-                        //                                 .latitude =
-                        //                             value.result.geometry!
-                        //                                 .location.lat
-                        //                                 .toString();
-                        //                         controller.multiStopList[index]
-                        //                                 .longitude =
-                        //                             value.result.geometry!
-                        //                                 .location.lng
-                        //                                 .toString();
-                        //                         setStopMarker(
-                        //                             LatLng(
-                        //                                 value.result.geometry!
-                        //                                     .location.lat,
-                        //                                 value.result.geometry!
-                        //                                     .location.lng),
-                        //                             index);
-                        //                       }
-                        //                     });
-                        //                   },
-                        //                   child: Row(
-                        //                     crossAxisAlignment:
-                        //                         CrossAxisAlignment.center,
-                        //                     children: [
-                        //                       Icon(
-                        //                         Icons.location_on_outlined,
-                        //                         size: 25,
-                        //                         color: ConstantColors
-                        //                             .hintTextColor,
-                        //                       ),
-                        //                       SizedBox(
-                        //                         width: 5,
-                        //                       ),
-                        //                       Expanded(
-                        //                         child: buildTextField(
-                        //                           title:
-                        //                               "Where do you want to stop ?",
-                        //                           textController: controller
-                        //                               .multiStopList[index]
-                        //                               .editingController,
-                        //                         ),
-                        //                       ),
-                        //                       SizedBox(
-                        //                         width: 5,
-                        //                       ),
-                        //                       InkWell(
-                        //                         onTap: () {
-                        //                           controller.removeStops(index);
-                        //                           _markers
-                        //                               .remove("Stop $index");
-                        //                           getDirections();
-                        //                         },
-                        //                         child: Icon(
-                        //                           Icons.close,
-                        //                           size: 25,
-                        //                           color: ConstantColors
-                        //                               .hintTextColor,
-                        //                         ),
-                        //                       ),
-                        //                     ],
-                        //                   ),
-                        //                 ),
-                        //               ],
-                        //             ),
-                        //           ),
-                        //         ),
-                        // child: Column(
-                        //   children: [
-                        //     const Divider(),
-                        //     InkWell(
-                        //       onTap: () async {
-                        //         await controller
-                        //             .placeSelectAPI(context)
-                        //             .then((value) {
-                        //           if (value != null) {
-                        //             controller.multiStopList[index]
-                        //                     .editingController.text =
-                        //                 value.result.formattedAddress
-                        //                     .toString();
-                        //             controller.multiStopList[index]
-                        //                     .latitude =
-                        //                 value.result.geometry!.location
-                        //                     .lat
-                        //                     .toString();
-                        //             controller.multiStopList[index]
-                        //                     .longitude =
-                        //                 value.result.geometry!.location
-                        //                     .lng
-                        //                     .toString();
-                        //             setStopMarker(
-                        //                 LatLng(
-                        //                     value.result.geometry!
-                        //                         .location.lat,
-                        //                     value.result.geometry!
-                        //                         .location.lng),
-                        //                 index);
-                        //           }
-                        //         });
-                        //       },
-                        //       child: Row(
-                        //         crossAxisAlignment:
-                        //             CrossAxisAlignment.center,
-                        //         children: [
-                        //           Icon(
-                        //             Icons.location_on_outlined,
-                        //             size: 25,
-                        //             color: ConstantColors.hintTextColor,
-                        //           ),
-                        //           SizedBox(
-                        //             width: 5,
-                        //           ),
-                        //           Expanded(
-                        //             child: buildTextField(
-                        //               title:
-                        //                   "Where do you want to stop ?",
-                        //               textController: controller
-                        //                   .multiStopList[index]
-                        //                   .editingController,
-                        //             ),
-                        //           ),
-                        //           SizedBox(
-                        //             width: 5,
-                        //           ),
-                        //           InkWell(
-                        //             onTap: () {
-                        //               controller.removeStops(index);
-                        //               _markers.remove("Stop $index");
-                        //               getDirections();
-                        //             },
-                        //             child: Icon(
-                        //               Icons.close,
-                        //               size: 25,
-                        //               color:
-                        //                   ConstantColors.hintTextColor,
-                        //             ),
-                        //           ),
-                        //         ],
-                        //       ),
-                        //     ),
-                        //   ],
-                        //         ),
-                        //       );
-                        //     }),
-
-                        const Divider(),
-                        InkWell(
-                          onTap: () {
-                            controller.addStops();
-                          },
-                          child: Row(
-                            children: [
-                              Icon(
-                                Icons.add_circle,
-                                color: ConstantColors.hintTextColor,
-                              ),
-                              const SizedBox(
-                                width: 5,
-                              ),
-                              Text(
-                                'Add stop'.tr,
-                                style: TextStyle(color: ConstantColors.hintTextColor, fontSize: 16),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
             ],
           ),
           Visibility(
@@ -497,11 +172,9 @@ class _HomeScreenState extends State<HomeScreen> {
       _controller!.animateCamera(
           CameraUpdate.newCameraPosition(CameraPosition(target: LatLng(departure.latitude, departure.longitude), zoom: 14)));
 
-      // _controller?.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: LatLng(departure.latitude, departure.longitude), zoom: 18)));
       if (departureLatLong != null && destinationLatLong != null) {
         getDirections();
         controller.confirmWidgetVisible.value = true;
-        // conformationBottomSheet(context);
       }
     });
   }
@@ -519,28 +192,22 @@ class _HomeScreenState extends State<HomeScreen> {
       if (departureLatLong != null && destinationLatLong != null) {
         getDirections();
         controller.confirmWidgetVisible.value = true;
-        // conformationBottomSheet(context);
       }
     });
   }
 
   setStopMarker(LatLng destination, int index) {
-    // final List<int> codeUnits = "Anand".codeUnits;
-    // final Uint8List unit8List = Uint8List.fromList(codeUnits);
-    // print('\x1b[97m ===== $unit8List =====');
     setState(() {
       controller.markers['Stop $index'] = Marker(
         markerId: MarkerId('Stop $index'),
         infoWindow: InfoWindow(title: "Stop ${String.fromCharCode(index + 65)}"),
         position: destination,
         icon: controller.stopIcon!,
-      ); //BitmapDescriptor.fromBytes(unit8List));
-      // destinationLatLong = destination;
+      );
 
       if (departureLatLong != null && destinationLatLong != null) {
         getDirections();
         controller.confirmWidgetVisible.value = true;
-        // conformationBottomSheet(context);
       }
     });
   }
@@ -640,7 +307,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           }
 
                           controller.duration.value = durationValue['rows'].first['elements'].first['duration']['text'];
-                          // Get.back();
+
                           controller.confirmWidgetVisible.value = false;
                           tripOptionBottomSheet(context);
                         }
@@ -654,7 +321,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         }
                         controller.duration.value = durationValue['rows'].first['elements'].first['duration']['text'];
                         controller.confirmWidgetVisible.value = false;
-                        // Get.back();
+
                         tripOptionBottomSheet(context);
                       }
                     }
@@ -798,37 +465,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     if (value != null) {
                                       if (value.success == "Success") {
                                         Get.back();
-                                        // List tripPrice = [];
-                                        // for (int i = 0;
-                                        //     i < value.vehicleData!.length;
-                                        //     i++) {
-                                        //   tripPrice.add(0.0);
-                                        // }
-                                        // if (value.vehicleData!.isNotEmpty) {
-                                        //   for (int i = 0;
-                                        //       i < value.vehicleData!.length;
-                                        //       i++) {
-                                        //     if (controller.distance.value >
-                                        //         value.vehicleData![i]
-                                        //             .minimumDeliveryChargesWithin!
-                                        //             .toDouble()) {
-                                        //       tripPrice.add((controller
-                                        //                   .distance.value *
-                                        //               value.vehicleData![i]
-                                        //                   .deliveryCharges!)
-                                        //           .toDouble()
-                                        //           .toStringAsFixed(
-                                        //               int.parse(Constant.decimal ?? "2")));
-                                        //     } else {
-                                        //       tripPrice.add(value
-                                        //           .vehicleData![i]
-                                        //           .minimumDeliveryCharges!
-                                        //           .toDouble()
-                                        //           .toStringAsFixed(
-                                        //               int.parse(Constant.decimal ?? "2")));
-                                        //     }
-                                        //   }
-                                        // }
+
                                         chooseVehicleBottomSheet(
                                           context,
                                           value,
@@ -1041,40 +678,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                 } else {
                                   cout = double.parse(controller.vehicleData!.minimumDeliveryCharges.toString());
                                 }
-
-                                // double cout = double.parse(controller
-                                //         .vehicleData!.prix
-                                //         .toString()) *
-                                //     controller.distance.value;
-
-                                // if (controller.vehicleData!.statutCommission ==
-                                //         "yes" &&
-                                //     controller.vehicleData!
-                                //             .statutCommissionPerc ==
-                                //         "yes") {
-                                //   double coutFixed = double.parse(controller
-                                //       .vehicleData!.commission
-                                //       .toString());
-                                //   double coutPerc = cout +
-                                //       (cout +
-                                //           double.parse(controller
-                                //               .vehicleData!.commissionPerc
-                                //               .toString()));
-                                //   cout = coutFixed + coutPerc;
-                                // } else if (controller
-                                //         .vehicleData!.statutCommission ==
-                                //     "yes") {
-                                //   cout = cout +
-                                //       double.parse(controller
-                                //           .vehicleData!.commission
-                                //           .toString());
-                                // } else {
-                                //   cout = cout +
-                                //       (cout +
-                                //           double.parse(controller
-                                //               .vehicleData!.commissionPerc
-                                //               .toString()));
-                                // }
 
                                 await controller
                                     .getDriverDetails(controller.vehicleData!.id.toString(),
@@ -1492,7 +1095,6 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   _pendingPaymentDialog(BuildContext context) {
-    // set up the button
     Widget okButton = TextButton(
       child: const Text("OK"),
       onPressed: () {
@@ -1500,7 +1102,6 @@ class _HomeScreenState extends State<HomeScreen> {
       },
     );
 
-    // set up the AlertDialog
     AlertDialog alert = AlertDialog(
       title: const Text("Cab me"),
       content: Text("You have pending payments. Please complete payment before book new trip.".tr),
@@ -1508,7 +1109,7 @@ class _HomeScreenState extends State<HomeScreen> {
         okButton,
       ],
     );
-    // show the dialog
+
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -1605,7 +1206,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                   Text("Cash".tr),
                                 ],
                               ),
-                              //toggleable: true,
                             ),
                           ),
                         ),
@@ -1676,7 +1276,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                   Text("Wallet".tr),
                                 ],
                               ),
-                              //toggleable: true,
                             ),
                           ),
                         ),
@@ -1747,7 +1346,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                   Text("Stripe".tr),
                                 ],
                               ),
-                              //toggleable: true,
                             ),
                           ),
                         ),
@@ -1789,7 +1387,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                 Get.back();
                               },
                               selected: controller.payStack.value,
-                              //selectedRadioTile == "strip" ? true : false,
                               contentPadding: const EdgeInsets.symmetric(
                                 horizontal: 6,
                               ),
@@ -1820,7 +1417,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                   Text("PayStack".tr),
                                 ],
                               ),
-                              //toggleable: true,
                             ),
                           ),
                         ),
@@ -1892,7 +1488,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                   Text("FlutterWave".tr),
                                 ],
                               ),
-                              //toggleable: true,
                             ),
                           ),
                         ),
@@ -1956,7 +1551,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                   Text("RazorPay".tr),
                                 ],
                               ),
-                              //toggleable: true,
                             ),
                           ),
                         ),
@@ -1998,7 +1592,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                 Get.back();
                               },
                               selected: controller.payFast.value,
-                              //selectedRadioTile == "strip" ? true : false,
                               contentPadding: const EdgeInsets.symmetric(
                                 horizontal: 6,
                               ),
@@ -2029,7 +1622,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                   Text("Pay Fast".tr),
                                 ],
                               ),
-                              //toggleable: true,
                             ),
                           ),
                         ),
@@ -2099,7 +1691,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                   Text("Paytm".tr),
                                 ],
                               ),
-                              //toggleable: true,
                             ),
                           ),
                         ),
@@ -2171,7 +1762,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                   Text("Mercado Pago".tr),
                                 ],
                               ),
-                              //toggleable: true,
                             ),
                           ),
                         ),
@@ -2239,7 +1829,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                   Text("PayPal".tr),
                                 ],
                               ),
-                              //toggleable: true,
                             ),
                           ),
                         ),

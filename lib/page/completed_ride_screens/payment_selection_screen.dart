@@ -11,7 +11,8 @@ import 'package:cabme/model/get_payment_txt_token_model.dart';
 import 'package:cabme/model/payStackURLModel.dart';
 import 'package:cabme/model/razorpay_gen_orderid_model.dart';
 import 'package:cabme/model/stripe_failed_model.dart';
-import 'package:cabme/model/tax_model.dart';
+// import 'package:cabme/model/tax_model.dart';
+import 'package:cabme/page/wallet/cxpay_screen.dart';
 import 'package:cabme/page/wallet/payStackScreen.dart';
 import 'package:cabme/service/api.dart';
 import 'package:cabme/themes/button_them.dart';
@@ -331,7 +332,7 @@ class PaymentSelectionScreen extends StatelessWidget {
                                 ),
                                 Text(
                                   Constant().amountShow(amount: controller.getTotalAmount().toString()),
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     letterSpacing: 1.0,
                                     color: ConstantColors.primary,
                                     fontSize: 16,
@@ -552,6 +553,74 @@ class PaymentSelectionScreen extends StatelessWidget {
                       ],
                     ),
                   ),
+
+                  /// cxpay
+                  Visibility(
+                    visible: controller.paymentSettingModel.value.cxpay!.isEnabled == 'true',
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 3.0, horizontal: 2),
+                      child: Card(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        elevation: controller.paypal.value ? 0 : 2,
+                        child: RadioListTile(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              side: BorderSide(color: controller.cxpay.value ? ConstantColors.primary : Colors.transparent)),
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 6,
+                          ),
+                          controlAffinity: ListTileControlAffinity.trailing,
+                          value: "cxpay",
+                          groupValue: controller.selectedRadioTile.value,
+                          onChanged: (String? value) {
+                            controller.stripe = false.obs;
+                            controller.wallet = false.obs;
+                            controller.cash = false.obs;
+                            controller.razorPay = false.obs;
+                            controller.payTm = false.obs;
+                            controller.paypal = false.obs;
+                            controller.payStack = false.obs;
+                            controller.flutterWave = false.obs;
+                            controller.mercadoPago = false.obs;
+                            controller.payFast = false.obs;
+                            controller.cxpay = true.obs;
+                            controller.selectedRadioTile.value = value!;
+                            controller.paymentMethodId.value =
+                                controller.paymentSettingModel.value.cxpay!.idPaymentMethod.toString();
+                          },
+                          selected: controller.cxpay.value,
+                          title: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.blueGrey.shade50,
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(vertical: 3.0, horizontal: 10),
+                                    child: SizedBox(
+                                        width: 80,
+                                        height: 35,
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(vertical: 3.0),
+                                          child: Image.asset("assets/images/paypal_@3x.png"),
+                                        )),
+                                  )),
+                              const SizedBox(
+                                width: 20,
+                              ),
+                              // TODO i18n
+                              const Text("Credit card"),
+                            ],
+                          ),
+                          //toggleable: true,
+                        ),
+                      ),
+                    ),
+                  ),
                   Visibility(
                     visible: controller.paymentSettingModel.value.cash!.isEnabled == "true" ? true : false,
                     child: Padding(
@@ -579,6 +648,7 @@ class PaymentSelectionScreen extends StatelessWidget {
                             controller.flutterWave = false.obs;
                             controller.mercadoPago = false.obs;
                             controller.payFast = false.obs;
+                            controller.cxpay = false.obs;
                             controller.selectedRadioTile.value = value!;
                             controller.paymentMethodId =
                                 controller.paymentSettingModel.value.cash!.idPaymentMethod.toString().obs;
@@ -654,6 +724,7 @@ class PaymentSelectionScreen extends StatelessWidget {
                             controller.flutterWave = false.obs;
                             controller.mercadoPago = false.obs;
                             controller.payFast = false.obs;
+                            controller.cxpay = false.obs;
                           },
                           selected: controller.wallet.value,
                           contentPadding: const EdgeInsets.symmetric(
@@ -749,6 +820,7 @@ class PaymentSelectionScreen extends StatelessWidget {
                             controller.flutterWave = false.obs;
                             controller.mercadoPago = false.obs;
                             controller.payFast = false.obs;
+                            controller.cxpay = false.obs;
                             controller.selectedRadioTile.value = value!;
                             controller.paymentMethodId =
                                 controller.paymentSettingModel.value.strip!.idPaymentMethod.toString().obs;
@@ -773,7 +845,7 @@ class PaymentSelectionScreen extends StatelessWidget {
                                       child: Padding(
                                         padding: const EdgeInsets.symmetric(vertical: 6.0),
                                         child: Image.asset(
-                                          "assets/images/stripe.png",
+                                          "assets/images/stripe-cards.png",
                                         ),
                                       ),
                                     ),
@@ -781,7 +853,8 @@ class PaymentSelectionScreen extends StatelessWidget {
                               const SizedBox(
                                 width: 20,
                               ),
-                              Text("Stripe".tr),
+                              // TODO i18n
+                              const Text("Credit/Debit Card"),
                             ],
                           ),
                           //toggleable: true,
@@ -816,6 +889,7 @@ class PaymentSelectionScreen extends StatelessWidget {
                             controller.flutterWave = false.obs;
                             controller.mercadoPago = false.obs;
                             controller.payFast = false.obs;
+                            controller.cxpay = false.obs;
                             controller.selectedRadioTile.value = value!;
                             controller.paymentMethodId =
                                 controller.paymentSettingModel.value.payStack!.idPaymentMethod.toString().obs;
@@ -885,6 +959,7 @@ class PaymentSelectionScreen extends StatelessWidget {
                             controller.flutterWave = true.obs;
                             controller.mercadoPago = false.obs;
                             controller.payFast = false.obs;
+                            controller.cxpay = false.obs;
                             controller.selectedRadioTile.value = value!;
                             controller.paymentMethodId.value =
                                 controller.paymentSettingModel.value.flutterWave!.idPaymentMethod.toString();
@@ -955,6 +1030,7 @@ class PaymentSelectionScreen extends StatelessWidget {
                             controller.flutterWave = false.obs;
                             controller.mercadoPago = false.obs;
                             controller.payFast = false.obs;
+                            controller.cxpay = false.obs;
                             controller.selectedRadioTile.value = value!;
                             controller.paymentMethodId.value =
                                 controller.paymentSettingModel.value.razorpay!.idPaymentMethod.toString();
@@ -1010,6 +1086,7 @@ class PaymentSelectionScreen extends StatelessWidget {
                             controller.flutterWave = false.obs;
                             controller.mercadoPago = false.obs;
                             controller.payFast = true.obs;
+                            controller.cxpay = false.obs;
                             controller.selectedRadioTile.value = value!;
                             controller.paymentMethodId.value =
                                 controller.paymentSettingModel.value.payFast!.idPaymentMethod.toString();
@@ -1081,6 +1158,7 @@ class PaymentSelectionScreen extends StatelessWidget {
                             controller.flutterWave = false.obs;
                             controller.mercadoPago = false.obs;
                             controller.payFast = false.obs;
+                            controller.cxpay = false.obs;
                             controller.selectedRadioTile.value = value!;
                             controller.paymentMethodId.value =
                                 controller.paymentSettingModel.value.paytm!.idPaymentMethod.toString();
@@ -1145,6 +1223,7 @@ class PaymentSelectionScreen extends StatelessWidget {
                             controller.flutterWave = false.obs;
                             controller.mercadoPago = true.obs;
                             controller.payFast = false.obs;
+                            controller.cxpay = false.obs;
                             controller.selectedRadioTile.value = value!;
                             controller.paymentMethodId.value =
                                 controller.paymentSettingModel.value.mercadopago!.idPaymentMethod.toString();
@@ -1215,6 +1294,7 @@ class PaymentSelectionScreen extends StatelessWidget {
                             controller.flutterWave = false.obs;
                             controller.mercadoPago = false.obs;
                             controller.payFast = false.obs;
+                            controller.cxpay = false.obs;
                             controller.selectedRadioTile.value = value!;
                             controller.paymentMethodId.value =
                                 controller.paymentSettingModel.value.payPal!.idPaymentMethod.toString();
@@ -1267,6 +1347,12 @@ class PaymentSelectionScreen extends StatelessWidget {
                   ),
                   InkWell(
                     onTap: () {
+                      if (controller.selectedRadioTile.value == 'Cash') {
+                        // TODO i18n
+                        ShowToastDialog.showToast("Please select payment method".tr);
+                        return;
+                      }
+
                       if (controller.selectedRadioTile.value == "Wallet") {
                         if (double.parse(controller.walletAmount.toString()) >= controller.getTotalAmount()) {
                           Get.back();
@@ -1356,6 +1442,9 @@ class PaymentSelectionScreen extends StatelessWidget {
                       } else if (controller.selectedRadioTile.value == "MercadoPago") {
                         showLoadingAlert(context);
                         mercadoPagoMakePayment(context, controller.getTotalAmount().toString());
+                      } else if (controller.selectedRadioTile.value == 'cxpay') {
+                        showLoadingAlert(context);
+                        cxpayPayment(context, controller.getTotalAmount().toString());
                       }
                     },
                     child: Text(
@@ -2096,6 +2185,21 @@ class PaymentSelectionScreen extends StatelessWidget {
         showSnackBarAlert(message: "Error while transaction!".tr, color: Colors.red);
       }
     });
+  }
+
+  Future<void> cxpayPayment(context, amount) async {
+    final isDone = await Get.to(() {
+      return CxpayScreen(amount: amount);
+    });
+
+    Get.back();
+
+    if (isDone) {
+      Get.back();
+      transactionAPI();
+      return;
+    }
+    showSnackBarAlert(message: "Payment UnSuccessful!!".tr, color: Colors.red);
   }
 
   ///FlutterWave Payment Method

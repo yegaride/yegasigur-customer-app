@@ -53,11 +53,13 @@ class _PayStackScreenState extends State<PayStackScreen> {
           onWebResourceError: (WebResourceError error) {},
           onNavigationRequest: (NavigationRequest navigation) async {
             if (navigation.url == '${widget.callBackUrl}?trxref=${widget.reference}&reference=${widget.reference}') {
-              final isDone = await widget.walletController.payStackVerifyTransaction(secretKey: widget.secretKey, reference: widget.reference, amount: widget.amount);
+              final isDone = await widget.walletController
+                  .payStackVerifyTransaction(secretKey: widget.secretKey, reference: widget.reference, amount: widget.amount);
               Get.back(result: isDone);
             }
             if (navigation.url == '${widget.callBackUrl}?trxref=${widget.reference}&reference=${widget.reference}') {
-              final isDone = await widget.walletController.payStackVerifyTransaction(secretKey: widget.secretKey, reference: widget.reference, amount: widget.amount);
+              final isDone = await widget.walletController
+                  .payStackVerifyTransaction(secretKey: widget.secretKey, reference: widget.reference, amount: widget.amount);
               Get.back(result: isDone);
               //close webview
             }

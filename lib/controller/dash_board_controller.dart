@@ -7,20 +7,18 @@ import 'package:cabme/constant/constant.dart';
 import 'package:cabme/constant/show_toast_dialog.dart';
 import 'package:cabme/model/drawer_item_model.dart';
 import 'package:cabme/model/user_model.dart';
-import 'package:cabme/page/auth_screens/login_screen.dart';
+import 'package:cabme/page/auth_screens/mobile_number_screen.dart';
 import 'package:cabme/page/contact_us/contact_us_screen.dart';
-import 'package:cabme/page/coupon_code/coupon_code_screen.dart';
 import 'package:cabme/page/home_screens/home_screen.dart';
-import 'package:cabme/page/localization_screens/localization_screen.dart';
+import 'package:cabme/page/map_view/map_view_screen.dart';
 import 'package:cabme/page/my_profile/my_profile_screen.dart';
 import 'package:cabme/page/new_ride_screens/new_ride_screen.dart';
 import 'package:cabme/page/order_yegasigur_screen/order_yegasigur_screen.dart';
-import 'package:cabme/page/privacy_policy/privacy_policy_screen.dart';
-import 'package:cabme/page/referral_screen/referral_screen.dart';
-import 'package:cabme/page/terms_service/terms_of_service_screen.dart';
+import 'package:cabme/page/settings/user_settings_screen.dart';
 import 'package:cabme/page/wallet/wallet_screen.dart';
 import 'package:cabme/service/api.dart';
 import 'package:cabme/utils/Preferences.dart';
+
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -36,7 +34,6 @@ class DashBoardController extends GetxController {
   void onInit() {
     getUsrData();
     updateToken();
-    getPaymentSettingData();
     super.onInit();
   }
 
@@ -56,19 +53,29 @@ class DashBoardController extends GetxController {
   }
 
   final drawerRoutes = [
-    DrawerRoute(Routes.home, CupertinoIcons.home, const HomeScreen()),
-    DrawerRoute(Routes.orderYegasigur, CupertinoIcons.car_detailed, OrderYegasigurScreen()),
-    DrawerRoute(Routes.myProfile, Icons.person_outline, MyProfileScreen()),
-    DrawerRoute(Routes.allRides, Icons.local_car_wash, const NewRideScreen()),
-    DrawerRoute(Routes.promoCode, Icons.discount, const CouponCodeScreen()),
-    DrawerRoute(Routes.wallet, Icons.account_balance_wallet_outlined, WalletScreen()),
-    DrawerRoute(Routes.referAFriend, Icons.people_sharp, const ReferralScreen()),
-    DrawerRoute(Routes.changeLanguage, Icons.language, const LocalizationScreens(intentType: "dashBoard")),
-    DrawerRoute(Routes.termsOfService, Icons.design_services, const TermsOfServiceScreen()),
-    DrawerRoute(Routes.privacyPolice, Icons.privacy_tip, const PrivacyPolicyScreen()),
-    DrawerRoute(Routes.contactUs, Icons.support_agent, const ContactUsScreen()),
-    DrawerRoute(Routes.signOut, Icons.logout),
+    DrawerRoute(Routes.home, CupertinoIcons.home),
+    DrawerRoute(Routes.mapView, Icons.map),
+    DrawerRoute(Routes.orderYegasigur, CupertinoIcons.car_detailed),
+    DrawerRoute(Routes.myProfile, Icons.person_outline),
+    DrawerRoute(Routes.allRides, Icons.local_car_wash),
+    DrawerRoute(Routes.wallet, Icons.account_balance_wallet_outlined),
+    DrawerRoute(Routes.settings, Icons.settings),
+    DrawerRoute(Routes.contactUs, Icons.support_agent),
   ];
+
+  Widget buildSelectedRoute(String route) {
+    return switch (route) {
+      Routes.home => const HomeScreen(),
+      Routes.mapView => const MapViewScreen(),
+      Routes.orderYegasigur => OrderYegasigurScreen(),
+      Routes.myProfile => MyProfileScreen(),
+      Routes.allRides => const NewRideScreen(),
+      Routes.wallet => WalletScreen(),
+      Routes.settings => const UserSettingsScreen(),
+      Routes.contactUs => const ContactUsScreen(),
+      _ => const Text('Error'),
+    };
+  }
 
   void onRouteSelected(String route) {
     // rate app
@@ -81,7 +88,7 @@ class DashBoardController extends GetxController {
       Preferences.clearKeyData(Preferences.isLogin);
       Preferences.clearKeyData(Preferences.user);
       Preferences.clearKeyData(Preferences.userId);
-      Get.offAll(LoginScreen());
+      Get.offAll(() => const MobileNumberScreen(isLogin: true));
     } else {
       selectedRoute.value = route;
     }

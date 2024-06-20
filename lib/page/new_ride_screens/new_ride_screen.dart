@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:cabme/constant/constant.dart';
 import 'package:cabme/constant/show_toast_dialog.dart';
 import 'package:cabme/controller/new_ride_controller.dart';
@@ -24,6 +22,9 @@ class NewRideScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetX<NewRideController>(
+      dispose: (state) {
+        Get.delete<NewRideController>();
+      },
       init: NewRideController(),
       builder: (controller) {
         return Scaffold(

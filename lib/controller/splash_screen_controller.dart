@@ -1,30 +1,47 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
-import 'dart:io';
-// import 'package:geocoding/geocoding.dart' as get_cord_address;
+
+import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
+
 import 'package:cabme/constant/constant.dart';
 import 'package:cabme/constant/show_toast_dialog.dart';
 import 'package:cabme/model/settings_model.dart';
+import 'package:cabme/page/dash_board.dart';
+import 'package:cabme/page/error_screen/error_screen.dart';
+import 'package:cabme/page/localization_screens/localization_screen.dart';
 import 'package:cabme/service/api.dart';
-// import 'package:cabme/themes/constant_colors.dart';
 import 'package:cabme/utils/Preferences.dart';
-// import 'package:flutter/animation.dart';
-import 'package:get/get.dart';
-import 'package:http/http.dart' as http;
-// import 'package:location/location.dart';
+import 'package:cabme/page/on_boarding_screen.dart';
 
-class SettingsController extends GetxController {
+class SplashScreenController extends GetxController {
+  bool errorLoadingSettings = false;
+
   @override
   void onInit() {
     API.header['accesstoken'] = Preferences.getString(Preferences.accesstoken);
-    getSettingsData();
+    getSettingsAndPaymentSettingsData();
     super.onInit();
+  }
+
+  Future<void> getSettingsAndPaymentSettingsData() async {
+    final String accessToken = Preferences.getString(Preferences.accesstoken);
+
+    if (accessToken.isNotEmpty) {
+      await Future.wait([
+        getSettingsData(),
+        getPaymentSettingsData(),
+      ]);
+    } else {
+      await getSettingsData();
+    }
+
+    navigateToNextScreen();
   }
 
   Future<SettingsModel?> getSettingsData() async {
     try {
-      ShowToastDialog.showLoader("Please wait");
       final response = await http.get(
         Uri.parse(API.settings),
         headers: API.authheader,
@@ -33,7 +50,6 @@ class SettingsController extends GetxController {
       Map<String, dynamic> responseBody = json.decode(response.body);
       log(response.body);
       if (response.statusCode == 200 && responseBody['success'] == "success") {
-        ShowToastDialog.closeLoader();
         SettingsModel model = SettingsModel.fromJson(responseBody);
         // LocationData location = await Location().getLocation();
         // List<get_cord_address.Placemark> placeMarks =
@@ -62,26 +78,68 @@ class SettingsController extends GetxController {
         Constant.contactUsPhone = model.data!.contactUsPhone!;
         Constant.rideOtp = model.data!.showRideOtp!;
       } else if (response.statusCode == 200 && responseBody['success'] == "Failed") {
-        ShowToastDialog.closeLoader();
         ShowToastDialog.showToast(responseBody['error']);
       } else {
-        ShowToastDialog.closeLoader();
         ShowToastDialog.showToast('Something want wrong. Please try again later');
         throw Exception('Failed to load album');
       }
-    } on TimeoutException catch (e) {
-      ShowToastDialog.closeLoader();
-      ShowToastDialog.showToast(e.message.toString());
-    } on SocketException catch (e) {
-      ShowToastDialog.closeLoader();
-      ShowToastDialog.showToast(e.message.toString());
-    } on Error catch (e) {
-      ShowToastDialog.closeLoader();
-      ShowToastDialog.showToast(e.toString());
     } catch (e) {
-      ShowToastDialog.closeLoader();
-      ShowToastDialog.showToast(e.toString());
+      errorLoadingSettings = true;
     }
     return null;
+  }
+
+  Future<void> getPaymentSettingsData() async {
+    try {
+      final response = await http.get(Uri.parse(API.paymentSetting), headers: API.header);
+
+      Map<String, dynamic> responseBody = json.decode(response.body);
+
+      if (response.statusCode == 200 && responseBody['success'] == "success") {
+        Preferences.setString(Preferences.paymentSetting, jsonEncode(responseBody));
+      } else if (response.statusCode == 401) {
+        _clearPreferencesData();
+      } else {
+        ShowToastDialog.showToast('Something want wrong. Please try again later');
+        throw Exception('Failed to load album');
+      }
+    } catch (e) {
+      errorLoadingSettings = true;
+    }
+  }
+
+  void _clearPreferencesData() {
+    Preferences.clearKeyData(Preferences.isLogin);
+    Preferences.clearKeyData(Preferences.user);
+    Preferences.clearKeyData(Preferences.userId);
+    Preferences.clearKeyData(Preferences.accesstoken);
+  }
+
+  void navigateToNextScreen() {
+    if (Preferences.getString(Preferences.languageCodeKey).isEmpty) {
+      Get.off(
+        () => const LocalizationScreens(intentType: "main"),
+        transition: Transition.fade,
+        duration: const Duration(milliseconds: 700),
+      );
+    } else if (errorLoadingSettings) {
+      Get.offAll(
+        () => const ErrorScreen(),
+        transition: Transition.fade,
+        duration: const Duration(milliseconds: 700),
+      );
+    } else if (Preferences.getBoolean(Preferences.isLogin)) {
+      Get.off(
+        () => const DashBoard(),
+        transition: Transition.fade,
+        duration: const Duration(milliseconds: 700),
+      );
+    } else {
+      Get.off(
+        () => const OnBoardingScreen(),
+        transition: Transition.fade,
+        duration: const Duration(milliseconds: 700),
+      );
+    }
   }
 }

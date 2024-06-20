@@ -40,6 +40,8 @@ class WalletController extends GetxController {
 
   @override
   void onInit() {
+    if (Preferences.getInt(Preferences.userId) == 0) return;
+
     getAmount();
     getTransaction();
     setFlutterwaveRef();
@@ -100,7 +102,8 @@ class WalletController extends GetxController {
   Future<dynamic> getTransaction() async {
     try {
       isLoading.value = true;
-      final response = await http.get(Uri.parse("${API.transaction}?id_user_app=${Preferences.getInt(Preferences.userId)}"), headers: API.header);
+      final response = await http.get(Uri.parse("${API.transaction}?id_user_app=${Preferences.getInt(Preferences.userId)}"),
+          headers: API.header);
       Map<String, dynamic> responseBody = json.decode(response.body);
       devlo.log(response.body);
 
@@ -133,7 +136,10 @@ class WalletController extends GetxController {
 
   Future<dynamic> getAmount() async {
     try {
-      final response = await http.get(Uri.parse("${API.wallet}?id_user=${Preferences.getInt(Preferences.userId)}&user_cat=user_app"), headers: API.header);
+      final response = await http.get(
+        Uri.parse("${API.wallet}?id_user=${Preferences.getInt(Preferences.userId)}&user_cat=user_app"),
+        headers: API.header,
+      );
       Map<String, dynamic> responseBody = json.decode(response.body);
 
       if (response.statusCode == 200 && responseBody['success'] == "success") {
@@ -362,8 +368,8 @@ class WalletController extends GetxController {
         "shipping[address][country]": "US",
       };
       var stripeSecret = paymentSettingModel.value.strip!.secretKey;
-      var response =
-          await http.post(Uri.parse('https://api.stripe.com/v1/payment_intents'), body: body, headers: {'Authorization': 'Bearer $stripeSecret', 'Content-Type': 'application/x-www-form-urlencoded'});
+      var response = await http.post(Uri.parse('https://api.stripe.com/v1/payment_intents'),
+          body: body, headers: {'Authorization': 'Bearer $stripeSecret', 'Content-Type': 'application/x-www-form-urlencoded'});
 
       return jsonDecode(response.body);
     } catch (e) {}

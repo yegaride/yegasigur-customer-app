@@ -16,6 +16,7 @@ class AddPhotoController extends GetxController {
 
   @override
   void onInit() {
+    print('🤔🤔🤔');
     getUsrData();
     super.onInit();
   }

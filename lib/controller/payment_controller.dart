@@ -33,6 +33,7 @@ class PaymentController extends GetxController {
   RxBool flutterWave = false.obs;
   RxBool mercadoPago = false.obs;
   RxBool payFast = false.obs;
+  RxBool cxpay = false.obs;
 
   @override
   void onInit() {
@@ -114,6 +115,8 @@ class PaymentController extends GetxController {
         mercadoPago.value = true;
       } else if (selectedRadioTile.value == "PayPal") {
         paypal.value = true;
+      } else if (selectedRadioTile.value == 'cxpay') {
+        cxpay.value = true;
       }
     }
     getAmount();
@@ -244,6 +247,8 @@ class PaymentController extends GetxController {
     // }
 
     // return (subTotalAmount.value - discountAmount.value) + tipAmount.value + taxAmount.value;
+    print('🚀');
+    print(subTotalAmount.value - discountAmount.value);
     return (subTotalAmount.value - discountAmount.value);
   }
 

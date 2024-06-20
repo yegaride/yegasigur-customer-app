@@ -46,8 +46,8 @@ class Constant {
   static String? contactUsEmail = "", contactUsAddress = "", contactUsPhone = "";
   static String? rideOtp = "yes";
 
-  static String stripePublishablekey =
-      "pk_test_51Kaaj9SE3HQdbrEJneDaJ2aqIyX1SBpYhtcMKfwchyohSZGp53F75LojfdGTNDUwsDV5p6x5BnbATcrerModlHWa00WWm5Yf5h";
+  static const String stripePublishablekey =
+      "pk_test_51PAjTNDfegs3YGhVWLD3OfmLpOtQmdpEsT3wuA00yuddWhJJM4BzYE1L9zk1qGmZBjJlbAvngZZ4aW9OHkGi1lVH00Iq5RTagi";
 
   static CollectionReference conversation = FirebaseFirestore.instance.collection('conversation');
   static CollectionReference driverLocationUpdateCollection = FirebaseFirestore.instance.collection('driver_location_update');
@@ -57,13 +57,13 @@ class Constant {
     return uuid.v1();
   }
 
-  static const maleImagePathPlaceholder = "${API.host}/assets/images/placeholder_image.jpg";
-  static const femaleImagePathPlaceholder = '${API.host}/assets/images/placeholder_image_female.jpg';
+  static const _maleImagePathPlaceholder = "${API.host}/assets/images/placeholder_image.jpg";
+  static const _femaleImagePathPlaceholder = '${API.host}/assets/images/placeholder_image_female.jpg';
 
   static getPhotoPlaceholderBasedOnGender(String gender) {
     return switch (gender) {
-      'male' => Constant.maleImagePathPlaceholder,
-      'female' => Constant.femaleImagePathPlaceholder,
+      'male' => Constant._maleImagePathPlaceholder,
+      'female' => Constant._femaleImagePathPlaceholder,
       _ => ''
     };
   }

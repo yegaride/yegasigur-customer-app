@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 class PaymentSettingModel {
   String? success;
   String? error;
@@ -12,6 +13,7 @@ class PaymentSettingModel {
   Mercadopago? mercadopago;
   Paytm? paytm;
   PayPal? payPal;
+  Cxpay? cxpay;
 
   PaymentSettingModel({
     this.success,
@@ -27,6 +29,7 @@ class PaymentSettingModel {
     this.mercadopago,
     this.paytm,
     this.payPal,
+    this.cxpay,
   });
 
   PaymentSettingModel.fromJson(Map<String, dynamic> json) {
@@ -43,6 +46,7 @@ class PaymentSettingModel {
     mercadopago = json['Mercadopago'] != null ? Mercadopago.fromJson(json['Mercadopago']) : null;
     paytm = json['Paytm'] != null ? Paytm.fromJson(json['Paytm']) : null;
     payPal = json['PayPal'] != null ? PayPal.fromJson(json['PayPal']) : null;
+    cxpay = json['cxpay'] != null ? Cxpay.fromJson(json['cxpay']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -81,6 +85,10 @@ class PaymentSettingModel {
       data['PayPal'] = payPal!.toJson();
     }
 
+    if (cxpay != null) {
+      data['cxpay'] = cxpay!.toJson();
+    }
+
     return data;
   }
 }
@@ -95,7 +103,15 @@ class Strip {
   String? idPaymentMethod;
   String? libelle;
 
-  Strip({this.id, this.key, this.clientpublishableKey, this.secretKey, this.isEnabled, this.isSandboxEnabled, this.idPaymentMethod, this.libelle});
+  Strip(
+      {this.id,
+      this.key,
+      this.clientpublishableKey,
+      this.secretKey,
+      this.isEnabled,
+      this.isSandboxEnabled,
+      this.idPaymentMethod,
+      this.libelle});
 
   Strip.fromJson(Map<String, dynamic> json) {
     id = json['id'].toString();
@@ -159,7 +175,17 @@ class PayFast {
   String? idPaymentMethod;
   String? libelle;
 
-  PayFast({this.id, this.merchantId, this.merchantKey, this.cancelUrl, this.notifyUrl, this.returnUrl, this.isEnabled, this.isSandboxEnabled, this.idPaymentMethod, this.libelle});
+  PayFast(
+      {this.id,
+      this.merchantId,
+      this.merchantKey,
+      this.cancelUrl,
+      this.notifyUrl,
+      this.returnUrl,
+      this.isEnabled,
+      this.isSandboxEnabled,
+      this.idPaymentMethod,
+      this.libelle});
 
   PayFast.fromJson(Map<String, dynamic> json) {
     id = json['id'].toString();
@@ -200,7 +226,15 @@ class PayStack {
   String? idPaymentMethod;
   String? libelle;
 
-  PayStack({this.id, this.secretKey, this.publicKey, this.callbackUrl, this.isEnabled, this.isSandboxEnabled, this.idPaymentMethod, this.libelle});
+  PayStack(
+      {this.id,
+      this.secretKey,
+      this.publicKey,
+      this.callbackUrl,
+      this.isEnabled,
+      this.isSandboxEnabled,
+      this.idPaymentMethod,
+      this.libelle});
 
   PayStack.fromJson(Map<String, dynamic> json) {
     id = json['id'].toString();
@@ -237,7 +271,15 @@ class FlutterWave {
   String? idPaymentMethod;
   String? libelle;
 
-  FlutterWave({this.id, this.secretKey, this.publicKey, this.encryptionKey, this.isEnabled, this.isSandboxEnabled, this.idPaymentMethod, this.libelle});
+  FlutterWave(
+      {this.id,
+      this.secretKey,
+      this.publicKey,
+      this.encryptionKey,
+      this.isEnabled,
+      this.isSandboxEnabled,
+      this.idPaymentMethod,
+      this.libelle});
 
   FlutterWave.fromJson(Map<String, dynamic> json) {
     id = json['id'].toString();
@@ -423,6 +465,36 @@ class PayPal {
     data['id_payment_method'] = idPaymentMethod;
     data['username'] = username;
     data['password'] = password;
+    data['libelle'] = libelle;
+    return data;
+  }
+}
+
+class Cxpay {
+  Cxpay(
+    this.id,
+    this.idPaymentMethod,
+    this.isEnabled,
+    this.libelle,
+  );
+
+  String? id;
+  String? idPaymentMethod;
+  String? isEnabled;
+  String? libelle;
+
+  Cxpay.fromJson(Map<String, dynamic> json) {
+    id = json['id'].toString();
+    idPaymentMethod = json['id_payment_method'].toString();
+    isEnabled = json['isEnabled'].toString();
+    libelle = json['libelle'].toString();
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['id_payment_method'] = idPaymentMethod;
+    data['isEnabled'] = isEnabled;
     data['libelle'] = libelle;
     return data;
   }

@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:cabme/model/tax_model.dart';
 
 class RideModel {
@@ -29,6 +30,11 @@ class RideModel {
       data['data'] = this.data!.map((v) => v.toJson()).toList();
     }
     return data;
+  }
+
+  @override
+  String toString() {
+    return 'RideModel(success: $success, error: $error, message: $message, data: $data)';
   }
 }
 
@@ -254,6 +260,11 @@ class RideData {
     }
     data['tax'] = taxModel != null ? taxModel!.map((v) => v.toJson()).toList() : null;
     return data;
+  }
+
+  @override
+  String toString() {
+    return 'RideData(id: $id, idUserApp: $idUserApp, departName: $departName, distanceUnit: $distanceUnit, destinationName: $destinationName, latitudeDepart: $latitudeDepart, longitudeDepart: $longitudeDepart, latitudeArrivee: $latitudeArrivee, longitudeArrivee: $longitudeArrivee, numberPoeple: $numberPoeple, place: $place, statut: $statut, idConducteur: $idConducteur, creer: $creer, stops: $stops, trajet: $trajet, tripObjective: $tripObjective, tripCategory: $tripCategory, nom: $nom, prenom: $prenom, otp: $otp, distance: $distance, phone: $phone, nomConducteur: $nomConducteur, prenomConducteur: $prenomConducteur, driverPhone: $driverPhone, photoPath: $photoPath, dateRetour: $dateRetour, heureRetour: $heureRetour, statutRound: $statutRound, montant: $montant, duree: $duree, statutPaiement: $statutPaiement, payment: $payment, paymentImage: $paymentImage, idVehicule: $idVehicule, brand: $brand, model: $model, carMake: $carMake, milage: $milage, km: $km, color: $color, numberplate: $numberplate, passenger: $passenger, moyenne: $moyenne, moyenneDriver: $moyenneDriver, rideType: $rideType, taxModel: $taxModel)';
   }
 }
 

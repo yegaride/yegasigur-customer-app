@@ -1,13 +1,22 @@
 import 'package:cabme/constant/constant.dart';
+import 'package:cabme/controller/dash_board_controller.dart';
 import 'package:cabme/controller/home_controller.dart';
 import 'package:cabme/model/home_model.dart';
+import 'package:cabme/routes/routes.dart';
+import 'package:cabme/themes/button_them.dart';
 import 'package:cabme/themes/constant_colors.dart';
-import 'package:cabme/utils/Preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
+
+  String _capitalize(String text) {
+    if (text.isEmpty) {
+      return text;
+    }
+    return text[0].toUpperCase() + text.substring(1);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,24 +39,29 @@ class HomeScreen extends StatelessWidget {
                     final HomeModel screen = controller.homePageViewPages[index];
                     return Column(
                       children: [
+                        // Expanded(
+                        //   child: Padding(
+                        //     padding: const EdgeInsets.only(top: 30),
+                        //     child: Center(
+                        //       child: Image.asset(
+                        //         screen.imageAsset,
+                        //         width: 260,
+                        //       ),
+                        //     ),
+                        //   ),
+                        // ),
                         Expanded(
                           child: Padding(
-                            padding: const EdgeInsets.only(top: 30),
-                            child: Center(
-                              child: Image.asset(
-                                screen.imageAsset,
-                                width: 260,
-                              ),
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.only(top: 50),
+                            padding: const EdgeInsets.only(top: 20),
                             child: Column(
                               children: [
+                                Image.asset(
+                                  'assets/images/appIcon-130.png',
+                                  height: 100,
+                                ),
+                                const SizedBox(height: 20),
                                 Text(
-                                  '${'welcome back'.tr} \n${Constant.getUserData().data?.prenom}',
+                                  '${'Welcome back'.tr} \n${_capitalize(Constant.getUserData().data?.prenom ?? 'User')}',
                                   textAlign: TextAlign.center,
                                   style: const TextStyle(
                                     fontSize: 20,
@@ -64,6 +78,30 @@ class HomeScreen extends StatelessWidget {
                                     style: const TextStyle(fontSize: 16, color: Colors.black45, letterSpacing: 1.5),
                                   ),
                                 ),
+                                const SizedBox(height: 20),
+                                ButtonThem.buildButton(
+                                  btnHeight: 70,
+                                  context,
+                                  // TODO i18n
+                                  title: 'Order YegaSigur',
+                                  btnColor: ConstantColors.primary,
+                                  txtColor: Colors.white,
+                                  onPress: () {
+                                    Get.put(DashBoardController()).onRouteSelected(Routes.orderYegasigur);
+                                  },
+                                ),
+                                const SizedBox(height: 20),
+                                ButtonThem.buildButton(
+                                  btnHeight: 70,
+                                  context,
+                                  // TODO i18n
+                                  title: 'Wallet',
+                                  btnColor: ConstantColors.primary,
+                                  txtColor: Colors.white,
+                                  onPress: () {
+                                    Get.put(DashBoardController()).onRouteSelected(Routes.wallet);
+                                  },
+                                )
                               ],
                             ),
                           ),

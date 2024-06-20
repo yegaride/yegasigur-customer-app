@@ -283,7 +283,7 @@ class _SignupScreenState extends State<SignupScreen> {
                             hintText: 'password'.tr,
                             controller: _passwordController,
                             textInputType: TextInputType.text,
-                            obscureText: false,
+                            obscureText: true,
                             contentPadding: EdgeInsets.zero,
                             validators: (String? value) {
                               if (value!.length >= 6) {
@@ -300,7 +300,7 @@ class _SignupScreenState extends State<SignupScreen> {
                             hintText: 'confirm_password'.tr,
                             controller: _confirmPasswordController,
                             textInputType: TextInputType.text,
-                            obscureText: false,
+                            obscureText: true,
                             contentPadding: EdgeInsets.zero,
                             validators: (String? value) {
                               if (_passwordController.text != value) {
@@ -353,7 +353,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                         Preferences.setInt(Preferences.userId, int.parse(value.data!.id.toString()));
                                         Preferences.setString(Preferences.user, jsonEncode(value));
                                         Get.to(const ChooseSafeLocationScreen(
-                                          continueButtonType: 'dashboard',
+                                          saveButtonBehavior: SavebuttonBehavior.saveAndContinue,
                                         ));
                                         // Get.to(AddProfilePhotoScreen());
                                       } else {

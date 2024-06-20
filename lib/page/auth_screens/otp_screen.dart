@@ -1,11 +1,10 @@
 // ignore_for_file: must_be_immutable
 
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:cabme/constant/show_toast_dialog.dart';
 import 'package:cabme/controller/phone_number_controller.dart';
-import 'package:cabme/page/auth_screens/add_profile_photo_screen.dart';
+// import 'package:cabme/page/auth_screens/add_profile_photo_screen.dart';
 import 'package:cabme/page/dash_board.dart';
 import 'package:cabme/service/api.dart';
 import 'package:cabme/themes/button_them.dart';
@@ -21,8 +20,7 @@ class OtpScreen extends StatelessWidget {
   String? phoneNumber;
   String? verificationId;
 
-  OtpScreen({Key? key, required this.phoneNumber, required this.verificationId})
-      : super(key: key);
+  OtpScreen({super.key, required this.phoneNumber, required this.verificationId});
 
   final controller = Get.put(PhoneNumberController());
   final textEditingController = TextEditingController();
@@ -52,10 +50,7 @@ class OtpScreen extends StatelessWidget {
                         Text(
                           "Enter OTP".tr,
                           style: const TextStyle(
-                              letterSpacing: 0.60,
-                              fontSize: 22,
-                              color: Colors.black,
-                              fontWeight: FontWeight.w600),
+                              letterSpacing: 0.60, fontSize: 22, color: Colors.black, fontWeight: FontWeight.w600),
                         ),
                         SizedBox(
                             width: 80,
@@ -71,18 +66,13 @@ class OtpScreen extends StatelessWidget {
                               height: 50,
                               width: 50,
                               textStyle: const TextStyle(
-                                  letterSpacing: 0.60,
-                                  fontSize: 16,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w600),
+                                  letterSpacing: 0.60, fontSize: 16, color: Colors.black, fontWeight: FontWeight.w600),
                               // margin: EdgeInsets.all(10),
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),
                                 shape: BoxShape.rectangle,
                                 color: Colors.white,
-                                border: Border.all(
-                                    color: ConstantColors.textFieldBoarderColor,
-                                    width: 0.7),
+                                border: Border.all(color: ConstantColors.textFieldBoarderColor, width: 0.7),
                               ),
                             ),
                             keyboardType: TextInputType.phone,
@@ -131,66 +121,41 @@ class OtpScreen extends StatelessWidget {
 
                                 if (textEditingController.text.length == 6) {
                                   ShowToastDialog.showLoader("Verify OTP".tr);
-                                  PhoneAuthCredential credential =
-                                      PhoneAuthProvider.credential(
-                                          verificationId:
-                                              verificationId.toString(),
-                                          smsCode: textEditingController.text);
-                                  await FirebaseAuth.instance
-                                      .signInWithCredential(credential)
-                                      .then((value) async {
+                                  PhoneAuthCredential credential = PhoneAuthProvider.credential(
+                                      verificationId: verificationId.toString(), smsCode: textEditingController.text);
+
+                                  await FirebaseAuth.instance.signInWithCredential(credential).then((value) async {
                                     Map<String, String> bodyParams = {
                                       'phone': phoneNumber.toString(),
                                       'user_cat': "customer",
                                     };
-                                    await controller
-                                        .phoneNumberIsExit(bodyParams)
-                                        .then((value) async {
+                                    await controller.phoneNumberIsExit(bodyParams).then((value) async {
                                       if (value == true) {
                                         Map<String, String> bodyParams = {
                                           'phone': phoneNumber.toString(),
                                           'user_cat': "customer",
                                         };
-                                        await controller
-                                            .getDataByPhoneNumber(bodyParams)
-                                            .then((value) {
+                                        await controller.getDataByPhoneNumber(bodyParams).then((value) {
                                           if (value != null) {
                                             if (value.success == "success") {
                                               ShowToastDialog.closeLoader();
 
-                                              Preferences.setInt(
-                                                  Preferences.userId,
-                                                  int.parse(value.data!.id
-                                                      .toString()));
+                                              Preferences.setInt(Preferences.userId, int.parse(value.data!.id.toString()));
+                                              Preferences.setString(Preferences.user, jsonEncode(value));
+                                              Preferences.setString(Preferences.accesstoken, value.data!.accesstoken.toString());
                                               Preferences.setString(
-                                                  Preferences.user,
-                                                  jsonEncode(value));
-                                              Preferences.setString(
-                                                  Preferences.accesstoken,
-                                                  value.data!.accesstoken
-                                                      .toString());
-                                              Preferences.setString(
-                                                  Preferences.admincommission,
-                                                  value.data!.adminCommission
-                                                      .toString());
-                                              API.header['accesstoken'] =
-                                                  Preferences.getString(
-                                                      Preferences.accesstoken);
+                                                  Preferences.admincommission, value.data!.adminCommission.toString());
+                                              API.header['accesstoken'] = Preferences.getString(Preferences.accesstoken);
 
-                                              if (value.data!.photo == null ||
-                                                  value.data!.photoPath
-                                                      .toString()
-                                                      .isEmpty) {
+                                              if (value.data!.photo == null || value.data!.photoPath.toString().isEmpty) {
                                                 // Get.to(() =>
                                                 //     AddProfilePhotoScreen());
                                               } else {
-                                                Preferences.setBoolean(
-                                                    Preferences.isLogin, true);
+                                                Preferences.setBoolean(Preferences.isLogin, true);
                                                 Get.offAll(DashBoard());
                                               }
                                             } else {
-                                              ShowToastDialog.showToast(
-                                                  value.error);
+                                              ShowToastDialog.showToast(value.error);
                                             }
                                           }
                                         });
@@ -203,12 +168,10 @@ class OtpScreen extends StatelessWidget {
                                     });
                                   }).catchError((error) {
                                     ShowToastDialog.closeLoader();
-                                    ShowToastDialog.showToast(
-                                        "Code is Invalid".tr);
+                                    ShowToastDialog.showToast("Code is Invalid".tr);
                                   });
                                 } else {
-                                  ShowToastDialog.showToast(
-                                      "Please Enter OTP".tr);
+                                  ShowToastDialog.showToast("Please Enter OTP".tr);
                                 }
                               },
                             ))

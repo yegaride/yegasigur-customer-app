@@ -258,5 +258,8 @@ const Map<String, String> enUS = {
   'standart': 'Starndart',
   'automatic': 'Automatic',
   'transmissionType': 'Transmissio type',
-  "welcome back": "welcome back"
+  "welcome back": "welcome back",
+  "All Rides": "Rides History",
+  "settings": "Settings",
+  "map_view": "Map View"
 };

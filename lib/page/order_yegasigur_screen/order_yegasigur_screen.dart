@@ -13,10 +13,22 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class OrderYegasigurScreen extends StatelessWidget {
-  OrderYegasigurScreen({super.key});
+class OrderYegasigurScreen extends StatefulWidget {
+  const OrderYegasigurScreen({super.key});
 
+  @override
+  State<OrderYegasigurScreen> createState() => _OrderYegasigurScreenState();
+}
+
+class _OrderYegasigurScreenState extends State<OrderYegasigurScreen> {
   final controller = Get.put(OrderYegasigurController());
+
+  @override
+  void dispose() {
+    Get.delete<OrderYegasigurController>();
+
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,14 +69,36 @@ class OrderYegasigurScreen extends StatelessWidget {
                       context: context,
                       builder: (context) {
                         return CustomAlertDialog(
+                          // TODO: i18n
                           title: "Are you sure you want to order yegasigur?",
                           onPressNegative: () => Get.back(),
                           onPressPositive: () async {
+                            if (controller.isLoading.value) return;
                             final res = await controller.orderYegaSigur();
 
-                            if (res == null) return;
-
                             if (!context.mounted) return;
+
+                            if (controller.insufficientBalance) {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return CustomDialogBox(
+                                    title: 'Insufficient balance',
+                                    descriptions:
+                                        'Your wallet does not have enough balance for this ride \n\nPlease add money to your wallet to continue.',
+                                    img: Image.asset('assets/images/walltet_history.png', width: 128),
+                                    onPress: () {
+                                      Get.back();
+                                      Get.back();
+                                      Get.put(DashBoardController()).onRouteSelected(Routes.wallet);
+                                    },
+                                  );
+                                },
+                              );
+                              return;
+                            }
+
+                            if (res == null) return;
 
                             showDialog(
                               context: context,
@@ -84,6 +118,7 @@ class OrderYegasigurScreen extends StatelessWidget {
                                       const Duration(seconds: 1),
                                       () {
                                         final newRideController = Get.put(NewRideController());
+
                                         newRideController.getNewRide().then((value) {
                                           controllerDashBoard.onRouteSelected(Routes.allRides);
                                           final lastRide = newRideController.rideList.first;
@@ -94,7 +129,7 @@ class OrderYegasigurScreen extends StatelessWidget {
                                           };
 
                                           ShowToastDialog.closeLoader();
-                                          Get.to(const RouteViewScreen(), arguments: argumentData);
+                                          Get.to(() => const RouteViewScreen(), arguments: argumentData);
                                         }).catchError((e) => ShowToastDialog.closeLoader());
                                       },
                                     );

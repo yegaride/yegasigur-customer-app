@@ -1,5 +1,3 @@
-// ignore_for_file: prefer_const_constructors
-
 import 'package:cabme/constant/constant.dart';
 import 'package:cabme/controller/coupon_code_controller.dart';
 import 'package:cabme/model/CoupanCodeModel.dart';
@@ -10,31 +8,36 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class CouponCodeScreen extends StatelessWidget {
-  const CouponCodeScreen({Key? key}) : super(key: key);
+  const CouponCodeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return GetX<CouponCodeController>(
         init: CouponCodeController(),
         builder: (controller) {
-          return Scaffold(
-            backgroundColor: ConstantColors.background,
-            body: RefreshIndicator(
-              onRefresh: () => controller.getCoupanCodeData(),
-              child: controller.isLoading.value
-                  ? Constant.loader()
-                  : controller.coupanCodeList.isEmpty
-                      ? Center(
-                          child: Constant.emptyView(
-                              context, "No coupons available".tr, false),
-                        )
-                      : ListView.builder(
-                          itemCount: controller.coupanCodeList.length,
-                          shrinkWrap: true,
-                          itemBuilder: (context, index) {
-                            return buildPromoCodeItem(
-                                context, controller.coupanCodeList[index]);
-                          }),
+          return SafeArea(
+            child: Scaffold(
+              backgroundColor: ConstantColors.background,
+              body: Stack(
+                children: [
+                  RefreshIndicator(
+                    onRefresh: () => controller.getCoupanCodeData(),
+                    child: controller.isLoading.value
+                        ? Constant.loader()
+                        : controller.coupanCodeList.isEmpty
+                            ? Center(
+                                child: Constant.emptyView(context, "No coupons available".tr, false),
+                              )
+                            : ListView.builder(
+                                itemCount: controller.coupanCodeList.length,
+                                shrinkWrap: true,
+                                itemBuilder: (context, index) {
+                                  return buildPromoCodeItem(context, controller.coupanCodeList[index]);
+                                }),
+                  ),
+                  const _BackButton(),
+                ],
+              ),
             ),
           );
         });
@@ -43,7 +46,7 @@ class CouponCodeScreen extends StatelessWidget {
   Widget buildPromoCodeItem(BuildContext context, CoupanCodeData data) {
     return Container(
       padding: const EdgeInsets.all(10),
-      margin: EdgeInsets.only(top: 10),
+      margin: const EdgeInsets.only(top: 10),
       decoration: const BoxDecoration(
         image: DecorationImage(
           image: AssetImage('assets/images/promo_bg.png'),
@@ -57,9 +60,7 @@ class CouponCodeScreen extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(left: 35),
               child: Container(
-                decoration: const BoxDecoration(
-                    color: Colors.blue,
-                    borderRadius: BorderRadius.all(Radius.circular(30))),
+                decoration: const BoxDecoration(color: Colors.blue, borderRadius: BorderRadius.all(Radius.circular(30))),
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Image.asset(
@@ -79,11 +80,7 @@ class CouponCodeScreen extends StatelessWidget {
                   children: [
                     Text(
                       data.discription.toString(),
-                      style: const TextStyle(
-                          color: Colors.black,
-                          fontSize: 18,
-                          fontWeight: FontWeight.w900,
-                          letterSpacing: 1),
+                      style: const TextStyle(color: Colors.black, fontSize: 18, fontWeight: FontWeight.w900, letterSpacing: 1),
                     ),
                     const SizedBox(
                       height: 10,
@@ -92,18 +89,16 @@ class CouponCodeScreen extends StatelessWidget {
                       children: [
                         InkWell(
                           onTap: () {
-                            FlutterClipboard.copy(data.code.toString())
-                                .then((value) {
+                            FlutterClipboard.copy(data.code.toString()).then((value) {
                               final SnackBar snackBar = SnackBar(
                                 content: Text(
                                   "Coupon Code Copied".tr,
                                   textAlign: TextAlign.center,
-                                  style: TextStyle(color: Colors.white),
+                                  style: const TextStyle(color: Colors.white),
                                 ),
                                 backgroundColor: Colors.black38,
                               );
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(snackBar);
+                              ScaffoldMessenger.of(context).showSnackBar(snackBar);
                               // return Navigator.pop(context);
                             });
                           },
@@ -114,8 +109,7 @@ class CouponCodeScreen extends StatelessWidget {
                               strokeWidth: 1,
                               dashPattern: const [3, 3],
                               child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 8, vertical: 5),
+                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
                                 child: Text(
                                   data.code.toString(),
                                 ),
@@ -141,6 +135,35 @@ class CouponCodeScreen extends StatelessWidget {
               ),
             )
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class _BackButton extends StatelessWidget {
+  const _BackButton();
+
+  @override
+  Widget build(BuildContext context) {
+    return Positioned(
+      top: 10,
+      left: 5,
+      child: Padding(
+        padding: const EdgeInsets.only(top: 3, bottom: 20),
+        child: ElevatedButton(
+          onPressed: () {
+            Get.back();
+          },
+          style: ElevatedButton.styleFrom(
+            shape: const CircleBorder(),
+            backgroundColor: Colors.white,
+            padding: const EdgeInsets.all(4),
+          ),
+          child: const Padding(
+            padding: EdgeInsets.all(4.0),
+            child: Icon(Icons.arrow_back_ios_outlined, color: Colors.black),
+          ),
         ),
       ),
     );

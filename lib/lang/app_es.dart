@@ -252,5 +252,6 @@ const Map<String, String> esES = {
   'order_yegasigur': "Ordenar Yegasigur",
   'orderNow': "Ordenar ahora",
   'get_started': 'Comenzar',
-  "welcome back": "Bienvenido"
+  "welcome back": "Bienvenido",
+  "All Rides": "Historial de viajes",
 };

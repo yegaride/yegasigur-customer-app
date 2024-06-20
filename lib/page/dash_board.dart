@@ -4,6 +4,7 @@ import 'package:cabme/constant/constant.dart';
 import 'package:cabme/controller/dash_board_controller.dart';
 import 'package:cabme/routes/routes.dart';
 import 'package:cabme/themes/constant_colors.dart';
+import 'package:cabme/utils/close_app_on_confirmation.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -11,9 +12,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class DashBoard extends StatelessWidget {
-  DashBoard({super.key});
-
-  DateTime backPress = DateTime.now();
+  const DashBoard({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -26,28 +25,9 @@ class DashBoard extends StatelessWidget {
       init: DashBoardController(),
       builder: (controller) {
         return SafeArea(
-          child: WillPopScope(
-            onWillPop: () async {
-              final timeGap = DateTime.now().difference(backPress);
-              final cantExit = timeGap >= const Duration(seconds: 2);
-              backPress = DateTime.now();
-              if (cantExit) {
-                const snack = SnackBar(
-                  content: Text(
-                    'Press Back button again to Exit',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  duration: Duration(seconds: 2),
-                  backgroundColor: Colors.black,
-                );
-                ScaffoldMessenger.of(context).showSnackBar(snack);
-                return false; // false will do nothing when back press
-              } else {
-                return true; // true will exit the app
-              }
-            },
+          child: CloseAppOnConfirmation(
             child: Scaffold(
-              appBar: controller.selectedRoute.value != Routes.wallet
+              appBar: controller.selectedRoute.value != Routes.wallet && controller.selectedRoute.value != Routes.mapView
                   ? AppBar(
                       backgroundColor: controller.selectedRoute.value == Routes.myProfile ||
                               controller.selectedRoute.value == Routes.orderYegasigur
@@ -58,7 +38,8 @@ class DashBoard extends StatelessWidget {
                       title: controller.selectedRoute.value != Routes.orderYegasigur &&
                               controller.selectedRoute.value != Routes.wallet
                           ? Text(
-                              controller.drawerRoutes.firstWhere((item) => item.route == controller.selectedRoute.value).route.tr,
+                              controller.selectedRoute.value.toString().tr,
+                              // controller.drawerRoutes.firstWhere((item) => item.route == controller.selectedRoute.value).route.tr,
                               style: TextStyle(
                                 color: controller.selectedRoute.value == Routes.myProfile ? Colors.white : Colors.black,
                               ),
@@ -115,8 +96,7 @@ class DashBoard extends StatelessWidget {
                     )
                   : null,
               drawer: buildAppDrawer(context, controller),
-              body: controller.drawerRoutes.firstWhere((item) => item.route == controller.selectedRoute.value).screen ??
-                  const Text('Error'),
+              body: controller.buildSelectedRoute(controller.selectedRoute.value),
             ),
           ),
         );
@@ -135,8 +115,8 @@ class DashBoard extends StatelessWidget {
     }).toList();
 
     return Drawer(
-      child: ListView(
-        padding: EdgeInsets.zero,
+      child: Column(
+        // padding: EdgeInsets.zero,
         children: [
           controller.userModel == null
               ? const Center(
@@ -170,11 +150,13 @@ class DashBoard extends StatelessWidget {
                 ),
           // Column(children: drawerOptions),
           Column(children: drawerRoutes),
-          Text(
-            'V : ${Constant.appVersion}',
-            textAlign: TextAlign.center,
-            style: const TextStyle(fontSize: 16),
+          const Spacer(),
+          ListTile(
+            leading: const Icon(Icons.logout),
+            title: Text(Routes.signOut.tr),
+            onTap: () => controller.onRouteSelected(Routes.signOut),
           ),
+          const SizedBox(height: 10),
         ],
       ),
     );

@@ -29,53 +29,48 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
           color: Colors.white,
         ),
       ),
-      body: Column(children: <Widget>[
-        Material(
+      body: Column(
+        children: [
+          Material(
             elevation: 2,
             color: Colors.white,
             child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Padding(
-                    padding:
-                        const EdgeInsets.only(right: 16.0, left: 16, top: 16),
-                    child: Text(
-                      'Our Address'.tr,
-                      style: const TextStyle(
-                          color: Colors.black,
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold),
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(right: 16.0, left: 16, top: 16),
+                  child: Text(
+                    'Our Address'.tr,
+                    style: const TextStyle(color: Colors.black, fontSize: 24, fontWeight: FontWeight.bold),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(right: 16.0, left: 16, top: 16, bottom: 16),
+                  child: Text(Constant.contactUsAddress!.replaceAll(r'\n', '\n')),
+                ),
+                ListTile(
+                  title: Text(
+                    'Email Us'.tr,
+                    style: const TextStyle(color: Colors.black, fontSize: 24, fontWeight: FontWeight.bold),
+                  ),
+                  subtitle: Text(Constant.contactUsEmail ?? ''),
+                  trailing: InkWell(
+                    onTap: () {
+                      String url = 'mailto: ${Constant.contactUsEmail}';
+                      launchUrl(Uri.parse(url));
+                    },
+                    child: const Icon(
+                      CupertinoIcons.chevron_forward,
+                      color: Colors.black54,
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(
-                        right: 16.0, left: 16, top: 16, bottom: 16),
-                    child: Text(
-                        Constant.contactUsAddress!.replaceAll(r'\n', '\n')),
-                  ),
-                  ListTile(
-                    title: Text(
-                      'Email Us'.tr,
-                      style: const TextStyle(
-                          color: Colors.black,
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold),
-                    ),
-                    subtitle: Text(Constant.contactUsEmail ?? ''),
-                    trailing: InkWell(
-                      onTap: () {
-                        String url = 'mailto: ${Constant.contactUsEmail}';
-                        launchUrl(Uri.parse(url));
-                      },
-                      child: const Icon(
-                        CupertinoIcons.chevron_forward,
-                        color: Colors.black54,
-                      ),
-                    ),
-                  )
-                ]))
-      ]),
+                )
+              ],
+            ),
+          )
+        ],
+      ),
     );
   }
 }

@@ -33,6 +33,7 @@ class PaymentController extends GetxController {
   RxBool flutterWave = false.obs;
   RxBool mercadoPago = false.obs;
   RxBool payFast = false.obs;
+  RxBool cxpay = false.obs;
 
   @override
   void onInit() {
@@ -114,6 +115,8 @@ class PaymentController extends GetxController {
         mercadoPago.value = true;
       } else if (selectedRadioTile.value == "PayPal") {
         paypal.value = true;
+      } else if (selectedRadioTile.value == 'cxpay') {
+        cxpay.value = true;
       }
     }
     getAmount();
@@ -126,7 +129,8 @@ class PaymentController extends GetxController {
           if (Constant.taxList[i].type == "Fixed") {
             taxAmount.value += double.parse(Constant.taxList[i].value.toString());
           } else {
-            taxAmount.value += ((subTotalAmount.value - discountAmount.value) * double.parse(Constant.taxList[i].value!.toString())) / 100;
+            taxAmount.value +=
+                ((subTotalAmount.value - discountAmount.value) * double.parse(Constant.taxList[i].value!.toString())) / 100;
           }
         }
       }
@@ -136,7 +140,9 @@ class PaymentController extends GetxController {
 
   Future<dynamic> getAmount() async {
     try {
-      final response = await http.get(Uri.parse("${API.wallet}?id_user=${Preferences.getInt(Preferences.userId)}&user_cat=user_app"), headers: API.header);
+      final response = await http.get(
+          Uri.parse("${API.wallet}?id_user=${Preferences.getInt(Preferences.userId)}&user_cat=user_app"),
+          headers: API.header);
       Map<String, dynamic> responseBody = json.decode(response.body);
 
       if (response.statusCode == 200 && responseBody['success'] == "success") {
@@ -179,7 +185,9 @@ class PaymentController extends GetxController {
             if (rideDetailsModel.rideDetailsdata!.taxModel![i].type == "Fixed") {
               taxAmount.value += double.parse(rideDetailsModel.rideDetailsdata!.taxModel![i].value.toString());
             } else {
-              taxAmount.value += ((subTotalAmount.value - discountAmount.value) * double.parse(rideDetailsModel.rideDetailsdata!.taxModel![i].value!.toString())) / 100;
+              taxAmount.value += ((subTotalAmount.value - discountAmount.value) *
+                      double.parse(rideDetailsModel.rideDetailsdata!.taxModel![i].value!.toString())) /
+                  100;
             }
           }
         }
@@ -238,7 +246,10 @@ class PaymentController extends GetxController {
     //       : 0.0;
     // }
 
-    return (subTotalAmount.value - discountAmount.value) + tipAmount.value + taxAmount.value;
+    // return (subTotalAmount.value - discountAmount.value) + tipAmount.value + taxAmount.value;
+    print('🚀');
+    print(subTotalAmount.value - discountAmount.value);
+    return (subTotalAmount.value - discountAmount.value);
   }
 
   UserModel? userModel;

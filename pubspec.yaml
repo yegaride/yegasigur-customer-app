@@ -54,7 +54,7 @@ dependencies:
   flutter_svg: ^2.0.9
   flutterflow_paginate_firestore: ^1.0.3+1
   flutterwave_standard: ^1.0.7
-  geocoding: ^2.1.1
+  geocoding: ^3.0.0
   geolocator: ^10.1.0
   get: ^4.6.6
   google_fonts: ^4.0.4
@@ -79,6 +79,7 @@ dependencies:
   video_compress: ^3.1.2
   video_player: ^2.8.1
   video_thumbnail: ^0.5.3
+  geocoder2: ^1.4.0
 
 dependency_overrides:
   webview_flutter: ^4.4.1

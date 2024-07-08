@@ -13,7 +13,7 @@ class ButtonThem {
     double btnHeight = 50,
     double txtSize = 14,
     double btnWidthRatio = 0.9,
-    required Function() onPress,
+    Function()? onPress,
     bool isVisible = true,
   }) {
     return Visibility(

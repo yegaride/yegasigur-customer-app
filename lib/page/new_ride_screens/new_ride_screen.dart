@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:cabme/constant/constant.dart';
 import 'package:cabme/constant/show_toast_dialog.dart';
 import 'package:cabme/controller/new_ride_controller.dart';
@@ -19,31 +17,37 @@ import 'package:location/location.dart';
 import 'package:text_scroll/text_scroll.dart';
 
 class NewRideScreen extends StatelessWidget {
-  const NewRideScreen({Key? key}) : super(key: key);
+  const NewRideScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return GetX<NewRideController>(
+      dispose: (state) {
+        Get.delete<NewRideController>();
+      },
       init: NewRideController(),
       builder: (controller) {
         return Scaffold(
-            backgroundColor: ConstantColors.background,
-            body: RefreshIndicator(
-              onRefresh: () => controller.getNewRide(),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: controller.isLoading.value
-                    ? Constant.loader()
-                    : controller.rideList.isEmpty
-                        ? Constant.emptyView(context, "You have not booked any trip.\n Please book a cab now".tr, true)
-                        : ListView.builder(
-                            itemCount: controller.rideList.length,
-                            shrinkWrap: true,
-                            itemBuilder: (context, index) {
-                              return newRideWidgets(controller, context, controller.rideList[index]);
-                            }),
-              ),
-            ));
+          backgroundColor: ConstantColors.background,
+          body: RefreshIndicator(
+            onRefresh: () => controller.getNewRide(),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: controller.isLoading.value
+                  ? Constant.loader()
+                  : controller.rideList.isEmpty
+                      // TODO: i18n
+                      ? Constant.emptyView(context, "You do not have any trip", false)
+                      : ListView.builder(
+                          itemCount: controller.rideList.length,
+                          shrinkWrap: true,
+                          itemBuilder: (context, index) {
+                            return newRideWidgets(controller, context, controller.rideList[index]);
+                          },
+                        ),
+            ),
+          ),
+        );
       },
     );
   }
@@ -218,75 +222,72 @@ class NewRideScreen extends StatelessWidget {
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
+                            // Expanded(
+                            //   child: Padding(
+                            //     padding: const EdgeInsets.only(left: 5.0),
+                            //     child: Container(
+                            //       alignment: Alignment.center,
+                            //       height: 100,
+                            //       decoration: BoxDecoration(
+                            //           border: Border.all(
+                            //             color: Colors.black12,
+                            //           ),
+                            //           borderRadius: const BorderRadius.all(Radius.circular(10))),
+                            //       child: Center(
+                            //         child: Padding(
+                            //           padding: const EdgeInsets.symmetric(vertical: 10),
+                            //           child: Column(
+                            //             mainAxisAlignment: MainAxisAlignment.center,
+                            //             children: [
+                            //               Image.asset(
+                            //                 'assets/icons/passenger.png',
+                            //                 height: 22,
+                            //                 width: 22,
+                            //                 color: ConstantColors.yellow,
+                            //               ),
+                            //               Text(" ${data.numberPoeple.toString()}",
+                            //                   //DateFormat('\$ KK:mm a, dd MMM yyyy').format(date),
+                            //                   style: const TextStyle(fontWeight: FontWeight.w800, color: Colors.black54)),
+                            //             ],
+                            //           ),
+                            //         ),
+                            //       ),
+                            //     ),
+                            //   ),
+                            // ),
                             Expanded(
-                              child: Padding(
-                                padding: const EdgeInsets.only(left: 5.0),
-                                child: Container(
-                                  alignment: Alignment.center,
-                                  height: 100,
-                                  decoration: BoxDecoration(
-                                      border: Border.all(
-                                        color: Colors.black12,
-                                      ),
-                                      borderRadius: const BorderRadius.all(Radius.circular(10))),
-                                  child: Center(
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(vertical: 10),
-                                      child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: [
-                                          Image.asset(
-                                            'assets/icons/passenger.png',
-                                            height: 22,
-                                            width: 22,
-                                            color: ConstantColors.yellow,
-                                          ),
-                                          Text(" ${data.numberPoeple.toString()}",
-                                              //DateFormat('\$ KK:mm a, dd MMM yyyy').format(date),
-                                              style: const TextStyle(fontWeight: FontWeight.w800, color: Colors.black54)),
-                                        ],
-                                      ),
+                              child: Container(
+                                height: 100,
+                                decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: Colors.black12,
                                     ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                              child: Padding(
-                                padding: const EdgeInsets.only(left: 5.0),
-                                child: Container(
-                                  height: 100,
-                                  decoration: BoxDecoration(
-                                      border: Border.all(
-                                        color: Colors.black12,
+                                    borderRadius: const BorderRadius.all(Radius.circular(10))),
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(vertical: 10),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        Constant.currency.toString(),
+                                        style: TextStyle(
+                                          color: ConstantColors.yellow,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 20,
+                                        ),
                                       ),
-                                      borderRadius: const BorderRadius.all(Radius.circular(10))),
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(vertical: 10),
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          Constant.currency.toString(),
-                                          style: TextStyle(
-                                            color: ConstantColors.yellow,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 20,
-                                          ),
-                                        ),
-                                        // Image.asset(
-                                        //   'assets/icons/price.png',
-                                        //   height: 22,
-                                        //   width: 22,
-                                        //   color: ConstantColors.yellow,
-                                        // ),
-                                        Text(
-                                          Constant().amountShow(amount: data.montant.toString()),
-                                          style:
-                                              const TextStyle(fontWeight: FontWeight.w700, color: Colors.black54, fontSize: 13.5),
-                                        ),
-                                      ],
-                                    ),
+                                      // Image.asset(
+                                      //   'assets/icons/price.png',
+                                      //   height: 22,
+                                      //   width: 22,
+                                      //   color: ConstantColors.yellow,
+                                      // ),
+                                      Text(
+                                        Constant().amountShow(amount: data.montant.toString()),
+                                        style:
+                                            const TextStyle(fontWeight: FontWeight.w700, color: Colors.black54, fontSize: 13.5),
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ),
@@ -373,27 +374,37 @@ class NewRideScreen extends StatelessWidget {
                       padding: const EdgeInsets.only(top: 10),
                       child: Row(
                         children: [
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(10),
-                            child: CachedNetworkImage(
-                              imageUrl: data.photoPath.toString(),
-                              height: 80,
-                              width: 80,
-                              fit: BoxFit.cover,
-                              placeholder: (context, url) => Constant.loader(),
-                              errorWidget: (context, url, error) => const Icon(Icons.error),
+                          if (data.idConducteur != '0')
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(10),
+                              child: CachedNetworkImage(
+                                imageUrl: data.photoPath.toString(),
+                                height: 80,
+                                width: 80,
+                                fit: BoxFit.cover,
+                                placeholder: (context, url) => Constant.loader(),
+                                errorWidget: (context, url, error) => const Icon(Icons.error),
+                              ),
                             ),
-                          ),
                           Expanded(
                             child: Padding(
                               padding: const EdgeInsets.only(left: 8.0),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text("${data.prenomConducteur} ${data.nomConducteur}",
-                                      style: const TextStyle(color: Colors.black87, fontWeight: FontWeight.w600)),
-                                  StarRating(
-                                      size: 18, rating: double.parse(data.moyenne.toString()), color: ConstantColors.yellow),
+                                  Text(
+                                    // TODO: i18n
+                                    data.idConducteur == '0'
+                                        ? 'Waiting for a driver to accept your request'
+                                        : "${data.prenomConducteur} ${data.nomConducteur}",
+                                    style: const TextStyle(color: Colors.black87, fontWeight: FontWeight.w600),
+                                  ),
+                                  if (data.idConducteur != '0')
+                                    StarRating(
+                                      size: 18,
+                                      rating: double.parse(data.moyenne.toString()),
+                                      color: ConstantColors.yellow,
+                                    ),
                                 ],
                               ),
                             ),
@@ -435,22 +446,23 @@ class NewRideScreen extends StatelessWidget {
                                           : const Offstage(),
                                     ],
                                   ),
-                                  Row(
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsets.only(left: 10),
-                                        child: InkWell(
-                                            onTap: () {
-                                              Constant.makePhoneCall(data.driverPhone.toString());
-                                            },
-                                            child: Image.asset(
-                                              'assets/icons/call_icon.png',
-                                              height: 36,
-                                              width: 36,
-                                            )),
-                                      ),
-                                    ],
-                                  ),
+                                  if (data.idConducteur != '0')
+                                    Row(
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.only(left: 10),
+                                          child: InkWell(
+                                              onTap: () {
+                                                Constant.makePhoneCall(data.driverPhone.toString());
+                                              },
+                                              child: Image.asset(
+                                                'assets/icons/call_icon.png',
+                                                height: 36,
+                                                width: 36,
+                                              )),
+                                        ),
+                                      ],
+                                    ),
                                 ],
                               ),
                               Padding(

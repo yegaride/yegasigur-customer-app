@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 class DriverLocationUpdate {
   String? driverLatitude;
   String? driverLongitude;
@@ -5,12 +6,7 @@ class DriverLocationUpdate {
   String? driverId;
   bool? active;
 
-  DriverLocationUpdate(
-      {this.driverLatitude,
-        this.driverLongitude,
-        this.rotation,
-        this.driverId,
-        this.active});
+  DriverLocationUpdate({this.driverLatitude, this.driverLongitude, this.rotation, this.driverId, this.active});
 
   DriverLocationUpdate.fromJson(Map<String, dynamic> json) {
     driverLatitude = json['driver_latitude'];
@@ -28,5 +24,10 @@ class DriverLocationUpdate {
     data['driver_id'] = driverId;
     data['active'] = active;
     return data;
+  }
+
+  @override
+  String toString() {
+    return 'DriverLocationUpdate(driverLatitude: $driverLatitude, driverLongitude: $driverLongitude, rotation: $rotation, driverId: $driverId, active: $active)';
   }
 }

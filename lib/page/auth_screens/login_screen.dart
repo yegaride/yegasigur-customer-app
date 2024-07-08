@@ -3,19 +3,17 @@ import 'dart:convert';
 import 'package:cabme/constant/show_toast_dialog.dart';
 import 'package:cabme/controller/login_conroller.dart';
 import 'package:cabme/page/auth_screens/add_profile_photo_screen.dart';
-import 'package:cabme/page/auth_screens/forgot_password.dart';
-import 'package:cabme/page/auth_screens/mobile_number_screen.dart';
+// import 'package:cabme/page/auth_screens/forgot_password.dart';
 import 'package:cabme/page/dash_board.dart';
 import 'package:cabme/themes/button_them.dart';
 import 'package:cabme/themes/constant_colors.dart';
 import 'package:cabme/themes/text_field_them.dart';
 import 'package:cabme/utils/Preferences.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class LoginScreen extends StatelessWidget {
-  LoginScreen({Key? key}) : super(key: key);
+  LoginScreen({super.key});
 
   static final GlobalKey<FormState> _loginFormKey = GlobalKey<FormState>();
 
@@ -31,10 +29,6 @@ class LoginScreen extends StatelessWidget {
         body: Container(
           decoration: const BoxDecoration(
             color: ConstantColors.fucsia,
-            // image: DecorationImage(
-            //   image: AssetImage("assets/images/login_bg.png"),
-            //   fit: BoxFit.cover,
-            // ),
           ),
           child: Center(
             child: Padding(
@@ -50,7 +44,13 @@ class LoginScreen extends StatelessWidget {
                     const SizedBox(height: 30),
                     Text(
                       "Login with Email".tr,
-                      style: const TextStyle(letterSpacing: 0.60, fontSize: 22, color: Colors.black, fontWeight: FontWeight.w600),
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        letterSpacing: 0.60,
+                        fontSize: 22,
+                        color: Colors.black,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                     SizedBox(
                         width: 80,
@@ -62,7 +62,6 @@ class LoginScreen extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(vertical: 40),
                       child: Form(
                         key: _loginFormKey,
-                        autovalidateMode: AutovalidateMode.onUserInteraction,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -70,6 +69,7 @@ class LoginScreen extends StatelessWidget {
                               hintText: 'email'.tr,
                               controller: _phoneController,
                               textInputType: TextInputType.emailAddress,
+                              textCapitalization: TextCapitalization.none,
                               contentPadding: EdgeInsets.zero,
                               validators: (String? value) {
                                 if (value!.isNotEmpty) {
@@ -85,7 +85,7 @@ class LoginScreen extends StatelessWidget {
                                 hintText: 'password'.tr,
                                 controller: _passwordController,
                                 textInputType: TextInputType.text,
-                                obscureText: false,
+                                obscureText: true,
                                 contentPadding: EdgeInsets.zero,
                                 validators: (String? value) {
                                   if (value!.isNotEmpty) {
@@ -96,7 +96,6 @@ class LoginScreen extends StatelessWidget {
                                 },
                               ),
                             ),
-
                             Padding(
                                 padding: const EdgeInsets.only(top: 50),
                                 child: ButtonThem.buildButton(
@@ -113,6 +112,7 @@ class LoginScreen extends StatelessWidget {
                                         'mdp': _passwordController.text,
                                         'user_cat': "customer",
                                       };
+
                                       await controller.loginAPI(bodyParams).then((value) {
                                         if (value != null) {
                                           if (value.success == "Success") {
@@ -124,10 +124,12 @@ class LoginScreen extends StatelessWidget {
                                               Get.to(() => AddProfilePhotoScreen());
                                             } else {
                                               Preferences.setBoolean(Preferences.isLogin, true);
-                                              Get.offAll(DashBoard(),
-                                                  duration: const Duration(milliseconds: 400),
-                                                  //duration of transitions, default 1 sec
-                                                  transition: Transition.rightToLeft);
+                                              Get.offAll(
+                                                const DashBoard(),
+                                                duration: const Duration(milliseconds: 400),
+                                                //duration of transitions, default 1 sec
+                                                transition: Transition.rightToLeft,
+                                              );
                                             }
                                           } else {
                                             ShowToastDialog.showToast(value.error);
@@ -154,26 +156,22 @@ class LoginScreen extends StatelessWidget {
                             //     ),
                             //   ),
                             // ),
-                            // TODO: login with phone number
-                            // Padding(
-                            //   padding: const EdgeInsets.only(top: 40),
-                            //   child: ButtonThem.buildBorderButton(
-                            //     context,
-                            //     title: 'Login With Phone Number'.tr,
-                            //     btnHeight: 50,
-                            //     btnColor: Colors.white,
-                            //     txtColor: ConstantColors.primary,
-                            //     onPress: () {
-                            //       FocusScope.of(context).unfocus();
-                            //       Get.to(MobileNumberScreen(isLogin: true),
-                            //           duration: const Duration(
-                            //               milliseconds:
-                            //                   400), //duration of transitions, default 1 sec
-                            //           transition: Transition.rightToLeft);
-                            //     },
-                            //     btnBorderColor: ConstantColors.primary,
-                            //   ),
-                            // ),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 40),
+                              child: ButtonThem.buildBorderButton(
+                                context,
+                                // TODO i18n
+                                title: 'Continue with phone number',
+                                btnHeight: 50,
+                                btnColor: Colors.white,
+                                txtColor: ConstantColors.primary,
+                                onPress: () {
+                                  FocusScope.of(context).unfocus();
+                                  Get.back();
+                                },
+                                btnBorderColor: ConstantColors.primary,
+                              ),
+                            ),
                           ],
                         ),
                       ),
@@ -183,46 +181,6 @@ class LoginScreen extends StatelessWidget {
               ),
             ),
           ),
-        ),
-        bottomNavigationBar: Container(
-          decoration: const BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage("assets/images/login_bg.png"),
-              fit: BoxFit.cover,
-            ),
-          ),
-          child: Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Text.rich(
-                textAlign: TextAlign.center,
-                TextSpan(
-                  children: [
-                    TextSpan(
-                      text: '${'You don’t have an account yet? '.tr} ',
-                      style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w500),
-                      recognizer: TapGestureRecognizer()
-                        ..onTap = () {
-                          Get.to(MobileNumberScreen(isLogin: false),
-                              duration: const Duration(milliseconds: 400), //duration of transitions, default 1 sec
-                              transition: Transition.rightToLeft); //transition effect);
-                        },
-                    ),
-                    TextSpan(
-                      text: 'SIGNUP'.tr,
-                      style: TextStyle(fontWeight: FontWeight.bold, color: ConstantColors.primary),
-                      recognizer: TapGestureRecognizer()
-                        ..onTap = () {
-                          Get.to(
-                              MobileNumberScreen(
-                                isLogin: false,
-                              ),
-                              duration: const Duration(milliseconds: 400), //duration of transitions, default 1 sec
-                              transition: Transition.rightToLeft); //transition effect);
-                        },
-                    ),
-                  ],
-                ),
-              )),
         ),
       ),
     );

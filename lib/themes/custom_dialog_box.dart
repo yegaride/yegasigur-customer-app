@@ -10,7 +10,8 @@ class CustomDialogBox extends StatefulWidget {
   final Image img;
   final Function() onPress;
 
-  const CustomDialogBox({Key? key, required this.title, required this.descriptions, required this.img, required this.onPress}) : super(key: key);
+  const CustomDialogBox({Key? key, required this.title, required this.descriptions, required this.img, required this.onPress})
+      : super(key: key);
 
   @override
   _CustomDialogBoxState createState() => _CustomDialogBoxState();
@@ -32,9 +33,13 @@ class _CustomDialogBoxState extends State<CustomDialogBox> {
   contentBox(context) {
     return Container(
       padding: const EdgeInsets.only(left: 20, top: 20, right: 20, bottom: 20),
-      decoration: BoxDecoration(shape: BoxShape.rectangle, color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: const [
-        BoxShadow(color: Colors.black, offset: Offset(0, 10), blurRadius: 10),
-      ]),
+      decoration: BoxDecoration(
+          shape: BoxShape.rectangle,
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: const [
+            BoxShadow(color: Colors.black, offset: Offset(0, 10), blurRadius: 10),
+          ]),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
@@ -47,6 +52,7 @@ class _CustomDialogBoxState extends State<CustomDialogBox> {
             visible: widget.title.isNotEmpty,
             child: Text(
               widget.title,
+              textAlign: TextAlign.center,
               style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
             ),
           ),

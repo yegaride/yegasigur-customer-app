@@ -30,7 +30,8 @@ class CompletedRideController extends GetxController {
 
   Future<dynamic> getCompletedRide() async {
     try {
-      final response = await http.get(Uri.parse("${API.completedRide}?id_user_app=${Preferences.getInt(Preferences.userId)}"), headers: API.header);
+      final response = await http.get(Uri.parse("${API.completedRide}?id_user_app=${Preferences.getInt(Preferences.userId)}"),
+          headers: API.header);
 
       Map<String, dynamic> responseBody = json.decode(response.body);
 

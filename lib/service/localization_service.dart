@@ -6,6 +6,9 @@ import 'package:cabme/lang/app_ja.dart';
 import 'package:cabme/lang/app_pt.dart';
 import 'package:cabme/lang/app_ru.dart';
 import 'package:cabme/lang/app_zh.dart';
+import 'package:cabme/lang/app_es.dart';
+import 'package:cabme/lang/app_pap.dart';
+import 'package:cabme/lang/app_nl.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -22,6 +25,9 @@ class LocalizationService extends Translations {
     const Locale('de'),
     const Locale('pt'),
     const Locale('ru'),
+    const Locale('es'),
+    const Locale('pap'),
+    const Locale('nl'),
   ];
 
   // Keys and their translations
@@ -36,6 +42,9 @@ class LocalizationService extends Translations {
         'de': deGR,
         'pt': ptPO,
         'ru': ruRU,
+        'es': esES,
+        'pap': pap,
+        'nl': nlNL,
       };
 
   // Gets locale from language, and updates the locale

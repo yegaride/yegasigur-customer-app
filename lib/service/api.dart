@@ -3,8 +3,11 @@ import 'dart:io';
 import 'package:cabme/utils/Preferences.dart';
 
 class API {
-  static const baseUrl = "${'https://dev.yegaride.com/admin'}/api/v1/"; // live
+  static const host = "https://admin.dev.yegasigur.com";
+  // static const host = "http://10.0.2.2/admin";
+  static const baseUrl = "$host/api/v1/";
   static const apiKey = "base64:4CGWBlDsMFiCkyEavKMUTP7JBwBQj7xVoelRB+jOZF4=";
+  // static const baseUrl = "${'https://admin.dev.yegasigur.com'}/api/v1/";
 
   static Map<String, String> authheader = {
     HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8',
@@ -16,6 +19,8 @@ class API {
     'accesstoken': Preferences.getString(Preferences.accesstoken)
   };
 
+  static const googleMapDistanceMatrix = 'https://maps.googleapis.com/maps/api/distancematrix/json';
+
   static const userSignUP = "${baseUrl}user";
   static const userLogin = "${baseUrl}user-login";
   static const sendResetPasswordOtp = "${baseUrl}reset-password-otp";
@@ -24,9 +29,11 @@ class API {
   static const getExistingUserOrNot = "${baseUrl}existing-user";
   static const updateUserNic = "${baseUrl}update-user-nic";
   static const uploadUserPhoto = "${baseUrl}user-photo";
+  static const setSafeLocation = "${baseUrl}safe-location";
   static const updateUserEmail = "${baseUrl}update-user-email";
   static const changePassword = "${baseUrl}update-user-mdp";
   static const updatePreName = "${baseUrl}user-pre-name";
+  static const userGender = "${baseUrl}user-gender";
   static const updateLastName = "${baseUrl}user-name";
   static const updateAddress = "${baseUrl}user-address";
   static const contactUs = "${baseUrl}contact-us";
@@ -48,6 +55,7 @@ class API {
   static const driverDetails = "${baseUrl}driver";
   static const getPaymentMethod = "${baseUrl}payment-method";
   static const bookRides = "${baseUrl}requete-register";
+  static const userSafeLocation = "${baseUrl}get-user-safe-location";
   static const userAllRides = "${baseUrl}user-all-rides";
   static const newRide = "${baseUrl}requete-userapp";
   static const confirmedRide = "${baseUrl}user-confirmation";

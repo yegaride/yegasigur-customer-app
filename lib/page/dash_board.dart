@@ -2,68 +2,71 @@
 
 import 'package:cabme/constant/constant.dart';
 import 'package:cabme/controller/dash_board_controller.dart';
+import 'package:cabme/routes/routes.dart';
 import 'package:cabme/themes/constant_colors.dart';
+import 'package:cabme/utils/close_app_on_confirmation.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class DashBoard extends StatelessWidget {
-  DashBoard({Key? key}) : super(key: key);
-
-  DateTime backPress = DateTime.now();
+  const DashBoard({super.key});
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarColor: ConstantColors.primary,
-    ));
+    SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(
+        statusBarColor: ConstantColors.primary,
+      ),
+    );
     return GetX<DashBoardController>(
       init: DashBoardController(),
       builder: (controller) {
         return SafeArea(
-          child: WillPopScope(
-            onWillPop: () async {
-              final timeGap = DateTime.now().difference(backPress);
-              final cantExit = timeGap >= const Duration(seconds: 2);
-              backPress = DateTime.now();
-              if (cantExit) {
-                const snack = SnackBar(
-                  content: Text(
-                    'Press Back button again to Exit',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  duration: Duration(seconds: 2),
-                  backgroundColor: Colors.black,
-                );
-                ScaffoldMessenger.of(context).showSnackBar(snack);
-                return false; // false will do nothing when back press
-              } else {
-                return true; // true will exit the app
-              }
-            },
+          child: CloseAppOnConfirmation(
             child: Scaffold(
-              appBar: controller.selectedDrawerIndex.value != 0 &&
-                      controller.selectedDrawerIndex.value != 6
+              appBar: controller.selectedRoute.value != Routes.wallet && controller.selectedRoute.value != Routes.mapView
                   ? AppBar(
-                      backgroundColor: controller.selectedDrawerIndex.value == 7
+                      backgroundColor: controller.selectedRoute.value == Routes.myProfile ||
+                              controller.selectedRoute.value == Routes.orderYegasigur
                           ? ConstantColors.primary
                           : ConstantColors.background,
                       elevation: 0,
                       centerTitle: true,
-                      title: controller.selectedDrawerIndex.value != 0 &&
-                              controller.selectedDrawerIndex.value != 6
+                      title: controller.selectedRoute.value != Routes.orderYegasigur &&
+                              controller.selectedRoute.value != Routes.wallet
                           ? Text(
-                              controller
-                                  .drawerItems[
-                                      controller.selectedDrawerIndex.value]
-                                  .title
-                                  .tr,
-                              style: const TextStyle(
-                                color: Colors.black,
+                              controller.selectedRoute.value.toString().tr,
+                              // controller.drawerRoutes.firstWhere((item) => item.route == controller.selectedRoute.value).route.tr,
+                              style: TextStyle(
+                                color: controller.selectedRoute.value == Routes.myProfile ? Colors.white : Colors.black,
                               ),
                             )
-                          : const Text(""),
+                          : controller.selectedRoute.value == Routes.orderYegasigur
+                              ? Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    Text(
+                                      'YegaSigur',
+                                      style: GoogleFonts.poppins(
+                                        fontWeight: FontWeight.w800,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    Text(
+                                      '.com',
+                                      style: GoogleFonts.poppins(
+                                        color: Colors.white,
+                                        fontSize: 15,
+                                        height: 1.4,
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              : const Text(""),
                       leading: Builder(builder: (context) {
                         return Padding(
                           padding: const EdgeInsets.all(8.0),
@@ -77,8 +80,7 @@ class DashBoard extends StatelessWidget {
                                   color: Colors.white,
                                   boxShadow: <BoxShadow>[
                                     BoxShadow(
-                                      color: ConstantColors.primary
-                                          .withOpacity(0.1),
+                                      color: ConstantColors.primary.withOpacity(0.1),
                                       blurRadius: 3,
                                       offset: const Offset(0, 3),
                                     ),
@@ -94,8 +96,7 @@ class DashBoard extends StatelessWidget {
                     )
                   : null,
               drawer: buildAppDrawer(context, controller),
-              body: controller
-                  .getDrawerItemWidget(controller.selectedDrawerIndex.value),
+              body: controller.buildSelectedRoute(controller.selectedRoute.value),
             ),
           ),
         );
@@ -104,27 +105,25 @@ class DashBoard extends StatelessWidget {
   }
 
   buildAppDrawer(BuildContext context, DashBoardController controller) {
-    var drawerOptions = <Widget>[];
-    for (var i = 0; i < controller.drawerItems.length; i++) {
-      var d = controller.drawerItems[i];
-      drawerOptions.add(ListTile(
-        leading: Icon(d.icon),
-        title: Text(d.title.tr),
-        selected: i == controller.selectedDrawerIndex.value,
-        onTap: () => controller.onSelectItem(i),
-      ));
-    }
+    final List<Widget> drawerRoutes = controller.drawerRoutes.map((route) {
+      return ListTile(
+        leading: Icon(route.drawerIcon),
+        title: Text(route.route.tr),
+        selected: route.route == controller.selectedRoute.value,
+        onTap: () => controller.onRouteSelected(route.route),
+      );
+    }).toList();
+
     return Drawer(
-      child: ListView(
-        padding: EdgeInsets.zero,
+      child: Column(
+        // padding: EdgeInsets.zero,
         children: [
           controller.userModel == null
-              ? Center(
-                  child:
-                      CircularProgressIndicator(color: ConstantColors.primary),
+              ? const Center(
+                  child: CircularProgressIndicator(color: ConstantColors.primary),
                 )
               : UserAccountsDrawerHeader(
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     color: ConstantColors.primary,
                   ),
                   currentAccountPicture: ClipOval(
@@ -134,12 +133,10 @@ class DashBoard extends StatelessWidget {
                         child: Container(
                           color: Colors.white,
                           child: CachedNetworkImage(
-                            imageUrl: controller.userModel!.data!.photoPath
-                                .toString(),
+                            imageUrl: controller.userModel!.data!.photoPath.toString(),
                             fit: BoxFit.cover,
                             placeholder: (context, url) => Constant.loader(),
-                            errorWidget: (context, url, error) =>
-                                const Icon(Icons.error),
+                            errorWidget: (context, url, error) => const Icon(Icons.error),
                           ),
                         ),
                       ),
@@ -149,25 +146,19 @@ class DashBoard extends StatelessWidget {
                     "${controller.userModel!.data!.prenom} ${controller.userModel!.data!.nom}",
                     style: const TextStyle(color: Colors.white),
                   ),
-                  accountEmail: Text(
-                      controller.userModel!.data!.email.toString(),
-                      style: const TextStyle(color: Colors.white)),
+                  accountEmail: Text(controller.userModel!.data!.email.toString(), style: const TextStyle(color: Colors.white)),
                 ),
-          Column(children: drawerOptions),
-          Text(
-            'V : ${Constant.appVersion}',
-            textAlign: TextAlign.center,
-            style: const TextStyle(fontSize: 16),
+          // Column(children: drawerOptions),
+          Column(children: drawerRoutes),
+          const Spacer(),
+          ListTile(
+            leading: const Icon(Icons.logout),
+            title: Text(Routes.signOut.tr),
+            onTap: () => controller.onRouteSelected(Routes.signOut),
           ),
+          const SizedBox(height: 10),
         ],
       ),
     );
   }
-}
-
-class DrawerItem {
-  String title;
-  IconData icon;
-
-  DrawerItem(this.title, this.icon);
 }

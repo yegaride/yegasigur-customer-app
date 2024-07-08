@@ -48,10 +48,7 @@ class ForgotPasswordOtpScreen extends StatelessWidget {
                         Text(
                           "Enter OTP".tr,
                           style: const TextStyle(
-                              letterSpacing: 0.60,
-                              fontSize: 22,
-                              color: Colors.black,
-                              fontWeight: FontWeight.w600),
+                              letterSpacing: 0.60, fontSize: 22, color: Colors.black, fontWeight: FontWeight.w600),
                         ),
                         SizedBox(
                             width: 80,
@@ -60,26 +57,20 @@ class ForgotPasswordOtpScreen extends StatelessWidget {
                               thickness: 3,
                             )),
                         Padding(
-                          padding: const EdgeInsets.only(
-                              top: 30, right: 50, left: 50),
+                          padding: const EdgeInsets.only(top: 30, right: 50, left: 50),
                           child: Pinput(
                             controller: textEditingController,
                             defaultPinTheme: PinTheme(
                               height: 50,
                               width: 50,
                               textStyle: const TextStyle(
-                                  letterSpacing: 0.60,
-                                  fontSize: 16,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w600),
+                                  letterSpacing: 0.60, fontSize: 16, color: Colors.black, fontWeight: FontWeight.w600),
                               // margin: EdgeInsets.all(10),
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),
                                 shape: BoxShape.rectangle,
                                 color: Colors.white,
-                                border: Border.all(
-                                    color: ConstantColors.textFieldBoarderColor,
-                                    width: 0.7),
+                                border: Border.all(color: ConstantColors.textFieldBoarderColor, width: 0.7),
                               ),
                             ),
                             keyboardType: TextInputType.phone,
@@ -122,14 +113,13 @@ class ForgotPasswordOtpScreen extends StatelessWidget {
                             hintText: 'password'.tr,
                             controller: _passwordController,
                             textInputType: TextInputType.text,
-                            obscureText: false,
+                            obscureText: true,
                             contentPadding: EdgeInsets.zero,
                             validators: (String? value) {
                               if (value!.length >= 6) {
                                 return null;
                               } else {
-                                return 'Password required at least 6 characters'
-                                    .tr;
+                                return 'Password required at least 6 characters'.tr;
                               }
                             },
                           ),
@@ -140,7 +130,7 @@ class ForgotPasswordOtpScreen extends StatelessWidget {
                             hintText: 'confirm_password'.tr,
                             controller: _conformPasswordController,
                             textInputType: TextInputType.text,
-                            obscureText: false,
+                            obscureText: true,
                             contentPadding: EdgeInsets.zero,
                             validators: (String? value) {
                               if (_passwordController.text != value) {
@@ -165,27 +155,19 @@ class ForgotPasswordOtpScreen extends StatelessWidget {
                                   Map<String, String> bodyParams = {
                                     'email': email.toString(),
                                     'otp': textEditingController.text.trim(),
-                                    'new_password':
-                                        _passwordController.text.trim(),
-                                    'confirm_password':
-                                        _passwordController.text.trim(),
+                                    'new_password': _passwordController.text.trim(),
+                                    'confirm_password': _passwordController.text.trim(),
                                     'user_cat': "user_app",
                                   };
-                                  controller
-                                      .resetPassword(bodyParams)
-                                      .then((value) {
+                                  controller.resetPassword(bodyParams).then((value) {
                                     if (value != null) {
                                       if (value == true) {
                                         Get.offAll(LoginScreen(),
-                                            duration: const Duration(
-                                                milliseconds:
-                                                    400), //duration of transitions, default 1 sec
+                                            duration: const Duration(milliseconds: 400), //duration of transitions, default 1 sec
                                             transition: Transition.rightToLeft);
-                                        ShowToastDialog.showToast(
-                                            "Password change successfully!".tr);
+                                        ShowToastDialog.showToast("Password change successfully!".tr);
                                       } else {
-                                        ShowToastDialog.showToast(
-                                            "Please try again later".tr);
+                                        ShowToastDialog.showToast("Please try again later".tr);
                                       }
                                     }
                                   });

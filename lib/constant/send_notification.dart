@@ -5,7 +5,8 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class SendNotification {
-  static var SERVER_KEY = "AAAAes6iy30:APA91bEGZgbKE9VS68ummlUqXdX0u-JMAcnieJ8v7MX_q-oro5KrYySZ7Ho1oLvWvYDHHcZ-73pb8lLYo5s2xAt2kRoN8e2TDjIN8ikKVM6NPKeCqPB5qE0SpJ0JTiG7Sl8O5MxZssde";
+  static var SERVER_KEY =
+      "AAAA49ziIwY:APA91bHsBmmwutFQp_xt0bDHVKl78VgOk4rJwu4vU58XadwIDbogGebcH9FJ8DHkRuDjhee0Sth_TDbVsoAbAL66wz49meP9trIi6OcoEGvm0eWddxdGMp9DEmT1ejEAWb6BcTYlItLs";
 
   static sendMessageNotification(String token, String title, String body, Map<String, dynamic>? payload) async {
     await http.post(

@@ -31,7 +31,11 @@ class User {
     this.id,
     this.nom,
     this.prenom,
+    this.custNumber,
     this.email,
+    this.address,
+    this.safeLocationLat,
+    this.safeLocationLng,
     this.phone,
     this.loginType,
     this.photo,
@@ -63,7 +67,11 @@ class User {
   String? id;
   String? nom;
   String? prenom;
+  String? custNumber;
   String? email;
+  String? address;
+  String? safeLocationLat;
+  String? safeLocationLng;
   String? phone;
   String? loginType;
   dynamic photo;
@@ -94,13 +102,19 @@ class User {
 
   factory User.fromJson(Map<String, dynamic> json) => User(
         id: json["id"].toString(),
-        nom: json["nom"].toString() ?? '',
-        prenom: json["prenom"].toString() ?? '',
+        nom: json["nom"].toString(),
+        prenom: json["prenom"].toString(),
+        custNumber: json['customer_number'].toString().length < 4
+            ? json['customer_number'].toString().padLeft(4, '0')
+            : json['customer_number'].toString(),
         email: json["email"].toString(),
+        address: json["address"].toString(),
+        safeLocationLat: json["safe_location_lat"].toString(),
+        safeLocationLng: json["safe_location_lng"].toString(),
         phone: json["phone"].toString(),
         loginType: json["login_type"].toString(),
         photo: json["photo"].toString(),
-        photoPath: json["photo_path"].toString() ?? '',
+        photoPath: json["photo_path"].toString(),
         photoNic: json["photo_nic"].toString(),
         photoNicPath: json["photo_nic_path"].toString(),
         statut: json["statut"].toString(),
@@ -129,7 +143,11 @@ class User {
         "id": id,
         "nom": nom,
         "prenom": prenom,
+        "customer_number": custNumber,
         "email": email,
+        "address": address,
+        "safe_location_lat": safeLocationLat,
+        "safe_location_lng": safeLocationLng,
         "phone": phone,
         "login_type": loginType,
         "photo": photo,

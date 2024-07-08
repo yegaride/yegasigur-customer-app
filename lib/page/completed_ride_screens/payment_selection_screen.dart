@@ -11,7 +11,8 @@ import 'package:cabme/model/get_payment_txt_token_model.dart';
 import 'package:cabme/model/payStackURLModel.dart';
 import 'package:cabme/model/razorpay_gen_orderid_model.dart';
 import 'package:cabme/model/stripe_failed_model.dart';
-import 'package:cabme/model/tax_model.dart';
+// import 'package:cabme/model/tax_model.dart';
+import 'package:cabme/page/wallet/cxpay_screen.dart';
 import 'package:cabme/page/wallet/payStackScreen.dart';
 import 'package:cabme/service/api.dart';
 import 'package:cabme/themes/button_them.dart';
@@ -95,82 +96,83 @@ class PaymentSelectionScreen extends StatelessWidget {
               physics: const BouncingScrollPhysics(),
               child: Column(
                 children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      boxShadow: <BoxShadow>[
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.3),
-                          blurRadius: 2,
-                          offset: const Offset(2, 2),
-                        ),
-                      ],
-                      borderRadius: const BorderRadius.all(Radius.circular(15.0)),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Row(
-                        children: [
-                          Image.asset(
-                            'assets/images/promo_code.png',
-                            width: 50,
-                            height: 50,
-                          ),
-                          Expanded(
-                            child: Padding(
-                              padding: const EdgeInsets.only(left: 10),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "Promo Code".tr,
-                                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w900),
-                                  ),
-                                  Text(
-                                    "Apply promo code".tr,
-                                    style: TextStyle(color: Colors.black.withOpacity(0.50), fontWeight: FontWeight.w400),
-                                  )
-                                ],
-                              ),
-                            ),
-                          ),
-                          GestureDetector(
-                              onTap: () {
-                                // controller.couponCodeController =
-                                //     TextEditingController();
-                                showModalBottomSheet(
-                                  isScrollControlled: true,
-                                  isDismissible: true,
-                                  context: context,
-                                  backgroundColor: Colors.transparent,
-                                  enableDrag: true,
-                                  builder: (BuildContext context) => couponCodeSheet(
-                                    context,
-                                    controller,
-                                  ),
-                                );
-                              },
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(30),
-                                  boxShadow: <BoxShadow>[
-                                    BoxShadow(
-                                      color: Colors.black.withOpacity(0.2),
-                                      blurRadius: 2,
-                                      offset: const Offset(2, 2),
-                                    ),
-                                  ],
-                                ),
-                                child: Image.asset(
-                                  'assets/images/add_payment.png',
-                                  width: 36,
-                                  height: 36,
-                                ),
-                              )),
-                        ],
-                      ),
-                    ),
-                  ),
+                  // TODO: PROMO CODE
+                  // Container(
+                  //   decoration: BoxDecoration(
+                  //     color: Colors.white,
+                  //     boxShadow: <BoxShadow>[
+                  //       BoxShadow(
+                  //         color: Colors.black.withOpacity(0.3),
+                  //         blurRadius: 2,
+                  //         offset: const Offset(2, 2),
+                  //       ),
+                  //     ],
+                  //     borderRadius: const BorderRadius.all(Radius.circular(15.0)),
+                  //   ),
+                  //   child: Padding(
+                  //     padding: const EdgeInsets.all(10.0),
+                  //     child: Row(
+                  //       children: [
+                  //         Image.asset(
+                  //           'assets/images/promo_code.png',
+                  //           width: 50,
+                  //           height: 50,
+                  //         ),
+                  //         Expanded(
+                  //           child: Padding(
+                  //             padding: const EdgeInsets.only(left: 10),
+                  //             child: Column(
+                  //               crossAxisAlignment: CrossAxisAlignment.start,
+                  //               children: [
+                  //                 Text(
+                  //                   "Promo Code".tr,
+                  //                   style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w900),
+                  //                 ),
+                  //                 Text(
+                  //                   "Apply promo code".tr,
+                  //                   style: TextStyle(color: Colors.black.withOpacity(0.50), fontWeight: FontWeight.w400),
+                  //                 )
+                  //               ],
+                  //             ),
+                  //           ),
+                  //         ),
+                  //         GestureDetector(
+                  //             onTap: () {
+                  //               // controller.couponCodeController =
+                  //               //     TextEditingController();
+                  //               showModalBottomSheet(
+                  //                 isScrollControlled: true,
+                  //                 isDismissible: true,
+                  //                 context: context,
+                  //                 backgroundColor: Colors.transparent,
+                  //                 enableDrag: true,
+                  //                 builder: (BuildContext context) => couponCodeSheet(
+                  //                   context,
+                  //                   controller,
+                  //                 ),
+                  //               );
+                  //             },
+                  //             child: Container(
+                  //               decoration: BoxDecoration(
+                  //                 borderRadius: BorderRadius.circular(30),
+                  //                 boxShadow: <BoxShadow>[
+                  //                   BoxShadow(
+                  //                     color: Colors.black.withOpacity(0.2),
+                  //                     blurRadius: 2,
+                  //                     offset: const Offset(2, 2),
+                  //                   ),
+                  //                 ],
+                  //               ),
+                  //               child: Image.asset(
+                  //                 'assets/images/add_payment.png',
+                  //                 width: 36,
+                  //                 height: 36,
+                  //               ),
+                  //             )),
+                  //       ],
+                  //     ),
+                  //   ),
+                  // ),
                   Padding(
                     padding: const EdgeInsets.only(top: 15.0),
                     child: Container(
@@ -194,54 +196,63 @@ class PaymentSelectionScreen extends StatelessWidget {
                                 Expanded(
                                     child: Text(
                                   "Sub Total".tr,
-                                  style: TextStyle(letterSpacing: 1.0, color: ConstantColors.subTitleTextColor, fontWeight: FontWeight.w600),
+                                  style: TextStyle(
+                                      letterSpacing: 1.0, color: ConstantColors.subTitleTextColor, fontWeight: FontWeight.w600),
                                 )),
                                 Text(Constant().amountShow(amount: controller.data.value.montant.toString()),
-                                    style: TextStyle(letterSpacing: 1.0, color: ConstantColors.titleTextColor, fontWeight: FontWeight.w800)),
+                                    style: TextStyle(
+                                        letterSpacing: 1.0, color: ConstantColors.titleTextColor, fontWeight: FontWeight.w800)),
                               ],
                             ),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 3.0),
-                              child: Divider(
-                                color: Colors.black.withOpacity(0.40),
-                              ),
-                            ),
-                            Row(
-                              children: [
-                                Expanded(
-                                    child: Text(
-                                  "Discount".tr,
-                                  style: TextStyle(letterSpacing: 1.0, color: ConstantColors.subTitleTextColor, fontWeight: FontWeight.w600),
-                                )),
-                                Text('(-${Constant().amountShow(amount: controller.discountAmount.toString())})',
-                                    style: const TextStyle(letterSpacing: 1.0, color: Colors.red, fontWeight: FontWeight.w800)),
-                              ],
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 3.0),
-                              child: Divider(
-                                color: Colors.black.withOpacity(0.40),
-                              ),
-                            ),
+                            // Padding(
+                            //   padding: const EdgeInsets.symmetric(vertical: 3.0),
+                            //   child: Divider(
+                            //     color: Colors.black.withOpacity(0.40),
+                            //   ),
+                            // ),
+                            // TODO discount
+                            // Row(
+                            //   children: [
+                            //     Expanded(
+                            //         child: Text(
+                            //       "Discount".tr,
+                            //       style: TextStyle(
+                            //           letterSpacing: 1.0, color: ConstantColors.subTitleTextColor, fontWeight: FontWeight.w600),
+                            //     )),
+                            //     Text('(-${Constant().amountShow(amount: controller.discountAmount.toString())})',
+                            //         style: const TextStyle(letterSpacing: 1.0, color: Colors.red, fontWeight: FontWeight.w800)),
+                            //   ],
+                            // ),
+                            // Padding(
+                            //   padding: const EdgeInsets.symmetric(vertical: 3.0),
+                            //   child: Divider(
+                            //     color: Colors.black.withOpacity(0.40),
+                            //   ),
+                            // ),
 
-                            ListView.builder(
-                              itemCount: Constant.taxList.length,
-                              shrinkWrap: true,
-                              padding: EdgeInsets.zero,
-                              physics: const NeverScrollableScrollPhysics(),
-                              itemBuilder: (context, index) {
-                                TaxModel taxModel = Constant.taxList[index];
-                                return ListTile(
-                                  contentPadding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
-                                  title: Text(
-                                    '${taxModel.libelle.toString()} (${taxModel.type == "Fixed" ? Constant().amountShow(amount: taxModel.value) : "${taxModel.value}%"})',
-                                    style: TextStyle(letterSpacing: 1.0, color: ConstantColors.subTitleTextColor, fontWeight: FontWeight.w600),
-                                  ),
-                                  trailing: Text(Constant().amountShow(amount: controller.calculateTax(taxModel: taxModel).toString()),
-                                      style: TextStyle(letterSpacing: 1.0, color: ConstantColors.subTitleTextColor, fontWeight: FontWeight.w800)),
-                                );
-                              },
-                            ),
+                            // ListView.builder(
+                            //   itemCount: Constant.taxList.length,
+                            //   shrinkWrap: true,
+                            //   padding: EdgeInsets.zero,
+                            //   physics: const NeverScrollableScrollPhysics(),
+                            //   itemBuilder: (context, index) {
+                            //     TaxModel taxModel = Constant.taxList[index];
+                            //     return ListTile(
+                            //       contentPadding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+                            //       title: Text(
+                            //         '${taxModel.libelle.toString()} (${taxModel.type == "Fixed" ? Constant().amountShow(amount: taxModel.value) : "${taxModel.value}%"})',
+                            //         style: TextStyle(
+                            //             letterSpacing: 1.0, color: ConstantColors.subTitleTextColor, fontWeight: FontWeight.w600),
+                            //       ),
+                            //       trailing: Text(
+                            //           Constant().amountShow(amount: controller.calculateTax(taxModel: taxModel).toString()),
+                            //           style: TextStyle(
+                            //               letterSpacing: 1.0,
+                            //               color: ConstantColors.subTitleTextColor,
+                            //               fontWeight: FontWeight.w800)),
+                            //     );
+                            //   },
+                            // ),
 
                             // Row(
                             //   children: [
@@ -279,7 +290,10 @@ class PaymentSelectionScreen extends StatelessWidget {
                                       Expanded(
                                           child: Text(
                                         "Driver Tip".tr,
-                                        style: TextStyle(letterSpacing: 1.0, color: ConstantColors.subTitleTextColor, fontWeight: FontWeight.w600),
+                                        style: TextStyle(
+                                            letterSpacing: 1.0,
+                                            color: ConstantColors.subTitleTextColor,
+                                            fontWeight: FontWeight.w600),
                                       )),
                                       Text(
                                         Constant().amountShow(amount: controller.tipAmount.value.toString()),
@@ -318,7 +332,7 @@ class PaymentSelectionScreen extends StatelessWidget {
                                 ),
                                 Text(
                                   Constant().amountShow(amount: controller.getTotalAmount().toString()),
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     letterSpacing: 1.0,
                                     color: ConstantColors.primary,
                                     fontSize: 16,
@@ -330,199 +344,199 @@ class PaymentSelectionScreen extends StatelessWidget {
                             const SizedBox(
                               height: 10,
                             ),
-                            Align(
-                              alignment: Alignment.centerLeft,
-                              child: Text(
-                                "Tip to driver".tr,
-                                textAlign: TextAlign.left,
-                                style: TextStyle(letterSpacing: 1.0, color: ConstantColors.subTitleTextColor, fontWeight: FontWeight.w600),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 5),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: GestureDetector(
-                                      onTap: () {
-                                        if (controller.tipAmount.value == 5) {
-                                          controller.tipAmount.value = 0;
-                                        } else {
-                                          controller.tipAmount.value = 5;
-                                        }
-                                      },
-                                      child: Container(
-                                        width: 50,
-                                        height: 50,
-                                        decoration: BoxDecoration(
-                                          color: controller.tipAmount.value == 5 ? ConstantColors.primary : Colors.white,
-                                          border: Border.all(
-                                            color: controller.tipAmount.value == 5 ? Colors.transparent : Colors.black.withOpacity(0.20),
-                                          ),
-                                          boxShadow: <BoxShadow>[
-                                            BoxShadow(
-                                              color: Colors.black.withOpacity(0.3),
-                                              blurRadius: 2,
-                                              offset: const Offset(2, 2),
-                                            ),
-                                          ],
-                                          borderRadius: const BorderRadius.all(Radius.circular(30.0)),
-                                        ),
-                                        child: Center(
-                                            child: Text(
-                                          Constant().amountShow(amount: '5'),
-                                          style: TextStyle(color: controller.tipAmount.value == 5 ? Colors.white : Colors.black),
-                                        )),
-                                      ),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: GestureDetector(
-                                      onTap: () {
-                                        if (controller.tipAmount.value == 10) {
-                                          controller.tipAmount.value = 0;
-                                        } else {
-                                          controller.tipAmount.value = 10;
-                                        }
-                                      },
-                                      child: Container(
-                                        width: 50,
-                                        height: 50,
-                                        decoration: BoxDecoration(
-                                          color: controller.tipAmount.value == 10 ? ConstantColors.primary : Colors.white,
-                                          border: Border.all(
-                                            color: controller.tipAmount.value == 10 ? Colors.transparent : Colors.black.withOpacity(0.20),
-                                          ),
-                                          boxShadow: <BoxShadow>[
-                                            BoxShadow(
-                                              color: Colors.black.withOpacity(0.3),
-                                              blurRadius: 2,
-                                              offset: const Offset(2, 2),
-                                            ),
-                                          ],
-                                          borderRadius: const BorderRadius.all(Radius.circular(30.0)),
-                                        ),
-                                        child: Center(
-                                            child: Text(
-                                          Constant().amountShow(amount: '10'),
-                                          style: TextStyle(color: controller.tipAmount.value == 10 ? Colors.white : Colors.black),
-                                        )),
-                                      ),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(12.0),
-                                    child: GestureDetector(
-                                      onTap: () {
-                                        if (controller.tipAmount.value == 15) {
-                                          controller.tipAmount.value = 0;
-                                        } else {
-                                          controller.tipAmount.value = 15;
-                                        }
-                                      },
-                                      child: Container(
-                                        width: 50,
-                                        height: 50,
-                                        decoration: BoxDecoration(
-                                          color: controller.tipAmount.value == 15 ? ConstantColors.primary : Colors.white,
-                                          border: Border.all(
-                                            color: controller.tipAmount.value == 15 ? Colors.transparent : Colors.black.withOpacity(0.20),
-                                          ),
-                                          boxShadow: <BoxShadow>[
-                                            BoxShadow(
-                                              color: Colors.black.withOpacity(0.3),
-                                              blurRadius: 2,
-                                              offset: const Offset(2, 2),
-                                            ),
-                                          ],
-                                          borderRadius: const BorderRadius.all(Radius.circular(30.0)),
-                                        ),
-                                        child: Center(
-                                            child: Text(
-                                          Constant().amountShow(amount: '15'),
-                                          style: TextStyle(color: controller.tipAmount.value == 15 ? Colors.white : Colors.black),
-                                        )),
-                                      ),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: GestureDetector(
-                                      onTap: () {
-                                        if (controller.tipAmount.value == 20) {
-                                          controller.tipAmount.value = 0;
-                                        } else {
-                                          controller.tipAmount.value = 20;
-                                        }
-                                      },
-                                      child: Container(
-                                        width: 50,
-                                        height: 50,
-                                        decoration: BoxDecoration(
-                                          color: controller.tipAmount.value == 20 ? ConstantColors.primary : Colors.white,
-                                          border: Border.all(
-                                            color: controller.tipAmount.value == 20 ? Colors.transparent : Colors.black.withOpacity(0.20),
-                                          ),
-                                          boxShadow: <BoxShadow>[
-                                            BoxShadow(
-                                              color: Colors.black.withOpacity(0.3),
-                                              blurRadius: 2,
-                                              offset: const Offset(2, 2),
-                                            ),
-                                          ],
-                                          borderRadius: const BorderRadius.all(Radius.circular(30.0)),
-                                        ),
-                                        child: Center(
-                                            child: Text(
-                                          Constant().amountShow(amount: '20'),
-                                          style: TextStyle(color: controller.tipAmount.value == 20 ? Colors.white : Colors.black),
-                                        )),
-                                      ),
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: InkWell(
-                                      onTap: () {
-                                        tipAmountBottomSheet(
-                                          context,
-                                          controller,
-                                        );
-                                      },
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8),
-                                        child: Container(
-                                          height: 50,
-                                          decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            border: Border.all(
-                                              color: Colors.black.withOpacity(0.20),
-                                            ),
-                                            boxShadow: <BoxShadow>[
-                                              BoxShadow(
-                                                color: Colors.black.withOpacity(0.3),
-                                                blurRadius: 2,
-                                                offset: const Offset(2, 2),
-                                              ),
-                                            ],
-                                            borderRadius: const BorderRadius.all(Radius.circular(10.0)),
-                                          ),
-                                          child: const Center(
-                                            child: Text(
-                                              "Other",
-                                              style: TextStyle(color: Colors.black),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
+                            // Align(
+                            //   alignment: Alignment.centerLeft,
+                            //   child: Text(
+                            //     "Tip to driver".tr,
+                            //     textAlign: TextAlign.left,
+                            //     style: TextStyle(letterSpacing: 1.0, color: ConstantColors.subTitleTextColor, fontWeight: FontWeight.w600),
+                            //   ),
+                            // ),
+                            // Padding(
+                            //   padding: const EdgeInsets.only(top: 5),
+                            //   child: Row(
+                            //     crossAxisAlignment: CrossAxisAlignment.center,
+                            //     mainAxisAlignment: MainAxisAlignment.center,
+                            //     children: [
+                            //       Padding(
+                            //         padding: const EdgeInsets.all(8.0),
+                            //         child: GestureDetector(
+                            //           onTap: () {
+                            //             if (controller.tipAmount.value == 5) {
+                            //               controller.tipAmount.value = 0;
+                            //             } else {
+                            //               controller.tipAmount.value = 5;
+                            //             }
+                            //           },
+                            //           child: Container(
+                            //             width: 50,
+                            //             height: 50,
+                            //             decoration: BoxDecoration(
+                            //               color: controller.tipAmount.value == 5 ? ConstantColors.primary : Colors.white,
+                            //               border: Border.all(
+                            //                 color: controller.tipAmount.value == 5 ? Colors.transparent : Colors.black.withOpacity(0.20),
+                            //               ),
+                            //               boxShadow: <BoxShadow>[
+                            //                 BoxShadow(
+                            //                   color: Colors.black.withOpacity(0.3),
+                            //                   blurRadius: 2,
+                            //                   offset: const Offset(2, 2),
+                            //                 ),
+                            //               ],
+                            //               borderRadius: const BorderRadius.all(Radius.circular(30.0)),
+                            //             ),
+                            //             child: Center(
+                            //                 child: Text(
+                            //               Constant().amountShow(amount: '5'),
+                            //               style: TextStyle(color: controller.tipAmount.value == 5 ? Colors.white : Colors.black),
+                            //             )),
+                            //           ),
+                            //         ),
+                            //       ),
+                            //       Padding(
+                            //         padding: const EdgeInsets.all(8.0),
+                            //         child: GestureDetector(
+                            //           onTap: () {
+                            //             if (controller.tipAmount.value == 10) {
+                            //               controller.tipAmount.value = 0;
+                            //             } else {
+                            //               controller.tipAmount.value = 10;
+                            //             }
+                            //           },
+                            //           child: Container(
+                            //             width: 50,
+                            //             height: 50,
+                            //             decoration: BoxDecoration(
+                            //               color: controller.tipAmount.value == 10 ? ConstantColors.primary : Colors.white,
+                            //               border: Border.all(
+                            //                 color: controller.tipAmount.value == 10 ? Colors.transparent : Colors.black.withOpacity(0.20),
+                            //               ),
+                            //               boxShadow: <BoxShadow>[
+                            //                 BoxShadow(
+                            //                   color: Colors.black.withOpacity(0.3),
+                            //                   blurRadius: 2,
+                            //                   offset: const Offset(2, 2),
+                            //                 ),
+                            //               ],
+                            //               borderRadius: const BorderRadius.all(Radius.circular(30.0)),
+                            //             ),
+                            //             child: Center(
+                            //                 child: Text(
+                            //               Constant().amountShow(amount: '10'),
+                            //               style: TextStyle(color: controller.tipAmount.value == 10 ? Colors.white : Colors.black),
+                            //             )),
+                            //           ),
+                            //         ),
+                            //       ),
+                            //       Padding(
+                            //         padding: const EdgeInsets.all(12.0),
+                            //         child: GestureDetector(
+                            //           onTap: () {
+                            //             if (controller.tipAmount.value == 15) {
+                            //               controller.tipAmount.value = 0;
+                            //             } else {
+                            //               controller.tipAmount.value = 15;
+                            //             }
+                            //           },
+                            //           child: Container(
+                            //             width: 50,
+                            //             height: 50,
+                            //             decoration: BoxDecoration(
+                            //               color: controller.tipAmount.value == 15 ? ConstantColors.primary : Colors.white,
+                            //               border: Border.all(
+                            //                 color: controller.tipAmount.value == 15 ? Colors.transparent : Colors.black.withOpacity(0.20),
+                            //               ),
+                            //               boxShadow: <BoxShadow>[
+                            //                 BoxShadow(
+                            //                   color: Colors.black.withOpacity(0.3),
+                            //                   blurRadius: 2,
+                            //                   offset: const Offset(2, 2),
+                            //                 ),
+                            //               ],
+                            //               borderRadius: const BorderRadius.all(Radius.circular(30.0)),
+                            //             ),
+                            //             child: Center(
+                            //                 child: Text(
+                            //               Constant().amountShow(amount: '15'),
+                            //               style: TextStyle(color: controller.tipAmount.value == 15 ? Colors.white : Colors.black),
+                            //             )),
+                            //           ),
+                            //         ),
+                            //       ),
+                            //       Padding(
+                            //         padding: const EdgeInsets.all(8.0),
+                            //         child: GestureDetector(
+                            //           onTap: () {
+                            //             if (controller.tipAmount.value == 20) {
+                            //               controller.tipAmount.value = 0;
+                            //             } else {
+                            //               controller.tipAmount.value = 20;
+                            //             }
+                            //           },
+                            //           child: Container(
+                            //             width: 50,
+                            //             height: 50,
+                            //             decoration: BoxDecoration(
+                            //               color: controller.tipAmount.value == 20 ? ConstantColors.primary : Colors.white,
+                            //               border: Border.all(
+                            //                 color: controller.tipAmount.value == 20 ? Colors.transparent : Colors.black.withOpacity(0.20),
+                            //               ),
+                            //               boxShadow: <BoxShadow>[
+                            //                 BoxShadow(
+                            //                   color: Colors.black.withOpacity(0.3),
+                            //                   blurRadius: 2,
+                            //                   offset: const Offset(2, 2),
+                            //                 ),
+                            //               ],
+                            //               borderRadius: const BorderRadius.all(Radius.circular(30.0)),
+                            //             ),
+                            //             child: Center(
+                            //                 child: Text(
+                            //               Constant().amountShow(amount: '20'),
+                            //               style: TextStyle(color: controller.tipAmount.value == 20 ? Colors.white : Colors.black),
+                            //             )),
+                            //           ),
+                            //         ),
+                            //       ),
+                            //       Expanded(
+                            //         child: InkWell(
+                            //           onTap: () {
+                            //             tipAmountBottomSheet(
+                            //               context,
+                            //               controller,
+                            //             );
+                            //           },
+                            //           child: Padding(
+                            //             padding: const EdgeInsets.all(8),
+                            //             child: Container(
+                            //               height: 50,
+                            //               decoration: BoxDecoration(
+                            //                 color: Colors.white,
+                            //                 border: Border.all(
+                            //                   color: Colors.black.withOpacity(0.20),
+                            //                 ),
+                            //                 boxShadow: <BoxShadow>[
+                            //                   BoxShadow(
+                            //                     color: Colors.black.withOpacity(0.3),
+                            //                     blurRadius: 2,
+                            //                     offset: const Offset(2, 2),
+                            //                   ),
+                            //                 ],
+                            //                 borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+                            //               ),
+                            //               child: const Center(
+                            //                 child: Text(
+                            //                   "Other",
+                            //                   style: TextStyle(color: Colors.black),
+                            //                 ),
+                            //               ),
+                            //             ),
+                            //           ),
+                            //         ),
+                            //       ),
+                            //     ],
+                            //   ),
+                            // ),
                           ],
                         ),
                       ),
@@ -533,8 +547,78 @@ class PaymentSelectionScreen extends StatelessWidget {
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("Select payment Option".tr, style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold, letterSpacing: 1.0, fontSize: 16)),
+                        Text("Select payment Option".tr,
+                            style: const TextStyle(
+                                color: Colors.black, fontWeight: FontWeight.bold, letterSpacing: 1.0, fontSize: 16)),
                       ],
+                    ),
+                  ),
+
+                  /// cxpay
+                  Visibility(
+                    visible: controller.paymentSettingModel.value.cxpay!.isEnabled == 'true',
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 3.0, horizontal: 2),
+                      child: Card(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        elevation: controller.paypal.value ? 0 : 2,
+                        child: RadioListTile(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              side: BorderSide(color: controller.cxpay.value ? ConstantColors.primary : Colors.transparent)),
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 6,
+                          ),
+                          controlAffinity: ListTileControlAffinity.trailing,
+                          value: "cxpay",
+                          groupValue: controller.selectedRadioTile.value,
+                          onChanged: (String? value) {
+                            controller.stripe = false.obs;
+                            controller.wallet = false.obs;
+                            controller.cash = false.obs;
+                            controller.razorPay = false.obs;
+                            controller.payTm = false.obs;
+                            controller.paypal = false.obs;
+                            controller.payStack = false.obs;
+                            controller.flutterWave = false.obs;
+                            controller.mercadoPago = false.obs;
+                            controller.payFast = false.obs;
+                            controller.cxpay = true.obs;
+                            controller.selectedRadioTile.value = value!;
+                            controller.paymentMethodId.value =
+                                controller.paymentSettingModel.value.cxpay!.idPaymentMethod.toString();
+                          },
+                          selected: controller.cxpay.value,
+                          title: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.blueGrey.shade50,
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(vertical: 3.0, horizontal: 10),
+                                    child: SizedBox(
+                                        width: 80,
+                                        height: 35,
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(vertical: 3.0),
+                                          child: Image.asset("assets/images/paypal_@3x.png"),
+                                        )),
+                                  )),
+                              const SizedBox(
+                                width: 20,
+                              ),
+                              // TODO i18n
+                              const Text("Credit card"),
+                            ],
+                          ),
+                          //toggleable: true,
+                        ),
+                      ),
                     ),
                   ),
                   Visibility(
@@ -547,7 +631,9 @@ class PaymentSelectionScreen extends StatelessWidget {
                         ),
                         elevation: controller.cash.value ? 0 : 2,
                         child: RadioListTile(
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8), side: BorderSide(color: controller.cash.value ? ConstantColors.primary : Colors.transparent)),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              side: BorderSide(color: controller.cash.value ? ConstantColors.primary : Colors.transparent)),
                           controlAffinity: ListTileControlAffinity.trailing,
                           value: "Cash",
                           groupValue: controller.selectedRadioTile.value,
@@ -562,8 +648,10 @@ class PaymentSelectionScreen extends StatelessWidget {
                             controller.flutterWave = false.obs;
                             controller.mercadoPago = false.obs;
                             controller.payFast = false.obs;
+                            controller.cxpay = false.obs;
                             controller.selectedRadioTile.value = value!;
-                            controller.paymentMethodId = controller.paymentSettingModel.value.cash!.idPaymentMethod.toString().obs;
+                            controller.paymentMethodId =
+                                controller.paymentSettingModel.value.cash!.idPaymentMethod.toString().obs;
                           },
                           selected: controller.cash.value,
                           contentPadding: const EdgeInsets.symmetric(
@@ -611,7 +699,9 @@ class PaymentSelectionScreen extends StatelessWidget {
                         ),
                         elevation: controller.wallet.value ? 0 : 2,
                         child: RadioListTile(
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8), side: BorderSide(color: controller.wallet.value ? ConstantColors.primary : Colors.transparent)),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              side: BorderSide(color: controller.wallet.value ? ConstantColors.primary : Colors.transparent)),
                           controlAffinity: ListTileControlAffinity.trailing,
                           value: "Wallet",
                           groupValue: controller.selectedRadioTile.value,
@@ -620,7 +710,8 @@ class PaymentSelectionScreen extends StatelessWidget {
                             if (double.parse(controller.walletAmount.toString()) >= controller.getTotalAmount()) {
                               controller.wallet = true.obs;
                               controller.selectedRadioTile.value = value!;
-                              controller.paymentMethodId = controller.paymentSettingModel.value.myWallet!.idPaymentMethod.toString().obs;
+                              controller.paymentMethodId =
+                                  controller.paymentSettingModel.value.myWallet!.idPaymentMethod.toString().obs;
                             } else {
                               controller.wallet = false.obs;
                             }
@@ -633,6 +724,7 @@ class PaymentSelectionScreen extends StatelessWidget {
                             controller.flutterWave = false.obs;
                             controller.mercadoPago = false.obs;
                             controller.payFast = false.obs;
+                            controller.cxpay = false.obs;
                           },
                           selected: controller.wallet.value,
                           contentPadding: const EdgeInsets.symmetric(
@@ -677,7 +769,8 @@ class PaymentSelectionScreen extends StatelessWidget {
                                         ),
                                       ],
                                     ),
-                                    double.parse(strToDouble(controller.walletAmount.value.toString())) >= controller.getTotalAmount()
+                                    double.parse(strToDouble(controller.walletAmount.value.toString())) >=
+                                            controller.getTotalAmount()
                                         ? Text(
                                             "Sufficient Balance".tr,
                                             style: const TextStyle(
@@ -710,7 +803,9 @@ class PaymentSelectionScreen extends StatelessWidget {
                         ),
                         elevation: controller.stripe.value ? 0 : 2,
                         child: RadioListTile(
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8), side: BorderSide(color: controller.stripe.value ? ConstantColors.primary : Colors.transparent)),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              side: BorderSide(color: controller.stripe.value ? ConstantColors.primary : Colors.transparent)),
                           controlAffinity: ListTileControlAffinity.trailing,
                           value: "Stripe",
                           groupValue: controller.selectedRadioTile.value,
@@ -725,8 +820,10 @@ class PaymentSelectionScreen extends StatelessWidget {
                             controller.flutterWave = false.obs;
                             controller.mercadoPago = false.obs;
                             controller.payFast = false.obs;
+                            controller.cxpay = false.obs;
                             controller.selectedRadioTile.value = value!;
-                            controller.paymentMethodId = controller.paymentSettingModel.value.strip!.idPaymentMethod.toString().obs;
+                            controller.paymentMethodId =
+                                controller.paymentSettingModel.value.strip!.idPaymentMethod.toString().obs;
                           },
                           selected: controller.stripe.value,
                           contentPadding: const EdgeInsets.symmetric(
@@ -748,7 +845,7 @@ class PaymentSelectionScreen extends StatelessWidget {
                                       child: Padding(
                                         padding: const EdgeInsets.symmetric(vertical: 6.0),
                                         child: Image.asset(
-                                          "assets/images/stripe.png",
+                                          "assets/images/stripe-cards.png",
                                         ),
                                       ),
                                     ),
@@ -756,7 +853,8 @@ class PaymentSelectionScreen extends StatelessWidget {
                               const SizedBox(
                                 width: 20,
                               ),
-                              Text("Stripe".tr),
+                              // TODO i18n
+                              const Text("Credit/Debit Card"),
                             ],
                           ),
                           //toggleable: true,
@@ -774,7 +872,9 @@ class PaymentSelectionScreen extends StatelessWidget {
                         ),
                         elevation: controller.payStack.value ? 0 : 2,
                         child: RadioListTile(
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8), side: BorderSide(color: controller.payStack.value ? ConstantColors.primary : Colors.transparent)),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              side: BorderSide(color: controller.payStack.value ? ConstantColors.primary : Colors.transparent)),
                           controlAffinity: ListTileControlAffinity.trailing,
                           value: "PayStack",
                           groupValue: controller.selectedRadioTile.value,
@@ -789,8 +889,10 @@ class PaymentSelectionScreen extends StatelessWidget {
                             controller.flutterWave = false.obs;
                             controller.mercadoPago = false.obs;
                             controller.payFast = false.obs;
+                            controller.cxpay = false.obs;
                             controller.selectedRadioTile.value = value!;
-                            controller.paymentMethodId = controller.paymentSettingModel.value.payStack!.idPaymentMethod.toString().obs;
+                            controller.paymentMethodId =
+                                controller.paymentSettingModel.value.payStack!.idPaymentMethod.toString().obs;
                           },
                           selected: controller.payStack.value,
                           //selectedRadioTile == "strip" ? true : false,
@@ -839,7 +941,10 @@ class PaymentSelectionScreen extends StatelessWidget {
                         ),
                         elevation: controller.flutterWave.value ? 0 : 2,
                         child: RadioListTile(
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8), side: BorderSide(color: controller.flutterWave.value ? ConstantColors.primary : Colors.transparent)),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              side:
+                                  BorderSide(color: controller.flutterWave.value ? ConstantColors.primary : Colors.transparent)),
                           controlAffinity: ListTileControlAffinity.trailing,
                           value: "FlutterWave",
                           groupValue: controller.selectedRadioTile.value,
@@ -854,8 +959,10 @@ class PaymentSelectionScreen extends StatelessWidget {
                             controller.flutterWave = true.obs;
                             controller.mercadoPago = false.obs;
                             controller.payFast = false.obs;
+                            controller.cxpay = false.obs;
                             controller.selectedRadioTile.value = value!;
-                            controller.paymentMethodId.value = controller.paymentSettingModel.value.flutterWave!.idPaymentMethod.toString();
+                            controller.paymentMethodId.value =
+                                controller.paymentSettingModel.value.flutterWave!.idPaymentMethod.toString();
                           },
                           selected: controller.flutterWave.value,
                           contentPadding: const EdgeInsets.symmetric(
@@ -903,7 +1010,9 @@ class PaymentSelectionScreen extends StatelessWidget {
                         ),
                         elevation: controller.razorPay.value ? 0 : 2,
                         child: RadioListTile(
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8), side: BorderSide(color: controller.razorPay.value ? ConstantColors.primary : Colors.transparent)),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              side: BorderSide(color: controller.razorPay.value ? ConstantColors.primary : Colors.transparent)),
                           contentPadding: const EdgeInsets.symmetric(
                             horizontal: 6,
                           ),
@@ -921,8 +1030,10 @@ class PaymentSelectionScreen extends StatelessWidget {
                             controller.flutterWave = false.obs;
                             controller.mercadoPago = false.obs;
                             controller.payFast = false.obs;
+                            controller.cxpay = false.obs;
                             controller.selectedRadioTile.value = value!;
-                            controller.paymentMethodId.value = controller.paymentSettingModel.value.razorpay!.idPaymentMethod.toString();
+                            controller.paymentMethodId.value =
+                                controller.paymentSettingModel.value.razorpay!.idPaymentMethod.toString();
                           },
                           selected: controller.razorPay.value,
                           title: Row(
@@ -958,7 +1069,9 @@ class PaymentSelectionScreen extends StatelessWidget {
                         ),
                         elevation: controller.payFast.value ? 0 : 2,
                         child: RadioListTile(
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8), side: BorderSide(color: controller.payFast.value ? ConstantColors.primary : Colors.transparent)),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              side: BorderSide(color: controller.payFast.value ? ConstantColors.primary : Colors.transparent)),
                           controlAffinity: ListTileControlAffinity.trailing,
                           value: "PayFast",
                           groupValue: controller.selectedRadioTile.value,
@@ -973,8 +1086,10 @@ class PaymentSelectionScreen extends StatelessWidget {
                             controller.flutterWave = false.obs;
                             controller.mercadoPago = false.obs;
                             controller.payFast = true.obs;
+                            controller.cxpay = false.obs;
                             controller.selectedRadioTile.value = value!;
-                            controller.paymentMethodId.value = controller.paymentSettingModel.value.payFast!.idPaymentMethod.toString();
+                            controller.paymentMethodId.value =
+                                controller.paymentSettingModel.value.payFast!.idPaymentMethod.toString();
                           },
                           selected: controller.payFast.value,
                           //selectedRadioTile == "strip" ? true : false,
@@ -1023,7 +1138,9 @@ class PaymentSelectionScreen extends StatelessWidget {
                         ),
                         elevation: controller.payTm.value ? 0 : 2,
                         child: RadioListTile(
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8), side: BorderSide(color: controller.payTm.value ? ConstantColors.primary : Colors.transparent)),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              side: BorderSide(color: controller.payTm.value ? ConstantColors.primary : Colors.transparent)),
                           contentPadding: const EdgeInsets.symmetric(
                             horizontal: 6,
                           ),
@@ -1041,8 +1158,10 @@ class PaymentSelectionScreen extends StatelessWidget {
                             controller.flutterWave = false.obs;
                             controller.mercadoPago = false.obs;
                             controller.payFast = false.obs;
+                            controller.cxpay = false.obs;
                             controller.selectedRadioTile.value = value!;
-                            controller.paymentMethodId.value = controller.paymentSettingModel.value.paytm!.idPaymentMethod.toString();
+                            controller.paymentMethodId.value =
+                                controller.paymentSettingModel.value.paytm!.idPaymentMethod.toString();
                           },
                           selected: controller.payTm.value,
                           title: Row(
@@ -1086,7 +1205,10 @@ class PaymentSelectionScreen extends StatelessWidget {
                         ),
                         elevation: controller.mercadoPago.value ? 0 : 2,
                         child: RadioListTile(
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8), side: BorderSide(color: controller.mercadoPago.value ? ConstantColors.primary : Colors.transparent)),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              side:
+                                  BorderSide(color: controller.mercadoPago.value ? ConstantColors.primary : Colors.transparent)),
                           controlAffinity: ListTileControlAffinity.trailing,
                           value: "MercadoPago",
                           groupValue: controller.selectedRadioTile.value,
@@ -1101,8 +1223,10 @@ class PaymentSelectionScreen extends StatelessWidget {
                             controller.flutterWave = false.obs;
                             controller.mercadoPago = true.obs;
                             controller.payFast = false.obs;
+                            controller.cxpay = false.obs;
                             controller.selectedRadioTile.value = value!;
-                            controller.paymentMethodId.value = controller.paymentSettingModel.value.mercadopago!.idPaymentMethod.toString();
+                            controller.paymentMethodId.value =
+                                controller.paymentSettingModel.value.mercadopago!.idPaymentMethod.toString();
                           },
                           selected: controller.mercadoPago.value,
                           contentPadding: const EdgeInsets.symmetric(
@@ -1150,7 +1274,9 @@ class PaymentSelectionScreen extends StatelessWidget {
                         ),
                         elevation: controller.paypal.value ? 0 : 2,
                         child: RadioListTile(
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8), side: BorderSide(color: controller.paypal.value ? ConstantColors.primary : Colors.transparent)),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              side: BorderSide(color: controller.paypal.value ? ConstantColors.primary : Colors.transparent)),
                           contentPadding: const EdgeInsets.symmetric(
                             horizontal: 6,
                           ),
@@ -1168,8 +1294,10 @@ class PaymentSelectionScreen extends StatelessWidget {
                             controller.flutterWave = false.obs;
                             controller.mercadoPago = false.obs;
                             controller.payFast = false.obs;
+                            controller.cxpay = false.obs;
                             controller.selectedRadioTile.value = value!;
-                            controller.paymentMethodId.value = controller.paymentSettingModel.value.payPal!.idPaymentMethod.toString();
+                            controller.paymentMethodId.value =
+                                controller.paymentSettingModel.value.payPal!.idPaymentMethod.toString();
                           },
                           selected: controller.paypal.value,
                           title: Row(
@@ -1219,6 +1347,12 @@ class PaymentSelectionScreen extends StatelessWidget {
                   ),
                   InkWell(
                     onTap: () {
+                      if (controller.selectedRadioTile.value == 'Cash') {
+                        // TODO i18n
+                        ShowToastDialog.showToast("Please select payment method".tr);
+                        return;
+                      }
+
                       if (controller.selectedRadioTile.value == "Wallet") {
                         if (double.parse(controller.walletAmount.toString()) >= controller.getTotalAmount()) {
                           Get.back();
@@ -1308,6 +1442,9 @@ class PaymentSelectionScreen extends StatelessWidget {
                       } else if (controller.selectedRadioTile.value == "MercadoPago") {
                         showLoadingAlert(context);
                         mercadoPagoMakePayment(context, controller.getTotalAmount().toString());
+                      } else if (controller.selectedRadioTile.value == 'cxpay') {
+                        showLoadingAlert(context);
+                        cxpayPayment(context, controller.getTotalAmount().toString());
                       }
                     },
                     child: Text(
@@ -1334,7 +1471,8 @@ class PaymentSelectionScreen extends StatelessWidget {
               onTap: () => Navigator.pop(context),
               child: Container(
                 height: 45,
-                decoration: BoxDecoration(border: Border.all(color: Colors.white, width: 0.3), color: Colors.transparent, shape: BoxShape.circle),
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.white, width: 0.3), color: Colors.transparent, shape: BoxShape.circle),
 
                 // radius: 20,
                 child: const Center(
@@ -1420,21 +1558,27 @@ class PaymentSelectionScreen extends StatelessWidget {
                             if (element.code!.trim() == controller.couponCodeController.text.toString().trim()) {
                               if (element.type == "Percentage") {
                                 var amount = double.parse(element.discount.toString()) / 100;
-                                if ((controller.subTotalAmount.value * double.parse(amount.toString())) < controller.subTotalAmount.value) {
-                                  controller.discountAmount.value = controller.subTotalAmount.value * double.parse(amount.toString());
+                                if ((controller.subTotalAmount.value * double.parse(amount.toString())) <
+                                    controller.subTotalAmount.value) {
+                                  controller.discountAmount.value =
+                                      controller.subTotalAmount.value * double.parse(amount.toString());
                                   controller.taxAmount.value = 0.0;
                                   for (var i = 0; i < Constant.taxList.length; i++) {
                                     if (Constant.taxList[i].statut == 'yes') {
                                       if (Constant.taxList[i].type == "Fixed") {
                                         controller.taxAmount.value += double.parse(Constant.taxList[i].value.toString());
                                       } else {
-                                        controller.taxAmount.value += ((controller.subTotalAmount.value - controller.discountAmount.value) * double.parse(Constant.taxList[i].value!.toString())) / 100;
+                                        controller.taxAmount.value +=
+                                            ((controller.subTotalAmount.value - controller.discountAmount.value) *
+                                                    double.parse(Constant.taxList[i].value!.toString())) /
+                                                100;
                                       }
                                     }
                                   }
                                   Navigator.pop(context);
                                 } else {
-                                  ShowToastDialog.showToast("A coupon will be applied when the subtotal amount is greater than the coupon amount.".tr);
+                                  ShowToastDialog.showToast(
+                                      "A coupon will be applied when the subtotal amount is greater than the coupon amount.".tr);
                                   Navigator.pop(context);
                                 }
                               } else {
@@ -1446,13 +1590,17 @@ class PaymentSelectionScreen extends StatelessWidget {
                                       if (Constant.taxList[i].type == "Fixed") {
                                         controller.taxAmount.value += double.parse(Constant.taxList[i].value.toString());
                                       } else {
-                                        controller.taxAmount.value += ((controller.subTotalAmount.value - controller.discountAmount.value) * double.parse(Constant.taxList[i].value!.toString())) / 100;
+                                        controller.taxAmount.value +=
+                                            ((controller.subTotalAmount.value - controller.discountAmount.value) *
+                                                    double.parse(Constant.taxList[i].value!.toString())) /
+                                                100;
                                       }
                                     }
                                   }
                                   Navigator.pop(context);
                                 } else {
-                                  ShowToastDialog.showToast("A coupon will be applied when the subtotal amount is greater than the coupon amount.".tr);
+                                  ShowToastDialog.showToast(
+                                      "A coupon will be applied when the subtotal amount is greater than the coupon amount.".tr);
                                   Navigator.pop(context);
                                 }
                               }
@@ -1539,7 +1687,11 @@ class PaymentSelectionScreen extends StatelessWidget {
                               }),
                             ),
                             Expanded(
-                              child: ButtonThem.buildButton(context, btnHeight: 40, title: "Add".tr, btnColor: ConstantColors.primary, txtColor: Colors.white, onPress: () async {
+                              child: ButtonThem.buildButton(context,
+                                  btnHeight: 40,
+                                  title: "Add".tr,
+                                  btnColor: ConstantColors.primary,
+                                  txtColor: Colors.white, onPress: () async {
                                 controller.tipAmount.value = double.parse(controller.tripAmountTextFieldController.text);
                                 Get.back();
                               }),
@@ -1864,7 +2016,8 @@ class PaymentSelectionScreen extends StatelessWidget {
 
   void initPayPal() async {
     //set debugMode for error logging
-    FlutterPaypalNative.isDebugMode = walletController.paymentSettingModel.value.payPal!.isLive.toString() == "false" ? true : false;
+    FlutterPaypalNative.isDebugMode =
+        walletController.paymentSettingModel.value.payPal!.isLive.toString() == "false" ? true : false;
 
     //initiate payPal plugin
     await _flutterPaypalNativePlugin.init(
@@ -1873,7 +2026,9 @@ class PaymentSelectionScreen extends StatelessWidget {
       //client id from developer dashboard
       clientID: walletController.paymentSettingModel.value.payPal!.appId!,
       //sandbox, staging, live etc
-      payPalEnvironment: walletController.paymentSettingModel.value.payPal!.isLive.toString() == "true" ? FPayPalEnvironment.live : FPayPalEnvironment.sandbox,
+      payPalEnvironment: walletController.paymentSettingModel.value.payPal!.isLive.toString() == "true"
+          ? FPayPalEnvironment.live
+          : FPayPalEnvironment.sandbox,
       //what currency do you plan to use? default is US dollars
       currencyCode: FPayPalCurrencyCode.usd,
       //action paynow?
@@ -2032,6 +2187,21 @@ class PaymentSelectionScreen extends StatelessWidget {
     });
   }
 
+  Future<void> cxpayPayment(context, amount) async {
+    final isDone = await Get.to(() {
+      return CxpayScreen(amount: amount);
+    });
+
+    Get.back();
+
+    if (isDone) {
+      Get.back();
+      transactionAPI();
+      return;
+    }
+    showSnackBarAlert(message: "Payment UnSuccessful!!".tr, color: Colors.red);
+  }
+
   ///FlutterWave Payment Method
 
   flutterWaveInitiatePayment(BuildContext context, String amount) async {
@@ -2111,7 +2281,8 @@ class PaymentSelectionScreen extends StatelessWidget {
 
   payFastPayment(context, amount) {
     PayFast? payfast = walletController.paymentSettingModel.value.payFast;
-    PayStackURLGen.getPayHTML(payFastSettingData: payfast!, amount: double.parse(amount.toString()).round().toString()).then((String? value) async {
+    PayStackURLGen.getPayHTML(payFastSettingData: payfast!, amount: double.parse(amount.toString()).round().toString())
+        .then((String? value) async {
       bool isDone = await Get.to(PayFastScreen(
         htmlData: value!,
         payFastSettingData: payfast,
@@ -2165,7 +2336,11 @@ class PaymentSelectionScreen extends StatelessWidget {
         {"title": "Wallet TopUp", "quantity": 1, "unit_price": double.parse(amount.toString())}
       ],
       "auto_return": "all",
-      "back_urls": {"failure": "${API.baseUrl}payment/failure", "pending": "${API.baseUrl}payment/pending", "success": "${API.baseUrl}payment/success"},
+      "back_urls": {
+        "failure": "${API.baseUrl}payment/failure",
+        "pending": "${API.baseUrl}payment/pending",
+        "success": "${API.baseUrl}payment/success"
+      },
     };
 
     var result = await mp.createPreference(pref);

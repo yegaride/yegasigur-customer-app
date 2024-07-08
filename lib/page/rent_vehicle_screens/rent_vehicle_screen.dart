@@ -34,17 +34,16 @@ class RentVehicleScreen extends StatelessWidget {
                         itemCount: controller.rentVehicleList.length,
                         shrinkWrap: true,
                         itemBuilder: (context, index) {
-                          return buildVehicleCard(context,
-                              controller.rentVehicleList[index], controller);
-                        }),
+                          return buildVehicleCard(context, controller.rentVehicleList[index], controller);
+                        },
+                      ),
           ),
         );
       },
     );
   }
 
-  Widget buildVehicleCard(BuildContext context, RentVehicleData data,
-      RentVehicleController controller) {
+  Widget buildVehicleCard(BuildContext context, RentVehicleData data, RentVehicleController controller) {
     return Card(
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
@@ -62,8 +61,7 @@ class RentVehicleScreen extends StatelessWidget {
                     imageUrl: data.image.toString(),
                     fit: BoxFit.fill,
                     placeholder: (context, url) => Constant.loader(),
-                    errorWidget: (context, url, error) =>
-                        const Icon(Icons.error),
+                    errorWidget: (context, url, error) => const Icon(Icons.error),
                   ),
                 ),
               ),
@@ -98,13 +96,10 @@ class RentVehicleScreen extends StatelessWidget {
                                   size: 18,
                                 ),
                                 Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(horizontal: 5),
-                                  child: Text(
-                                      " ${data.noOfPassenger.toString()}",
+                                  padding: const EdgeInsets.symmetric(horizontal: 5),
+                                  child: Text(" ${data.noOfPassenger.toString()}",
                                       //DateFormat('\$ KK:mm a, dd MMM yyyy').format(date),
-                                      style: const TextStyle(
-                                          color: Colors.black54, fontSize: 14)),
+                                      style: const TextStyle(color: Colors.black54, fontSize: 14)),
                                 ),
                               ],
                             ),
@@ -140,20 +135,17 @@ class RentVehicleScreen extends StatelessWidget {
 
   final GlobalKey<FormState> _contactKey = GlobalKey();
 
-  buildShowBottomSheet(BuildContext context, RentVehicleData data,
-      RentVehicleController controller) {
+  buildShowBottomSheet(BuildContext context, RentVehicleData data, RentVehicleController controller) {
     return showModalBottomSheet(
         shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(
-                topRight: Radius.circular(15), topLeft: Radius.circular(15))),
+            borderRadius: BorderRadius.only(topRight: Radius.circular(15), topLeft: Radius.circular(15))),
         context: context,
         isDismissible: false,
         isScrollControlled: true,
         builder: (context) {
           return StatefulBuilder(builder: (context, setState) {
             return Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10),
               child: Obx(
                 () => Padding(
                   padding: MediaQuery.of(context).viewInsets,
@@ -167,8 +159,7 @@ class RentVehicleScreen extends StatelessWidget {
                             padding: const EdgeInsets.symmetric(vertical: 10),
                             child: Text(
                               "Reservation Information".tr,
-                              style: const TextStyle(
-                                  fontSize: 20, fontWeight: FontWeight.w700),
+                              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
                             ),
                           ),
                         ],
@@ -182,17 +173,13 @@ class RentVehicleScreen extends StatelessWidget {
                               padding: const EdgeInsets.symmetric(vertical: 10),
                               child: Text(
                                 "Total to Pay".tr,
-                                style: const TextStyle(
-                                    fontSize: 14, fontWeight: FontWeight.w700),
+                                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
                               ),
                             ),
                           ),
                           Text(
                             Constant().amountShow(amount: data.prix.toString()),
-                            style: TextStyle(
-                                fontSize: 16,
-                                color: ConstantColors.yellow,
-                                fontWeight: FontWeight.w700),
+                            style: TextStyle(fontSize: 16, color: ConstantColors.yellow, fontWeight: FontWeight.w700),
                           ),
                         ],
                       ),
@@ -205,15 +192,13 @@ class RentVehicleScreen extends StatelessWidget {
                               padding: const EdgeInsets.symmetric(vertical: 10),
                               child: Text(
                                 "Number of days".tr,
-                                style: const TextStyle(
-                                    fontSize: 14, fontWeight: FontWeight.w700),
+                                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
                               ),
                             ),
                           ),
                           Text(
                             "${daysBetween(controller.startDate.value, controller.endDate.value)}",
-                            style: const TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.w700),
+                            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
                           ),
                         ],
                       ),
@@ -224,8 +209,7 @@ class RentVehicleScreen extends StatelessWidget {
                             padding: const EdgeInsets.symmetric(vertical: 10),
                             child: Text(
                               "Start date".tr,
-                              style: const TextStyle(
-                                  fontSize: 14, fontWeight: FontWeight.w700),
+                              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
                             ),
                           ),
                           InkWell(
@@ -236,16 +220,12 @@ class RentVehicleScreen extends StatelessWidget {
                                       firstDate: DateTime.now(),
                                       lastDate: DateTime(2040))
                                   .then((value) {
-                                controller.startDate.value = DateTime.parse(
-                                    DateFormat('yyyy-MM-dd 00:00:00')
-                                        .format(value!));
+                                controller.startDate.value = DateTime.parse(DateFormat('yyyy-MM-dd 00:00:00').format(value!));
                               });
                             },
                             child: Text(
-                              DateFormat('yyyy-MM-dd')
-                                  .format(controller.startDate.value),
-                              style: const TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.w700),
+                              DateFormat('yyyy-MM-dd').format(controller.startDate.value),
+                              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
                             ),
                           ),
                         ],
@@ -257,8 +237,7 @@ class RentVehicleScreen extends StatelessWidget {
                             padding: const EdgeInsets.symmetric(vertical: 10),
                             child: Text(
                               "End date".tr,
-                              style: const TextStyle(
-                                  fontSize: 14, fontWeight: FontWeight.w700),
+                              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
                             ),
                           ),
                           InkWell(
@@ -269,16 +248,12 @@ class RentVehicleScreen extends StatelessWidget {
                                       firstDate: controller.startDate.value,
                                       lastDate: DateTime(2040))
                                   .then((value) {
-                                controller.endDate.value = DateTime.parse(
-                                    DateFormat('yyyy-MM-dd 00:00:00')
-                                        .format(value!));
+                                controller.endDate.value = DateTime.parse(DateFormat('yyyy-MM-dd 00:00:00').format(value!));
                               });
                             },
                             child: Text(
-                              DateFormat('yyyy-MM-dd')
-                                  .format(controller.endDate.value),
-                              style: const TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.w700),
+                              DateFormat('yyyy-MM-dd').format(controller.endDate.value),
+                              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
                             ),
                           ),
                         ],
@@ -311,23 +286,14 @@ class RentVehicleScreen extends StatelessWidget {
                                 txtColor: Colors.white, onPress: () {
                               if (_contactKey.currentState!.validate()) {
                                 Map<String, dynamic> bodyParams = {
-                                  'nb_jour': daysBetween(
-                                          controller.startDate.value,
-                                          controller.endDate.value)
-                                      .toString(),
-                                  'date_debut': DateFormat('yyyy-MM-dd')
-                                      .format(controller.startDate.value),
-                                  'date_fin': DateFormat('yyyy-MM-dd')
-                                      .format(controller.endDate.value),
+                                  'nb_jour': daysBetween(controller.startDate.value, controller.endDate.value).toString(),
+                                  'date_debut': DateFormat('yyyy-MM-dd').format(controller.startDate.value),
+                                  'date_fin': DateFormat('yyyy-MM-dd').format(controller.endDate.value),
                                   'contact': _phoneController.text,
-                                  'id_user_app':
-                                      Preferences.getInt(Preferences.userId)
-                                          .toString(),
+                                  'id_user_app': Preferences.getInt(Preferences.userId).toString(),
                                   'id_vehicule': data.id.toString(),
                                 };
-                                controller
-                                    .setLocation(bodyParams)
-                                    .then((value) {
+                                controller.setLocation(bodyParams).then((value) {
                                   if (value != null) {
                                     Get.back();
                                   }

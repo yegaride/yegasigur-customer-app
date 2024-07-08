@@ -11,6 +11,8 @@ import 'package:cabme/model/payment_setting_model.dart';
 import 'package:cabme/model/tax_model.dart';
 import 'package:cabme/model/user_model.dart';
 import 'package:cabme/page/chats_screen/conversation_screen.dart';
+import 'package:cabme/routes/routes.dart';
+import 'package:cabme/service/api.dart';
 import 'package:cabme/themes/button_them.dart';
 import 'package:cabme/themes/constant_colors.dart';
 import 'package:cabme/utils/Preferences.dart';
@@ -32,31 +34,38 @@ class Constant {
   static String? appVersion = "0.0";
   static String? decimal = "2";
   static String? currency = "\$";
-  static String? driverRadius = "0";
+  static String? driverRadius = "30";
   static bool symbolAtRight = false;
   static List<TaxModel> taxList = [];
-  static String mapType = "google";
+  static String mapType = "inappmap";
   static String driverLocationUpdate = "10";
 
   // static String? taxValue = "0";
   // static String? taxType = 'Percentage';
   // static String? taxName = 'Tax';
-  static String? contactUsEmail = "",
-      contactUsAddress = "",
-      contactUsPhone = "";
+  static String? contactUsEmail = "", contactUsAddress = "", contactUsPhone = "";
   static String? rideOtp = "yes";
 
-  static String stripePublishablekey =
-      "pk_test_51Kaaj9SE3HQdbrEJneDaJ2aqIyX1SBpYhtcMKfwchyohSZGp53F75LojfdGTNDUwsDV5p6x5BnbATcrerModlHWa00WWm5Yf5h";
+  static const String stripePublishablekey =
+      "pk_test_51PAjTNDfegs3YGhVWLD3OfmLpOtQmdpEsT3wuA00yuddWhJJM4BzYE1L9zk1qGmZBjJlbAvngZZ4aW9OHkGi1lVH00Iq5RTagi";
 
-  static CollectionReference conversation =
-      FirebaseFirestore.instance.collection('conversation');
-  static CollectionReference driverLocationUpdateCollection =
-      FirebaseFirestore.instance.collection('driver_location_update');
+  static CollectionReference conversation = FirebaseFirestore.instance.collection('conversation');
+  static CollectionReference driverLocationUpdateCollection = FirebaseFirestore.instance.collection('driver_location_update');
 
   static String getUuid() {
     var uuid = const Uuid();
     return uuid.v1();
+  }
+
+  static const _maleImagePathPlaceholder = "${API.host}/assets/images/placeholder_image.jpg";
+  static const _femaleImagePathPlaceholder = '${API.host}/assets/images/placeholder_image_female.jpg';
+
+  static getPhotoPlaceholderBasedOnGender(String gender) {
+    return switch (gender) {
+      'male' => Constant._maleImagePathPlaceholder,
+      'female' => Constant._femaleImagePathPlaceholder,
+      _ => ''
+    };
   }
 
   static UserModel getUserData() {
@@ -114,13 +123,13 @@ class Constant {
             padding: const EdgeInsets.only(top: 20),
             child: ButtonThem.buildButton(
               context,
-              title: 'Book now'.tr,
+              title: 'orderNow'.tr,
               btnHeight: 45,
               btnWidthRatio: 0.8,
               btnColor: ConstantColors.primary,
               txtColor: Colors.white,
               onPress: () async {
-                controllerDashBoard.onSelectItem(0);
+                controllerDashBoard.onRouteSelected(Routes.allRides);
               },
             ),
           ),
@@ -143,12 +152,9 @@ class Constant {
     await launchUrl(launchUri);
   }
 
-  static Future<void> launchMapURl(
-      String? latitude, String? longLatitude) async {
-    String appleUrl =
-        'https://maps.apple.com/?saddr=&daddr=$latitude,$longLatitude&directionsmode=driving';
-    String googleUrl =
-        'https://www.google.com/maps/search/?api=1&query=$latitude,$longLatitude';
+  static Future<void> launchMapURl(String? latitude, String? longLatitude) async {
+    String appleUrl = 'https://maps.apple.com/?saddr=&daddr=$latitude,$longLatitude&directionsmode=driving';
+    String googleUrl = 'https://www.google.com/maps/search/?api=1&query=$latitude,$longLatitude';
 
     if (Platform.isIOS) {
       if (await canLaunch(appleUrl)) {
@@ -166,16 +172,14 @@ class Constant {
   static Future<Url> uploadChatImageToFireStorage(File image) async {
     ShowToastDialog.showLoader('Uploading image...');
     var uniqueID = const Uuid().v4();
-    Reference upload =
-        FirebaseStorage.instance.ref().child('images/$uniqueID.png');
+    Reference upload = FirebaseStorage.instance.ref().child('images/$uniqueID.png');
 
     File compressedImage = await compressImage(image);
     log(compressedImage.path);
     UploadTask uploadTask = upload.putFile(compressedImage);
 
     uploadTask.snapshotEvents.listen((event) {
-      ShowToastDialog.showLoader(
-          'Uploading image ${(event.bytesTransferred.toDouble() / 1000).toStringAsFixed(2)} /'
+      ShowToastDialog.showLoader('Uploading image ${(event.bytesTransferred.toDouble() / 1000).toStringAsFixed(2)} /'
           '${(event.totalBytes.toDouble() / 1000).toStringAsFixed(2)} '
           'KB');
     });
@@ -187,8 +191,7 @@ class Constant {
     var downloadUrl = await storageRef.getDownloadURL();
     var metaData = await storageRef.getMetadata();
     ShowToastDialog.closeLoader();
-    return Url(
-        mime: metaData.contentType ?? 'image', url: downloadUrl.toString());
+    return Url(mime: metaData.contentType ?? 'image', url: downloadUrl.toString());
   }
 
   static Future<File> compressImage(File file) async {
@@ -199,18 +202,15 @@ class Constant {
     return compressedImage;
   }
 
-  static Future<ChatVideoContainer> uploadChatVideoToFireStorage(
-      File video) async {
+  static Future<ChatVideoContainer> uploadChatVideoToFireStorage(File video) async {
     ShowToastDialog.showLoader('Uploading video');
     var uniqueID = const Uuid().v4();
-    Reference upload =
-        FirebaseStorage.instance.ref().child('videos/$uniqueID.mp4');
+    Reference upload = FirebaseStorage.instance.ref().child('videos/$uniqueID.mp4');
     File compressedVideo = await _compressVideo(video);
     SettableMetadata metadata = SettableMetadata(contentType: 'video');
     UploadTask uploadTask = upload.putFile(compressedVideo, metadata);
     uploadTask.snapshotEvents.listen((event) {
-      ShowToastDialog.showLoader(
-          'Uploading video ${(event.bytesTransferred.toDouble() / 1000).toStringAsFixed(2)} /'
+      ShowToastDialog.showLoader('Uploading video ${(event.bytesTransferred.toDouble() / 1000).toStringAsFixed(2)} /'
           '${(event.totalBytes.toDouble() / 1000).toStringAsFixed(2)} '
           'KB');
     });
@@ -218,24 +218,17 @@ class Constant {
     var downloadUrl = await storageRef.getDownloadURL();
     var metaData = await storageRef.getMetadata();
     final uint8list = await VideoThumbnail.thumbnailFile(
-        video: downloadUrl,
-        thumbnailPath: (await getTemporaryDirectory()).path,
-        imageFormat: ImageFormat.PNG);
+        video: downloadUrl, thumbnailPath: (await getTemporaryDirectory()).path, imageFormat: ImageFormat.PNG);
     final file = File(uint8list ?? '');
     String thumbnailDownloadUrl = await uploadVideoThumbnailToFireStorage(file);
     ShowToastDialog.closeLoader();
     return ChatVideoContainer(
-        videoUrl: Url(
-            url: downloadUrl.toString(), mime: metaData.contentType ?? 'video'),
-        thumbnailUrl: thumbnailDownloadUrl);
+        videoUrl: Url(url: downloadUrl.toString(), mime: metaData.contentType ?? 'video'), thumbnailUrl: thumbnailDownloadUrl);
   }
 
   static Future<File> _compressVideo(File file) async {
     MediaInfo? info = await VideoCompress.compressVideo(file.path,
-        quality: VideoQuality.DefaultQuality,
-        deleteOrigin: false,
-        includeAudio: true,
-        frameRate: 24);
+        quality: VideoQuality.DefaultQuality, deleteOrigin: false, includeAudio: true, frameRate: 24);
     if (info != null) {
       File compressedVideo = File(info.path!);
       return compressedVideo;
@@ -246,19 +239,14 @@ class Constant {
 
   static Future<String> uploadVideoThumbnailToFireStorage(File file) async {
     var uniqueID = const Uuid().v4();
-    Reference upload =
-        FirebaseStorage.instance.ref().child('thumbnails/$uniqueID.png');
+    Reference upload = FirebaseStorage.instance.ref().child('thumbnails/$uniqueID.png');
     File compressedImage = await compressImage(file);
     UploadTask uploadTask = upload.putFile(compressedImage);
-    var downloadUrl =
-        await (await uploadTask.whenComplete(() {})).ref.getDownloadURL();
+    var downloadUrl = await (await uploadTask.whenComplete(() {})).ref.getDownloadURL();
     return downloadUrl.toString();
   }
 
-  static redirectMap(
-      {required String name,
-      required double latitude,
-      required double longLatitude}) async {
+  static redirectMap({required String name, required double latitude, required double longLatitude}) async {
     if (Constant.mapType == "google") {
       bool? isAvailable = await MapLauncher.isMapAvailable(MapType.google);
       if (isAvailable == true) {
